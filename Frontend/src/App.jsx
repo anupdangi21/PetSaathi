@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import Navbar from "./Navbar"; // Import Navbar component
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="container">
+      <header className="header">
+        <Navbar />
+      </header>
+
+      <main className="main-content">
+        <section className="info-section">
+          <div className="info-banner">Some information on pet adoption</div>
+        </section>
+
+        <section className="recent-pets">
+          <h2>Recently uploaded pets</h2>
+          <div className="pet-cards">
+            <div className="pet-card">Pet 1</div>
+            <div className="pet-card">Pet 2</div>
+            <div className="pet-card">Pet 3</div>
+            <div className="pet-card">Pet 4</div>
+          </div>
+          <button className="arrow-btn">→</button>
+        </section>
+
+        <section className="adoption-info">
+          <h2>Some information on adoption</h2>
+          <div className="adoption-details">
+            <div className="info-box">Info Block 1</div>
+            <div className="info-box">Info Block 2</div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="footer">
+        Footer
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;

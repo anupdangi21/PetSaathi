@@ -1,42 +1,74 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.info-section .info-banner {
+  background-color: #eee;
+  padding: 20px;
   text-align: center;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.recent-pets h2 {
+  margin-bottom: 10px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.pet-cards {
+  display: flex;
+  gap: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.pet-card {
+  width: 100px;
+  height: 150px;
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
 }
 
-.card {
-  padding: 2em;
+.arrow-btn {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-.read-the-docs {
-  color: #888;
+.adoption-info .adoption-details {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.info-box {
+  flex: 1;
+  height: 200px;
+  background-color: #eee;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* Footer */
+.footer {
+  background-color: #f4f4f4;
+  padding: 10px 20px;
+  text-align: center;
+  border-top: 1px solid #ddd;
 }
