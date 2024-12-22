@@ -1,16 +1,22 @@
 import "./App.css";
-import Navbar from "./Navbar"; // Import Navbar component
+import Navbar from "./Navbar"; // Importing Navbar component
+import Foot from "./foot"; // Importing foot component
+import info from "../images/info-image.png"; 
+
 
 function App() {
   return (
     <div className="container">
-      <header className="header">
+      <header>
         <Navbar />
       </header>
 
       <main className="main-content">
         <section className="info-section">
-          <div className="info-banner">Some information on pet adoption</div>
+          <div className="info-banner">
+            Some information on pet adoption
+              <img src={info} alt="info" />
+            </div>
         </section>
 
         <section className="recent-pets">
@@ -25,17 +31,16 @@ function App() {
         </section>
 
         <section className="adoption-info">
-          <h2>Some information on adoption</h2>
+          <h2>Some more information on adoption</h2>
           <div className="adoption-details">
             <div className="info-box">Info Block 1</div>
             <div className="info-box">Info Block 2</div>
           </div>
         </section>
       </main>
-
-      <footer className="footer">
-        Footer
-      </footer>
+      <footer>
+        <Foot />
+      </footer> 
     </div>
   );
 }
