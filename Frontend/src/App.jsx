@@ -31,7 +31,7 @@ function App() {
         </section>
 
         <section className="adoption-info">
-          <h2>Some information on adoption</h2>
+          <h2>Some more information on adoption</h2>
           <div className="adoption-details">
             <div className="info-box">Info Block 1</div>
             <div className="info-box">Info Block 2</div>
