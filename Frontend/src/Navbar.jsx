@@ -1,5 +1,7 @@
 import "./navbar.css";
 import logo from "../images/logo.png"; 
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 function Nav() {
     return (
