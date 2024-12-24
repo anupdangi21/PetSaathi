@@ -24,9 +24,10 @@ function App() {
           <div className="pet-cards">
             <div className="pet-card">
             <img src="/Images/Dog.png" alt="Logo" />
-              <button className="view-details">View Details</button>
+            <button className="view-details">View Details</button>
             </div>
             <div className="pet-card">
+            <img src="/Images/cat.jpg" alt="Logo" />
               <button className="view-details">View Details</button>
             </div>
             <div className="pet-card">
