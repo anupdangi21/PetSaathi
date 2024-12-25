@@ -1,9 +1,9 @@
+import React from 'react';
 import "./navbar.css";
 import logo from "../images/logo.png"; 
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
 
 function Nav() {
+
     return (
         <div className="header">
             <div className="logo">
@@ -18,7 +18,9 @@ function Nav() {
             <div className="search-bar">
                 <input type="text" placeholder="Search for pets" />
             </div>
-            <button className="login-btn">Login/Sign Up</button>
+            <button className="login-btn">
+                Login/Sign Up
+            </button>
         </div>
     );
 }
