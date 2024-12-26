@@ -1,19 +1,21 @@
 import React from 'react';
 import "./navbar.css";
-import logo from "../images/logo.png"; 
+import Signin from "../signin";
+import Image from "../images.jsx";
+
 
 function Nav() {
 
     return (
         <div className="header">
             <div className="logo">
-                <img src={logo} alt="Logo" /> 
+                <img src={Image.image1} alt="Logo" /> 
             </div>
             <nav className="nav">
-                <a href="#home">Home</a>
-                <a href="#services">Services</a>
-                <a href="#about">About us</a>
-                <a href="#marketplace">Marketplace</a>
+                <a href="/">Home</a>
+                <a href="/services">Services</a>
+                <a href="/">About us</a>
+                <a href="/">Marketplace</a>
             </nav>
             <div className="search-bar">
                 <input type="text" placeholder="Search for pets" />

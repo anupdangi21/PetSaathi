@@ -1,6 +1,6 @@
 import "./App.css";
-import Navbar from "./Navbar"; // Importing Navbar component
-import Foot from "./foot"; // Importing foot component
+import Navbar from "./Components/Navbar"; // Importing Navbar component
+import Foot from "./Components/foot"; // Importing foot component
 import Info from "../images/info-image.png"; 
 
 
