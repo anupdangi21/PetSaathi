@@ -49,3 +49,25 @@
 .login-btn:hover {
   background-color: #a2bad4; 
 }
+
+.signin-form-overlay {
+  position: fixed; /* Fixed positioning to cover the entire viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex; /* Use flexbox for centering */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  z-index: 1000; /* Ensure it appears above other content */
+}
+
+.signin-form-container {
+  background: white; /* Background of the form */
+  padding: 20px; /* Padding for the form */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+  width: 350px;
+  height: 52vh; /* Fixed width for the form */
+}
