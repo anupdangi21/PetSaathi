@@ -15,10 +15,6 @@ function AppRouter() {
                 element: <Services />
             },
             {
-                path: "/signin",
-                element: <Signin />
-            },
-            {
                 path: "/register",
                 element: <Register />
             }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "./navbar.css";
-import Image from "../images.jsx";
 import Signin from "./signin.jsx";
+import Logo from "../Images/logo.png"
 
 function Nav() {
     const [visible, setVisible] = useState(false);
@@ -12,7 +12,7 @@ function Nav() {
     return (
         <div className="header">
             <div className="logo">
-                <img src={Image.image1} alt="Logo" />
+                <img src={Logo}alt="Logo" />
             </div>
             <nav className="nav">
                 <a href="/">Home</a>

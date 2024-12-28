@@ -1,7 +1,8 @@
 import "./App.css";
 import Navbar from "./Components/Navbar"; // Importing Navbar component
 import Foot from "./Components/foot"; // Importing foot component
-import Info from "../images/info-image.png"; 
+import Info from "./Images/info-image.png"; 
+import Sabin from "./Images/Dog.png"; // Importing Sabin image
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
           <h2>Recently uploaded pets</h2>
           <div className="pet-cards">
             <div className="pet-card">
-            <img src="/Images/Dog.png" alt="Logo" />
+            <img src={Sabin} alt="Logo" />
             <button className="view-details">View Details</button>
             </div>
             <div className="pet-card">
