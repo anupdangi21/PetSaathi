@@ -16,8 +16,7 @@ const Signin = ({ closeModal }) => {
                 alert('Login success.');
             }
         } catch (error) {
-            console.error('Login error:', error);
-            alert('Login failed. Please check your username and password.');
+            alert('Please try again with correct username and password.');
         }
     };
 
@@ -69,13 +68,11 @@ const Signin = ({ closeModal }) => {
                     <div className="text-center">
                         <p className="text-sm text-gray-600">
                             Don't have an account?
-                            <a href="./register" className="text-blue-500 hover:underline"> Register</a>
+                            <a href="./register" className="text-blue-500 hover:underline" > Register</a>
                         </p>
                     </div>
                 </div>
             </form>
-
-            <button onClick={closeModal} className="mt-4 text-red-500">Close</button>
         </div>
     );
 };

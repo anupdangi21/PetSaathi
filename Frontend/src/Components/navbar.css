@@ -15,7 +15,12 @@
   object-fit: cover; 
 }
 
-
+.nav{
+  display: flex;
+  margin-left: 10px;
+  justify-content: space-between;
+  gap: 20px;
+}
 .nav a {
   margin: 0 10px 0 10px; 
   text-decoration: none; 
@@ -26,7 +31,7 @@
   width: 2%;
   flex-grow: 1; 
   display: flex; 
-  margin: 0 180px; 
+  margin: 0 0 0 143px; 
 }
 
 .search-bar input {
@@ -37,7 +42,7 @@
 }
 
 .login-btn {
-  margin-right: 100px;
+  margin-right: 80px;
   padding: 8px 16px; 
   background-color: #38465a; 
   color: white; 
@@ -71,3 +76,4 @@
   width: 350px;
   height: 52vh; /* Fixed width for the form */
 }
+

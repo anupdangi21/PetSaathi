@@ -8,11 +8,12 @@ const RegisterForm = () => {
   const [username,setUsername]=useState('')
     const [password, setPassword] = useState(''); 
     
-    const navigate = useNavigate(); // Get the navigate function
+    const navigate = useNavigate(); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+          console.log("pug")
             const result = await axios.post('http://localhost:3000/register', { name,email,username, password });
             console.log(result);
             if (result.status === 200) {
@@ -85,10 +86,15 @@ const RegisterForm = () => {
           </button>
 
           <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?
-              <a href="./signin" className="text-blue-500 hover:underline"> Login</a>
-            </p>
+          <p className="text-sm text-gray-600">
+            Already have an account?{' '}
+            <span
+              className="text-blue-500 hover:underline cursor-pointer"
+              onClick={() => navigate('/signin')}
+            >
+              Login
+            </span>
+          </p>
           </div>
         </form>
       </div>

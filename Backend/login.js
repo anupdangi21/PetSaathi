@@ -9,26 +9,27 @@ app.use(express.json());
 app.use(cors());
 
 
-app.post('/register', async (req, res) => { // Make the function async
+app.post('/register', async (req, res) => { 
+    console.log("regis")
     registerModel.create(req.body)
     .then(register => res.json(register))
     .catch(err => res.status(400).json({ message: err.message }))
 });
 
 app.post('/signin', async (req, res) => {
-    const { username, password } = req.body; // Use 'username' as per your model
+    const { username, password } = req.body; 
 
     try {
         if (username && password) {
-            // Find the user by username and password in the register model
-            const user = await RegisterModel.findOne({ username, password }).exec();
+            
+            const user = await registerModel.findOne({ username, password }).exec();
             if (user) {
                 return res.status(200).json({ message: 'Login success' }); // Success message
             } else {
-                return res.status(401).json({ message: 'Username or password did not match' }); // Unauthorized
+                return res.status(401).json({ message: 'Username or password did not match' }); 
             }
         } else {
-            return res.status(400).json({ message: 'Missing username or password' }); // Bad request
+            return res.status(400).json({ message: 'Missing username or password' }); 
         }
     } catch (error) {
         console.error('Error:', error);

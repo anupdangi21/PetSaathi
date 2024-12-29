@@ -3,3 +3,6 @@ const image={
     image2:new URL("./Images/info-image.png",import.meta.url).href
 }
 export default image;
+
+
+

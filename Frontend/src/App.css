@@ -49,7 +49,7 @@ body {
 }
 .info-banner h2{
   margin-top: 4px;
-  width: 60%;
+  width: 57%;
 }
 
 .info-banner img{
@@ -59,18 +59,20 @@ body {
 
 .recent-pets h2 {
   font-size: 120%;
+  margin-left: 45px;
   margin-bottom: 10px;
 }
 
 .pet-cards {
   display: flex;
   gap: 30px;
+  margin-left: 45px;
 }
 
 .pet-card {
   width: 30vh;
   height: 50vh;
-  background-color: #ffffff;
+  background-color: #fffbfb;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,7 +81,7 @@ body {
 
 }
 .pet-card:hover {
-  background-color: #e8dede; /* Change background on hover */
+  background-color: #f5ebeb; /* Change background on hover */
 }
 .view-details {
   height: 5vh;
@@ -89,18 +91,22 @@ body {
   justify-content: end;
 }
 .pet-card:hover .view-details {
-  background-color: #9b8686;
+  background-color: #38465a;
+  color: white;
   display: block; /* Show button on hover */
 }
 
 .arrow-btn {
-  margin-top: 10px;
+  display: flex;
+  margin-left: 45px;
+  margin-bottom: 10px;
   padding: 5px 10px;
-  background-color: #007bff;
+  background-color: #38465a;
   color: white;
   border: none;
   border-radius: 5%;
   cursor: pointer;
 }
+
 
 
