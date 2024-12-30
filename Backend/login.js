@@ -10,7 +10,6 @@ app.use(cors());
 
 
 app.post('/register', async (req, res) => { 
-    console.log("regis")
     registerModel.create(req.body)
     .then(register => res.json(register))
     .catch(err => res.status(400).json({ message: err.message }))

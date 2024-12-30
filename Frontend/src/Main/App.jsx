@@ -1,8 +1,8 @@
 import "./App.css";
-import Navbar from "./Components/Navbar"; // Importing Navbar component
-import Foot from "./Components/foot"; // Importing foot component
-import Info from "./Images/info-image.png"; 
-import Dog from "./Images/Dog.png"; // Importing Sabin image
+import Navbar from "../Components/Navbar"; // Importing Navbar component
+import Foot from "../Components/foot"; // Importing foot component
+import Info from "../Images/info-image.png"; 
+import Dog from "../Images/Dog.png"; // Importing Sabin image
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 
 

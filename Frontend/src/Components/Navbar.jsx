@@ -76,7 +76,7 @@ function Nav() {
                     <ServicesDropdown />
                 </div>
 
-                <a href="/aboutus" className="mr-4">About us</a>
+                <a href="/about" className="mr-4">About us</a>
                 <a href="/marketplace" className="mr-4">Marketplace</a>
             </nav>
             <div className="search-bar">

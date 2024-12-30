@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Regbg from "../Images/rg.png"
+import Header from "../Components/Navbar"
+import App from "../Main/App"
 
 const RegisterForm = () => {
   const [name, setName] = useState(''); 
@@ -21,15 +24,16 @@ const RegisterForm = () => {
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('Login failed. Please check your username and password.');
+            alert('Please check your db connection');
         }
     };
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+    <div className="bg-white shadow-md rounded-lg min-h-[40vh] w-full max-w-md mx-auto">
+      
+      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mt-2" >
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <h1 className="text-2xl font-bold text-gray-800 text-center">Register here</h1>
-          
           <div className="relative">
             <input
               type="text"
@@ -100,6 +104,7 @@ const RegisterForm = () => {
       </div>
     </div>
   );
+
 };
 
 export default RegisterForm;

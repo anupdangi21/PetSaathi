@@ -1,9 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import Home from "../App";
+import Home from "../Main/App";
 import Services from "../Services" 
 import Signin from "../Components/signin"
 import Register from "../Components/register"
+import About from "../Main/Aboutus"
+import Marketplace from "../Main/market"
+
 function AppRouter() {
  const router = createBrowserRouter([    
             {
@@ -17,6 +19,18 @@ function AppRouter() {
             {
                 path: "/register",
                 element: <Register />
+            },
+            {
+                path:"/signin",
+                element: <Signin />
+            },
+            {
+                path: "/about",
+                element: <About />
+            },
+            {
+                path:"/marketplace",
+                element: <Marketplace />
             }
             ])
 
