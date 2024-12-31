@@ -10,6 +10,7 @@ const Aboutus = () => {
         </header>
         <main>
             <h1>About Us</h1>
+            hello this is aobut page 
         </main>
       <footer>
         <Footer />
