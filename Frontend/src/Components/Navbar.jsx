@@ -8,16 +8,16 @@ import { Dropdown } from 'rsuite';
 
 function Nav() {
     const [visible, setVisible] = useState(false);
-    const [dropdownVisible, setDropdownVisible] = useState(false); // State to control Services dropdown
+    const [dropdownVisible, setDropdownVisible] = useState(false); 
 
-    const modalRef = useRef(null); // Ref for modal container
+    const modalRef = useRef(null); 
 
     const openModal = () => setVisible(true);
     const closeModal = () => setVisible(false);
 
     const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
 
-    // Close modal when clicking outside of it
+
     useEffect(() => {
         if (visible) {
             const handleClickOutside = (event) => {
@@ -26,17 +26,14 @@ function Nav() {
                 }
             };
 
-            // Add event listener
             document.addEventListener('mousedown', handleClickOutside);
 
-            // Cleanup the event listener on component unmount or when modal is closed
             return () => {
                 document.removeEventListener('mousedown', handleClickOutside);
             };
         }
     }, [visible]);
 
-    // Services Dropdown Component
     const ServicesDropdown = () => (
         <div
             className={`absolute mt-2 w-48 bg-gray-800 shadow-lg rounded-lg ${dropdownVisible ? 'block' : 'hidden'}`}
@@ -66,7 +63,7 @@ function Nav() {
                     <a
                         href="#"
                         onClick={(e) => {
-                            e.preventDefault(); // Prevent page navigation
+                            e.preventDefault(); 
                             toggleDropdown();
                         }}
                         className="flex items-center text-gray-800 hover:text-blue-500 cursor-pointer"
@@ -84,10 +81,8 @@ function Nav() {
             </div>
 
             <div className="flex items-center space-x-0">
-                {/* Login/Sign Up Button */}
                 <button className="login-btn" onClick={openModal}>Login/Sign Up</button>
 
-                {/* Modal Overlay and Content */}
                 {visible && (
                     <div className="signin-form-overlay">
                         <div className="signin-form-container" ref={modalRef}>

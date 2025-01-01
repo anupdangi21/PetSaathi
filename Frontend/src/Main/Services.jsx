@@ -1,6 +1,6 @@
 import React from 'react'
-import Header from './Components/Navbar'
-import Foot from "./Components/foot"
+import Header from '../Components/Navbar'
+import Foot from "../Components/foot"
 
 const Services = () => {
   return (

@@ -2,7 +2,11 @@ import "./App.css";
 import Navbar from "../Components/Navbar"; // Importing Navbar component
 import Foot from "../Components/foot"; // Importing foot component
 import Info from "../Images/info-image.png"; 
-import Dog from "../Images/Dog.png"; // Importing Sabin image
+import Dog from "../Images/Dog.png"; // Importing Dog image
+import image1 from "../Images/rg.png"
+import training1 from "../Images/PetTrain.jpeg"
+import training2 from "../Images/PetTrain2.jpeg"
+import pet from "../Images/hp.jpeg"
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 
 
@@ -17,9 +21,15 @@ function App() {
       <main className="main-content">
         <section className="info-section">
           <div className="info-banner">
-          <h2>Pet adoption is a compassionate act that not only provides a loving home to animals in need but also addresses larger societal and environmental issues. Every year, millions of animals end up in shelters due to abandonment, neglect, or overpopulation. By adopting a pet, you give these animals a second chance at life and reduce the demand for commercial breeding operations, which often prioritize profit over animal welfare.</h2>
-              <img src={Info} alt="info" />
-            </div>
+            <h2>Pet adoption is a compassionate act that not only provides a loving home to animals in need but also addresses larger societal and environmental issues. Every year, millions of animals end up in shelters due to abandonment, neglect, or overpopulation. By adopting a pet, you give these animals a second chance at life and reduce the demand for commercial breeding operations, which often prioritize profit over animal welfare.</h2>
+          <div className="photos">
+            <img src={image1} alt="image" />
+            <img src={training1} alt="image" />
+            <img src={training2} alt="image" />
+            <img src= {pet}alt="image" /> 
+      </div>
+      </div>
+
         </section>
 
         <section className="recent-pets">
