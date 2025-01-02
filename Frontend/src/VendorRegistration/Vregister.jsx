@@ -21,6 +21,7 @@ const Vregister = () => {
         } catch (error) {
             console.error('Login error:', error);
             alert('Please check your db connection');
+            console.log("anup")
         }
     };
   return (
