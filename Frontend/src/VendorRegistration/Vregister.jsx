@@ -22,7 +22,8 @@ const Vregister = () => {
             console.error('Login error:', error);
             alert('Please check your db connection');
             console.log("anup")
-        }
+        error}
+
     };
   return (
     <div className="bg-white shadow-md rounded-lg min-h-[40vh] w-full max-w-md mx-auto">
