@@ -1,7 +1,7 @@
 const foot = () => {
   return (
-    <footer className="bg-gray-800 text-white py-4">
-      <div className="max-w-screen-xl mx-auto px-4">
+    <footer className="bg-gray-800 text-white py-2">
+      <div className="max-w-screen-xl mx-auto px-2">
         {/* Contact Section */}
         <div className="flex flex-col items-center">
           <h3 className="text-xl font-semibold mb-2">Contact us:</h3>

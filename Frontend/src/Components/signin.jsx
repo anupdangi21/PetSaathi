@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Signin = ({ closeModal }) => {
-    const [username, setName] = useState(''); // Initialize state as empty string
-    const [password, setPassword] = useState(''); // Initialize state as empty string
-    const navigate = useNavigate(); // Get the navigate function
+    const [username, setName] = useState(''); 
+    const [password, setPassword] = useState(''); 
+    const navigate = useNavigate(); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -14,6 +14,9 @@ const Signin = ({ closeModal }) => {
             console.log(result);
             if (result.status === 200) {
                 alert('Login success.');
+                navigate('/')
+            }else{
+                alert('The credentials doesnot match')
             }
         } catch (error) {
             alert('Please try again with correct username and password.');

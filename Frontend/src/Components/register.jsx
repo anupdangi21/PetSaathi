@@ -21,6 +21,7 @@ const RegisterForm = () => {
             console.log(result);
             if (result.status === 200) {
               alert('Registration success.');
+              navigate('/')
             }
         } catch (error) {
             console.error('Login error:', error);

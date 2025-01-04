@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 
 const signinSchema = new mongoose.Schema({
     name: String,
+    email: String,
+    username: String,
     password: String
 })
 

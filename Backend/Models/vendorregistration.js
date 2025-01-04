@@ -1,11 +1,12 @@
 const mongoose= require("mongoose")
 
 const vendorregisterSchema = new mongoose.Schema({
-    nameofowner: String,
+    organizationname: String,
     email: String,
-    organizationname : String,
-    organizationimage: String,
-    services: String
+    services: String,
+    username : String,
+    password: String,
 })
 
-const vendorregister = mongoose.model('vendor-registration', vendorregisterSchema)
+const vendorregisterModel = mongoose.model('vendor-registration', vendorregisterSchema)
+module.exports=vendorregisterModel

@@ -2,38 +2,50 @@ const express = require('express');
 const mongoose = require('./Connection');
 const cors = require('cors');
 const app = express();
-const SigninModel = require('../Backend/Models/signin');
-const registerModel=require("../Backend/Models/register")
+const SigninModel = require('./Models/signin');
+const registerModel=require("./Models/register");
+const vendorregisterModel= require("./Models/vendorregistration")
 
 app.use(express.json());
 app.use(cors());
 
-
+//user registration
 app.post('/register', async (req, res) => { 
-    registerModel.create(req.body)
+    // registerModel.create(req.body)
+    SigninModel.create(req.body)
     .then(register => res.json(register))
     .catch(err => res.status(400).json({ message: err.message }))
 });
 
+
+//vendor registration
+ app.post('/registration', async (req, res) => {
+    try {
+        const vendorregister = await vendorregisterModel.create(req.body);
+        console.log('anup');
+        res.json(vendorregister);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+    
+
+
 app.post('/signin', async (req, res) => {
     const { username, password } = req.body; 
-
-    try {
-        if (username && password) {
-            
-            const user = await registerModel.findOne({ username, password }).exec();
-            if (user) {
-                return res.status(200).json({ message: 'Login success' }); // Success message
-            } else {
-                return res.status(401).json({ message: 'Username or password did not match' }); 
+    registerModel.findOne({username: username})
+    .then(user=>{
+        if(user){
+            if(user.password===password){
+                res.json("login success")
+            }else{
+                res.json("the password is incorrect")
             }
-        } else {
-            return res.status(400).json({ message: 'Missing username or password' }); 
+        }else{
+            res.json("not existed")
         }
-    } catch (error) {
-        console.error('Error:', error);
-        return res.status(500).json({ message: 'Internal server error' }); // Internal server error
-    }
+    })
+    
 });
 
 const PORT = process.env.PORT || 3000;

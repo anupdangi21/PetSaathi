@@ -5,6 +5,11 @@ import Signin from "../Components/signin"
 import Register from "../Components/register"
 import About from "../Main/Aboutus"
 import Marketplace from "../Main/market"
+import Vregister from "../VendorRegistration/Vregister"
+import Dashboard from "../admin/dashboard"
+import Adoption from "../Services/Adoption"
+import Hostel from "../Services/Hostel"
+import Training from '../Services/PetTraining'
 
 function AppRouter() {
  const router = createBrowserRouter([    
@@ -31,7 +36,28 @@ function AppRouter() {
             {
                 path:"/marketplace",
                 element: <Marketplace />
+            },
+            {
+                path: "/dashboard",
+                element: <Dashboard />
+            },
+            {
+                path: "/services/adoption",
+                element: <Adoption />
+            },
+            {
+                path:"/services/hostel",
+                element: <Hostel />
+            },
+            {
+                path:"/services/training",
+                element: <Training />
+            },
+            {
+                path: "/vendor/register",
+                element: <Vregister />
             }
+            
             ])
 
 

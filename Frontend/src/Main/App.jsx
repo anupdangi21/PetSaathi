@@ -23,9 +23,6 @@ function App() {
           <div className="info-banner">
             <h2>Pet adoption is a compassionate act that not only provides a loving home to animals in need but also addresses larger societal and environmental issues. Every year, millions of animals end up in shelters due to abandonment, neglect, or overpopulation. By adopting a pet, you give these animals a second chance at life and reduce the demand for commercial breeding operations, which often prioritize profit over animal welfare.</h2>
           <div className="photos">
-            <img src={image1} alt="image" />
-            <img src={training1} alt="image" />
-            <img src={training2} alt="image" />
             <img src= {pet}alt="image" /> 
       </div>
       </div>

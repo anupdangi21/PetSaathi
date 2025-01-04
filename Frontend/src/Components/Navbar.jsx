@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from "axios"
+import { Link, Navigate } from "react-router-dom";
 import "./navbar.css";
 import Signin from "./signin.jsx";
 import Logo from "../Images/logo.png";
@@ -22,7 +24,7 @@ function Nav() {
         if (visible) {
             const handleClickOutside = (event) => {
                 if (modalRef.current && !modalRef.current.contains(event.target)) {
-                    closeModal(); // Close modal if clicked outside
+                    closeModal(); 
                 }
             };
 
@@ -38,7 +40,7 @@ function Nav() {
         <div
             className={`absolute mt-2 w-48 bg-gray-800 shadow-lg rounded-lg ${dropdownVisible ? 'block' : 'hidden'}`}
         >
-            <a href="/services/adopt" className="block px-4 py-2 text-gray-700 hover:bg-gray-700">
+            <a href="/services/adoption" className="block px-4 py-2 text-gray-700 hover:bg-gray-700">
                 Adopt a Pet
             </a>
             <a href="/services/hostel" className="block px-4 py-2 text-gray-700 hover:bg-gray-700">
@@ -49,6 +51,23 @@ function Nav() {
             </a>
         </div>
     );
+    function logout(event) {
+        event.preventDefault(); // Prevent the default behavior of the link
+        if (window.confirm("Are you sure you want to exit?")) {
+            // Redirect to /customer/customer.html
+            Navigate('/');
+        }
+    }
+    // const handleLinkClick = (e) => {
+    //     e.preventDefault(); 
+    //     console.log('Form submitted');
+    //     try{
+    //         const response = await axios.post('http://localhost:3000/vendorregistration', {username, password});
+    //     }catch{
+
+    //     }
+    //     navigate('/dashboard');
+    //   };
 
     return (
         <div className="header flex items-center justify-between">
@@ -103,16 +122,16 @@ function Nav() {
                         className="absolute right-0 mt-2 mr-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
                     >
                         <MenuItem>
-                            <a
-                                href="#"
-                                className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700"
-                            >
-                                Dashboard
-                            </a>
+                        <Link
+                            
+                            className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700" 
+                        >
+                            Dashboard
+                        </Link>
                         </MenuItem>
                         <MenuItem>
                             <a
-                                href="#"
+                                href=""
                                 className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700"
                             >
                                 Your Profile
@@ -120,7 +139,7 @@ function Nav() {
                         </MenuItem>
                         <MenuItem>
                             <a
-                                href="#"
+                                href=""
                                 className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700"
                             >
                                 Settings
@@ -128,7 +147,7 @@ function Nav() {
                         </MenuItem>
                         <MenuItem>
                             <a
-                                href="#"
+                                href=""
                                 className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700"
                             >
                                 Sign out
