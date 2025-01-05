@@ -38,6 +38,7 @@ app.post('/signin', async (req, res) => {
         if(user){
             if(user.password===password){
                 res.json("login success")
+                res.redirect("../Frontend/src/admin/dashboard.jsx")
             }else{
                 res.json("the password is incorrect")
             }

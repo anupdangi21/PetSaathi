@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Image1 from "../Images/vendor-register.jpeg"
+import Navbar from "../Components/Navbar"
 
 const Vregister = () => {
 
@@ -15,7 +17,6 @@ const Vregister = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          console.log("pug")
             const result = await axios.post('http://localhost:3000/registration', { organizationname,email,username, password });
             console.log(result);
             if (result.status === 200) {
@@ -28,11 +29,14 @@ const Vregister = () => {
         }
     };
   return (
-    <div className="bg-white shadow-md rounded-lg min-h-[40vh] w-full max-w-md mx-auto">
+    
+    <div className="flex mt-6 ml-8" >
+      <img src={Image1} className='w-45'></img>
+    <div className="bg-white shadow-md rounded-lg min-h-[40vh] w-full max-w-md mx-auto flex justify-end">
+    
+    <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mt-2 " >
       
-    <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mt-2" >
-      
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 ">
         <h1 className="text-2xl font-bold text-gray-800 text-center">Join us now!!!</h1>
         <div className="relative">
           <input
@@ -99,8 +103,11 @@ const Vregister = () => {
         >
           Register
         </button>
+        
       </form>
+      
     </div>
+  </div>
   </div>
 );
 
