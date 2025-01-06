@@ -4,7 +4,7 @@
   display: flex;
   align-items: center; 
   justify-content: space-between; 
-  background-color: #1F2937  ; 
+  background-color: #e8c7a3  ; 
 }
 
 .logo img {
@@ -44,7 +44,7 @@
 .login-btn {
   margin-right: 80px;
   padding: 8px 16px; 
-  background-color: #38465a; 
+  background-color: #e6ae72; 
   color: white; 
   border: none; 
   border-radius: 55px; 
@@ -52,7 +52,7 @@
 }
 
 .login-btn:hover {
-  background-color: #889baf; 
+  background-color: #dbc9b5; 
 }
 
 .signin-form-overlay {

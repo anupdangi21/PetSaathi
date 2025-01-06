@@ -29,8 +29,8 @@ body {
 
 .main-content {
   padding: 20px;
+  background-color: #D8C6B5;
 }
-
 
 .info-section .info-banner {
   display: flex;
@@ -58,17 +58,20 @@ body {
 }
 
 .photos img{
-  width:80%;
+  width:100%;
   height: 100%;
+  margin-left: 100px;
   object-fit: cover;
   border-radius: 25px;
-  border: 2px solid rgb(248, 240, 240);
+  border: 2px;
   transition: all ease 0.3s;
   cursor: pointer;
 }
 
 
-
+.recent-pets{
+  background-color: #ffffff;
+}
 
 .recent-pets h2 {
   margin-top: 80px;

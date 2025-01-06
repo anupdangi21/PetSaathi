@@ -38,36 +38,20 @@ function Nav() {
 
     const ServicesDropdown = () => (
         <div
-            className={`absolute mt-2 w-48 bg-gray-800 shadow-lg rounded-lg ${dropdownVisible ? 'block' : 'hidden'}`}
+            className={`absolute mt-2 w-48 bg-orange-200 shadow-lg rounded-lg ${dropdownVisible ? 'block' : 'hidden'}`}
         >
-            <a href="/services/adoption" className="block px-4 py-2 text-gray-700 hover:bg-gray-700">
+            <a href="/services/adoption" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
                 Adopt a Pet
             </a>
-            <a href="/services/hostel" className="block px-4 py-2 text-gray-700 hover:bg-gray-700">
+            <a href="/services/hostel" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
                 Hostel
             </a>
-            <a href="/services/training" className="block px-4 py-2 text-gray-700 hover:bg-gray-700">
+            <a href="/services/training" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
                 Pet Training
             </a>
         </div>
     );
-    function logout(event) {
-        event.preventDefault(); // Prevent the default behavior of the link
-        if (window.confirm("Are you sure you want to exit?")) {
-            // Redirect to /customer/customer.html
-            Navigate('/');
-        }
-    }
-    // const handleLinkClick = (e) => {
-    //     e.preventDefault(); 
-    //     console.log('Form submitted');
-    //     try{
-    //         const response = await axios.post('http://localhost:3000/vendorregistration', {username, password});
-    //     }catch{
-
-    //     }
-    //     navigate('/dashboard');
-    //   };
+    
 
     return (
         <div className="header flex items-center justify-between">
@@ -75,7 +59,7 @@ function Nav() {
                 <img src={Logo} alt="Logo" />
             </div>
             <nav className="nav relative">
-                <a href="/" className="mr-4">Home</a>
+                <a href="/" className="mr-8">Home</a>
 
                 {/* Services Dropdown Trigger */}
                 <div className="relative">
@@ -84,16 +68,17 @@ function Nav() {
                         onClick={(e) => {
                             e.preventDefault(); 
                             toggleDropdown();
+                            
                         }}
-                        className="flex items-center text-gray-800 hover:text-blue-500 cursor-pointer"
+                        className="flex items-center text-red-800 hover:text-white-100 cursor-pointer"
                     >
                         Services
                     </a>
-                    <ServicesDropdown />
+                    <ServicesDropdown closeModal={closeModal} />
                 </div>
-
+                <a href="/marketplace" className="mr-4">Marketplace</a>          
                 <a href="/about" className="mr-4">About us</a>
-                <a href="/marketplace" className="mr-4">Marketplace</a>
+                
             </nav>
             <div className="search-bar">
                 <input type="text" placeholder="Search for pets" />
@@ -113,18 +98,18 @@ function Nav() {
                 {/* Profile Dropdown */}
                 <Menu as="div" className="relative mr-4">
                     <div>
-                        <MenuButton className="relative mr-20 flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                        <MenuButton className="relative mr-20 flex rounded-full bg-nav text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200">
                             <span className="sr-only">Open user menu</span>
                             <img src={User} className="w-12 h-12 mr-18 rounded-full" />
                         </MenuButton>
                     </div>
                     <MenuItems
-                        className="absolute right-0 mt-2 mr-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                        className="absolute right-0 mt-2 mr-2 w-48 origin-top-right rounded-md bg-orange-200 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
                     >
                         <MenuItem>
                         <Link
                             
-                            className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700" 
+                            className="block px-4 py-2 text-sm text-white hover:bg-orange-50" 
                         >
                             Dashboard
                         </Link>
@@ -132,7 +117,7 @@ function Nav() {
                         <MenuItem>
                             <a
                                 href=""
-                                className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700"
+                                className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
                             >
                                 Your Profile
                             </a>
@@ -140,7 +125,7 @@ function Nav() {
                         <MenuItem>
                             <a
                                 href=""
-                                className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700"
+                                className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
                             >
                                 Settings
                             </a>
@@ -148,7 +133,7 @@ function Nav() {
                         <MenuItem>
                             <a
                                 href=""
-                                className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-700"
+                                className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
                             >
                                 Sign out
                             </a>

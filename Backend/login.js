@@ -11,7 +11,7 @@ app.use(cors());
 
 //user registration
 app.post('/register', async (req, res) => { 
-    // registerModel.create(req.body)
+    registerModel.create(req.body)
     SigninModel.create(req.body)
     .then(register => res.json(register))
     .catch(err => res.status(400).json({ message: err.message }))
@@ -38,7 +38,6 @@ app.post('/signin', async (req, res) => {
         if(user){
             if(user.password===password){
                 res.json("login success")
-                res.redirect("../Frontend/src/admin/dashboard.jsx")
             }else{
                 res.json("the password is incorrect")
             }
