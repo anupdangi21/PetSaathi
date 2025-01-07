@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "../Main/App";
-import Services from "../Main/Services" 
 import Signin from "../Components/signin"
 import Register from "../Components/register"
 import About from "../Main/Aboutus"
@@ -16,10 +15,6 @@ function AppRouter() {
             {
                 path: "/",
                 element: <Home />
-            },
-            {
-                path: "/services",
-                element: <Services />
             },
             {
                 path: "/register",
