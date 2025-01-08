@@ -56,5 +56,6 @@ function App() {
     </div>
   );
 }
+console.log(comit)
 
 export default App;
