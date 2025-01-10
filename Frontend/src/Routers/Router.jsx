@@ -9,6 +9,7 @@ import Dashboard from "../admin/dashboard"
 import Adoption from "../Services/Adoption"
 import Hostel from "../Services/Hostel"
 import Training from '../Services/PetTraining'
+import Lostfound from "../Services/lostfound"
 
 function AppRouter() {
  const router = createBrowserRouter([    
@@ -47,6 +48,10 @@ function AppRouter() {
             {
                 path:"/services/training",
                 element: <Training />
+            },
+            {
+                path:"/services/lostfound",
+                element: <Lostfound />
             },
             {
                 path: "/vendor/register",
