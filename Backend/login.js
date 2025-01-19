@@ -19,10 +19,16 @@ app.post('/register', async (req, res) => {
 
 
 //vendor registration
- app.post('/registration', async (req, res) => {
+app.post('/registration', async (req, res) => {
     try {
+        // Check if username already exists
+        const existingVendor = await vendorregisterModel.findOne({ username: req.body.username });
+        if (existingVendor) {
+            return res.status(400).json({ message: "Name already taken" });
+        }
+
+        // Create new vendor
         const vendorregister = await vendorregisterModel.create(req.body);
-        console.log('anup');
         res.json(vendorregister);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -33,18 +39,22 @@ app.post('/register', async (req, res) => {
 
 app.post('/signin', async (req, res) => {
     const { username, password } = req.body; 
-    registerModel.findOne({username: username})
-    .then(user=>{
-        if(user){
-            if(user.password===password){
-                res.json("login success")
-            }else{
-                res.json("the password is incorrect")
+    try{
+        if(username && password){
+
+            const user= await registerModel.findOne({username, password}).exec();
+            const vendor= await vendorregisterModel.findOne({username, password}).exec();
+            if(user){
+                return res.status(200).json({ role: 'user', message: 'Login successful' });
+            }else if(vendor){
+                return res.status(200).json({ role: 'vendor', message: 'Login successful' });
             }
         }else{
             res.json("not existed")
         }
-    })
+    }catch{
+
+    }
     
 });
 

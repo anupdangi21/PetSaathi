@@ -95,7 +95,7 @@ const RegisterForm = () => {
             Already have an account?{' '}
             <span
               className="text-blue-500 hover:underline cursor-pointer"
-              onClick={() => navigate('/signin')}
+              onClick={() => navigate('/')}
             >
               Login
             </span>

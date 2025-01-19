@@ -1,30 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
-import axios from "axios"
-import { Link, Navigate } from "react-router-dom";
+import axios from "axios";
+import { Link } from "react-router-dom";
 import "./navbar.css";
 import Signin from "./signin.jsx";
 import Logo from "../Images/logo.png";
 import User from "../Images/logo.png";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { Dropdown } from 'rsuite';
 
 function Nav() {
     const [visible, setVisible] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false); 
 
-    const modalRef = useRef(null); 
+    const modalRef = useRef(null);
+    const dropdownRef = useRef(null); // Reference for the Services dropdown
 
     const openModal = () => setVisible(true);
     const closeModal = () => setVisible(false);
 
     const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
 
-
+    // Close modal when clicking outside
     useEffect(() => {
         if (visible) {
             const handleClickOutside = (event) => {
                 if (modalRef.current && !modalRef.current.contains(event.target)) {
-                    closeModal(); 
+                    closeModal();
                 }
             };
 
@@ -36,8 +36,26 @@ function Nav() {
         }
     }, [visible]);
 
+    // Close Services dropdown when clicking outside
+    useEffect(() => {
+        if (dropdownVisible) {
+            const handleClickOutside = (event) => {
+                if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                    setDropdownVisible(false); // Close the dropdown
+                }
+            };
+
+            document.addEventListener('mousedown', handleClickOutside);
+
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
+    }, [dropdownVisible]);
+
     const ServicesDropdown = () => (
         <div
+            ref={dropdownRef} // Attach ref to the dropdown
             className={`absolute mt-2 w-48 bg-orange-200 shadow-lg rounded-lg ${dropdownVisible ? 'block' : 'hidden'}`}
         >
             <a href="/services/adoption" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
@@ -54,7 +72,6 @@ function Nav() {
             </a>
         </div>
     );
-    
 
     return (
         <div className="header flex items-center justify-between">
@@ -69,21 +86,17 @@ function Nav() {
                     <a
                         href="#"
                         onClick={(e) => {
-                            e.preventDefault(); 
+                            e.preventDefault();
                             toggleDropdown();
-                            
                         }}
                         className="flex items-center text-red-800 hover:text-white-100 cursor-pointer"
                     >
                         Services
                     </a>
-                    <ServicesDropdown closeModal={closeModal} />
+                    <ServicesDropdown />
                 </div>
                 <a href="/marketplace" className="mr-4">Marketplace</a>          
                 <a href="/about" className="mr-4">About us</a>
-                
-                
-                
             </nav>
             <div className="search-bar">
                 <input type="text" placeholder="Search for pets" />
@@ -112,16 +125,16 @@ function Nav() {
                         className="absolute right-0 mt-2 mr-2 w-48 origin-top-right rounded-md bg-orange-200 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
                     >
                         <MenuItem>
-                        <Link
-                            
-                            className="block px-4 py-2 text-sm text-white hover:bg-orange-50" 
-                        >
-                            Dashboard
-                        </Link>
+                            <Link
+                                to="/dashboard"
+                                className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
+                            >
+                                Dashboard
+                            </Link>
                         </MenuItem>
                         <MenuItem>
                             <a
-                                href=""
+                                href="/profile"
                                 className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
                             >
                                 Your Profile
@@ -129,7 +142,7 @@ function Nav() {
                         </MenuItem>
                         <MenuItem>
                             <a
-                                href=""
+                                href="/settings"
                                 className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
                             >
                                 Settings
@@ -137,7 +150,7 @@ function Nav() {
                         </MenuItem>
                         <MenuItem>
                             <a
-                                href=""
+                                href="/logout"
                                 className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
                             >
                                 Sign out

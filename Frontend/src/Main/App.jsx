@@ -16,29 +16,29 @@ function App() {
   const recentPets = [
     {
       id: 1,
-      name: 'Luna',
-      type: 'Dog',
-      breed: 'Golden Retriever',
-      age: '2 years',
-      location: 'San Francisco',
-      image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=500'
-    },
-    {
-      id: 2,
-      name: 'Oliver',
-      type: 'Cat',
-      breed: 'British Shorthair',
-      age: '1 year',
-      location: 'Los Angeles',
-      image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=500'
-    },
+    name: "lucky",
+    breed: "Golden Retriever",
+    age: "2 years",
+    location: "lalitput",
+    image: "https://images.unsplash.com/photo-1552053831-71594a27632d",
+    description: "Friendly and energetic Golden Retriever looking for an active family."
+  },
+  {
+    id: 2,
+    name: "Rocky",
+    breed: "Domestic Shorthair",
+    age: "1 year",
+    location: "kathmandu, buddhanagar",
+    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba",
+    description: "Sweet and playful cat who loves cuddles and window watching."
+  },
     {
       id: 3,
-      name: 'Max',
+      name: 'Maxer',
       type: 'Dog',
       breed: 'Beagle',
       age: '3 years',
-      location: 'New York',
+      location: 'imadole',
       image: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&q=80&w=500'
     }
   ];

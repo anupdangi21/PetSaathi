@@ -11,16 +11,20 @@ const Signin = ({ closeModal }) => {
         e.preventDefault();
         try {
             const result = await axios.post('http://localhost:3000/signin', { username, password });
-            console.log(result);
-            if (result.status === 200) {
-                alert('Login success.');
-                navigate('/')
-            }else{
-                alert('The credentials doesnot match')
+            const { role } = result.data;
+        
+            if (role === 'user') {
+                navigate("/"); // Redirect to user home
+                console.log("userrrrr")
+            } else if (role === 'vendor') {
+                console.log("venodrrrrr")
+                navigate("/dashboard"); // Redirect to vendor dashboard
             }
         } catch (error) {
-            alert('Please try again with correct username and password.');
+            alert(error.response?.data?.message || "An error occurred. Please try again.");
         }
+        
+        
     };
 
     return (
