@@ -46,7 +46,7 @@ const Aside = () => {
         
         <nav className="mt-8">
           <div className="px-4">
-            <a href="" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+            <a href="/dashboard" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
               <LayoutDashboard size={20} />
               {<span>Dashboard</span>}
             </a>
@@ -68,7 +68,7 @@ const Aside = () => {
                   {services.map((service) => (
                     <a
                       key={service.name}
-                      href="#"
+                      href="/dashboard/adoption"
                       className="flex items-center space-x-3 text-gray-600 p-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                     >
                       {service.icon && <service.icon size={18} />}

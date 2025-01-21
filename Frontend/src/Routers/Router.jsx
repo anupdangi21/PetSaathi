@@ -12,6 +12,7 @@ import Adoption from "../Services/Adoption";
 import Hostel from "../Services/Hostel";
 import Training from "../Services/PetTraining";
 import Lostfound from "../Services/lostfound";
+import AdminAdoption from "../admin/Adoption"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -63,6 +64,10 @@ function AppRouter() {
       path: "/vendor/register",
       element: <Vregister />,
     },
+    {
+      path:"/dashboard/adoption",
+      element: <AdminAdoption />
+    }
   ]);
 
   return (
