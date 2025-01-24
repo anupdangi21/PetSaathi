@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import  mongoose from'mongoose'
 
 const signinSchema = new mongoose.Schema({
     name: String,
@@ -8,4 +8,4 @@ const signinSchema = new mongoose.Schema({
 })
 
 const signinModel = mongoose.model('signin', signinSchema)
-module.exports = signinModel
+export default signinModel

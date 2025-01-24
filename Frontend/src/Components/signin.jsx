@@ -11,20 +11,27 @@ const Signin = ({ closeModal }) => {
         e.preventDefault();
         try {
             const result = await axios.post('http://localhost:3000/signin', { username, password });
-            const { role } = result.data;
-        
-            if (role === 'user') {
-                navigate("/"); // Redirect to user home
-                console.log("userrrrr")
-            } else if (role === 'vendor') {
-                console.log("venodrrrrr")
-                navigate("/dashboard"); // Redirect to vendor dashboard
+            
+            if (result.data && result.data.role) {
+                const { role, token } = result.data;
+            
+                if (role === 'user') {
+                    console.log("User login success");
+                    alert("User login success");
+                    navigate("/"); // Redirect to user home
+                    
+                } else if (role === 'vendor') {
+                    console.log("Vendor login success");
+                    alert("Vendor login success");
+                    navigate("/dashboard"); // Redirect to vendor dashboard
+                }
+            } else {
+                alert("Login failed");
             }
         } catch (error) {
+            console.error(error);
             alert(error.response?.data?.message || "An error occurred. Please try again.");
         }
-        
-        
     };
 
     return (

@@ -68,7 +68,7 @@ const AdminDashboard=()=> {
         </div>
         <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
           <h2 className=" grid ml text-2xl font-semibold text-gray-800 place-items-end">Recent Orders </h2>
-          <p classname="grid mt-2 place-items-end ">hello</p>
+          <p className="grid mt-2 place-items-end ">hello</p>
         </div>
       </main>
     </div>

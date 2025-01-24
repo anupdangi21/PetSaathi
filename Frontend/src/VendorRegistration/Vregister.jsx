@@ -8,7 +8,7 @@ const Vregister = () => {
 
   const [organizationname, setName] = useState(''); 
   const [email, setEmail] = useState('');
-  const [service, setService]=useState('')
+  const [services, setServices]=useState('')
   const [username,setUsername]=useState('')
   const [password, setPassword] = useState(''); 
     
@@ -17,19 +17,24 @@ const Vregister = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await axios.post('http://localhost:3000/registration', { organizationname,email,service,username, password });
+            const result = await axios.post('http://localhost:3000/registration', { organizationname,email,services,username, password });
             console.log(result);
             if (result.status === 200) {
               alert('Registration success.');
               navigate('/dashboard')
             }
         } catch (error) {
-            console.error('Login error:', error);
-            alert('Please check your db connection');
-        }
+          console.error('Error:', error);
+  
+          if (error.response && error.response.status === 400) {
+              alert(error.response.data.message); 
+          } else {
+              alert('An unexpected error occurred. Please try again.');
+          }
+      }
     };
   const handleChange = (e) => {
-    setService(e.target.value);
+    setServices(e.target.value);
   };
   return (
     
@@ -61,26 +66,26 @@ const Vregister = () => {
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             onChange={(e) => setEmail(e.target.value)}
+            
           />
           <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-400"></i>
         </div>
         <div className="relative">
         <select
-          name="service"
-          required
-          className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-            service ? "text-gray-800" : "text-gray-400"
-          }`}
-          // value={service}
-          onChange={(e) => setService(e.target.value)}
-        >
-          <option value="" disabled className="text-gray-400">
-            Choose your service
-          </option>
-          <option value="hostel" className="text-black">Hostel</option>
-          <option value="pet-training" className="text-black">Pet Training</option>
-          <option value="adoption" className="text-black">Adoption</option>
-        </select>
+    name="service"
+    required
+    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+    value={services}
+    onChange={(e) => setServices(e.target.value)}
+>
+    <option value="" disabled>
+        Choose your service
+    </option>
+    <option value="hostel">Hostel</option>
+    <option value="pet-training">Pet Training</option>
+    <option value="adoption">Adoption</option>
+</select>
+
 
           <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-500"></i>
         </div>

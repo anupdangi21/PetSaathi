@@ -19,7 +19,17 @@ function Nav() {
 
     const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
 
-    // Close modal when clicking outside
+    const handleLogin = () => {
+        setIsLoggedIn(true); 
+        closeModal(); 
+    };
+
+    useEffect(() => {
+        
+        const token = localStorage.getItem('authToken');
+        if (token) setIsLoggedIn(true); 
+    }, []);
+
     useEffect(() => {
         if (visible) {
             const handleClickOutside = (event) => {
@@ -36,7 +46,6 @@ function Nav() {
         }
     }, [visible]);
 
-    // Close Services dropdown when clicking outside
     useEffect(() => {
         if (dropdownVisible) {
             const handleClickOutside = (event) => {

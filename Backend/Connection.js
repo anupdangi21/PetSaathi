@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import  mongoose from 'mongoose';
 
 mongoose.connect('mongodb+srv://anupdangi28:anupdangi123@petsaathi.erpzk.mongodb.net/Login')
     .then(() => {
@@ -8,4 +8,5 @@ mongoose.connect('mongodb+srv://anupdangi28:anupdangi123@petsaathi.erpzk.mongodb
         console.error('Error connecting to MongoDB:', err);
     });
 
-module.exports = mongoose;
+
+export default mongoose;

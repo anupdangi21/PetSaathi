@@ -1,12 +1,17 @@
-const mongoose= require("mongoose")
+import  mongoose from "mongoose"
 
 const vendorregisterSchema = new mongoose.Schema({
-    organizationname: String,
-    email: String,
-    services: String,
-    username : String,
-    password: String,
-})
+    organizationname: { type: String }, 
+    email: { type: String, required: true , unique: true },
+    services: { type: String},
+    username: { type: String, unique: true }, 
+    password: { type: String  },
+    verifyOtp: { type: String, default: "" },
+    verifyOtpExipreAt: { type: Date, default: null },  
+    isAccountVerified: { type: Boolean, default: false }, 
+    resetOtp: { type: String, default: "" },
+    resetOtpExipreAt: { type: Date, default: null }, 
+});
 
 const vendorregisterModel = mongoose.model('vendor-registration', vendorregisterSchema)
-module.exports=vendorregisterModel
+export default vendorregisterModel

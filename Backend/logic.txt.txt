@@ -1,0 +1,2 @@
+smtp private code: xsmtpsib-914bdfe27772e6e1a5d89ba7ccf4e53821e8f1eb4ebd2d298e41386b76d763bb-G0sWPDdbrMa6HpCc
+apikey: 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

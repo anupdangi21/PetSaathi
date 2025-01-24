@@ -36,7 +36,7 @@ const Aside = () => {
     <div className="min-h-screen bg-gray-50 flex">
       <aside className={` 'w-full'} bg-white shadow-lg transition-all duration-300 fixed h-full`}>
         <div className="p-4 flex items-center justify-between">
-          <h1 className={`font-bold text-xl text-indigo-600 ml-8 mt-8 `}>Admin Panel</h1>
+          <h1 className={`font-bold text-xl text-orange-600 ml-8 mt-8 `}>Admin Panel</h1>
           
         </div>
         <div className=' rounded-full bg-white bg-red focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200'>

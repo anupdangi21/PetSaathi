@@ -1,0 +1,25 @@
+import express from 'express';
+import cors from 'cors';
+
+import mongoose from'./Connection.js'; // Adjust the path if needed
+import authRoutes from './Route/authRoute.js'; // Import the routes
+import cookieParser from 'cookie-parser'
+import dotenv from 'dotenv';
+dotenv.config();
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, // Allow cookies (if needed)
+  }));
+
+
+// Use the routes from authController.js
+app.use(authRoutes);
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));

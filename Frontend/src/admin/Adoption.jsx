@@ -3,22 +3,10 @@ import Aside from "../Components/aside"
 import React, { useState } from 'react';
 import { 
     BadgePlus,
-    LayoutDashboard, 
-    Package, 
-    Heart, 
-    Home, 
-    ShoppingBag, 
-    ChevronDown,
-    Bell,
-    LogOut,
-    Menu,
-    Users,
     Star,
-    Calendar,
     TrendingUp,
     DogIcon,
     CatIcon,
-    MessageSquare,
   } from 'lucide-react';
 
 const Adoption = () => {

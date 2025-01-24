@@ -45,70 +45,67 @@ const Aboutus = () => {
                 </div>
               </div>
               <div className="mt-4 ml-10 mb-4 rounded-lg">
-  <div className="mt-4 ml-8">
-    <h1 className="text-center text-3xl font-bold dark:text-black mt-16">
-      Submit a query
-    </h1>
-  </div>
+                <div className="mt-4 ml-8">
+                  <h1 className="text-center text-3xl font-bold dark:text-black mt-16">
+                    Submit a query
+                  </h1>
+                </div>
 
-  {/* Container for image and form */}
-  <div className="flex flex-wrap mt-8 items-start">
-    {/* Image Section */}
-    <div className="flex-shrink-0 ml-8">
-      <img
-        src={About3}
-        className="h-96 w-100 rounded-lg"
-        alt="About us"
-      />
-    </div>
+                <div className="flex flex-wrap mt-8 items-start">
+                  {/* Image Section */}
+                  <div className="flex-shrink-0 ml-8">
+                    <img
+                      src={About3}
+                      className="h-96 w-100 rounded-lg"
+                      alt="About us"
+                    />
+                  </div>
 
-    {/* Text and Form Section */}
-    <div className="ml-8 mt-4 flex-grow">
-      <h2 className="text-2xl min-h-24 text-left mb-6">Help us improve</h2>
-      <form className="w-full max-w-sm">
-        <div className="mb-4">
-          <label
-            className="block text-gray-500 font-bold mb-2"
-            htmlFor="inline-full-name"
-          >
-            Area for improvement
-          </label>
-          <input
-            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            id="inline-full-name"
-            type="text"
-          />
-        </div>
+                  {/* Text and Form Section */}
+                  <div className="ml-8 mt-4 flex-grow">
+                    <h2 className="text-2xl min-h-24 text-left mb-6">Help us improve</h2>
+                    <form className="w-full max-w-sm">
+                      <div className="mb-4">
+                        <label
+                          className="block text-gray-500 font-bold mb-2"
+                          htmlFor="inline-full-name"
+                        >
+                          Area for improvement
+                        </label>
+                        <input
+                          className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                          id="inline-full-name"
+                          type="text"
+                        />
+                      </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-500 font-bold mb-2"
-            htmlFor="inline-suggestion"
-          >
-            Your suggestion
-          </label>
-          <textarea
-            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            id="inline-suggestion"
-            rows="4"
-          ></textarea>
-        </div>
+                      <div className="mb-4">
+                        <label
+                          className="block text-gray-500 font-bold mb-2"
+                          htmlFor="inline-suggestion"
+                        >
+                          Your suggestion
+                        </label>
+                        <textarea
+                          className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                          id="inline-suggestion"
+                          rows="4"
+                        ></textarea>
+                      </div>
 
-        <div className="flex items-center justify-between">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-    
-            
-        </main>
+                      <div className="flex items-center justify-between">
+                        <button
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                          type="submit"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+          </main>
       <footer>
         <Footer />
       </footer>

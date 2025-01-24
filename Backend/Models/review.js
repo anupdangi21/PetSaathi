@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import  mongoose from 'mongoose'
 
 const reviewSchema = new mongoose.Schema({
     username: String,
@@ -7,4 +7,4 @@ const reviewSchema = new mongoose.Schema({
 })
 
 const reviewModel = mongoose.model('reviews', reviewSchema)
-module.exports = reviewModel
+export default reviewModel

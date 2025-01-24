@@ -5,8 +5,7 @@ import Regbg from "../Images/rg.png"
 import Header from "../Components/Navbar"
 import App from "../Main/App"
 
-const RegisterForm = () => {
-  const [name, setName] = useState(''); 
+const RegisterForm = () => { 
   const [email, setEmail] = useState('');
   const [username,setUsername]=useState('')
     const [password, setPassword] = useState(''); 
@@ -16,10 +15,9 @@ const RegisterForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          console.log("pug")
-            const result = await axios.post('http://localhost:3000/register', { name,email,username, password });
+            const result = await axios.post('http://localhost:3000/register', { email,username, password });
             console.log(result);
-            if (result.status === 200) {
+            if (result.status === 201) {
               alert('Registration success.');
               navigate('/')
             }
@@ -35,17 +33,7 @@ const RegisterForm = () => {
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <h1 className="text-2xl font-bold text-gray-800 text-center">Register here</h1>
-          <div className="relative">
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              onChange={(e) => setName(e.target.value)}
-            />
-            <i className="fa-solid fa-user absolute right-3 top-3 text-gray-400"></i>
-          </div>
+          
 
           <div className="relative">
             <input
