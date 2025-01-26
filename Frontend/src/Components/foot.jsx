@@ -1,6 +1,6 @@
 const foot = () => {
   return (
-    <footer className="bg-orange-200 text-black py-2">
+    <footer className="bg-orange-200 text-black  py-2">
       <div className="max-w-screen-xl mx-auto px-2">
         {/* Contact Section */}
         <div className="flex flex-col items-center ">

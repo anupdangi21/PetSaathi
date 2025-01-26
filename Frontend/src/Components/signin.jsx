@@ -1,28 +1,41 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../Context/AppContext";
+import Swal from "sweetalert2";
 
 const Signin = ({ closeModal }) => {
-    const [username, setName] = useState(''); 
-    const [password, setPassword] = useState(''); 
-    const navigate = useNavigate(); 
+    const { login, backendUrl } = useContext(AppContext);
+    const [username, setName] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        axios.defaults.withCredentials = true;
         try {
-            const result = await axios.post('http://localhost:3000/signin', { username, password });
-            
+            const result = await axios.post( "http://localhost:3000/signin", { username, password });
+
             if (result.data && result.data.role) {
-                const { role, token } = result.data;
-            
-                if (role === 'user') {
+                const { role, token, user } = result.data;
+
+                if (role === "user") {
                     console.log("User login success");
-                    alert("User login success");
+                    login(token, user); // Use the `login` method from context
+                    Swal.fire({
+                        icon: "success",
+                        title: "User Login Successfully",
+                        text: "You are successfully logged in as user.",
+                    });
                     navigate("/"); // Redirect to user home
-                    
-                } else if (role === 'vendor') {
+                } else if (role === "vendor") {
                     console.log("Vendor login success");
-                    alert("Vendor login success");
+                    login(token, user); // Update auth state
+                    Swal.fire({
+                        icon: "success",
+                        title: "Vendor Login Successfully",
+                        text: "You are successfully logged in as Vendor.",
+                    });
                     navigate("/dashboard"); // Redirect to vendor dashboard
                 }
             } else {
@@ -38,7 +51,7 @@ const Signin = ({ closeModal }) => {
         <div className="bg-white shadow-md rounded-lg p-4 min-h-[40vh] w-full max-w-md mx-auto">
             <h1 className="text-2xl font-bold text-gray-800 text-center mb-4">Login</h1>
             <form onSubmit={handleSubmit}>
-                <div className="flex flex-col gap-4"> 
+                <div className="flex flex-col gap-4">
                     <div className="relative">
                         <input
                             id="username"
@@ -69,7 +82,9 @@ const Signin = ({ closeModal }) => {
                         <label className="flex items-center text-sm text-gray-600">
                             <input type="checkbox" className="mr-2" /> Remember me
                         </label>
-                        <a href="#" className="text-sm text-blue-500 hover:underline">Forget Password?</a>
+                        <a href="#" className="text-sm text-blue-500 hover:underline">
+                            Forget Password?
+                        </a>
                     </div>
 
                     <button
@@ -82,7 +97,9 @@ const Signin = ({ closeModal }) => {
                     <div className="text-center">
                         <p className="text-sm text-gray-600">
                             Don't have an account?
-                            <a href="./register" className="text-blue-500 hover:underline" > Register</a>
+                            <a href="./register" className="text-blue-500 hover:underline">
+                                Register
+                            </a>
                         </p>
                     </div>
                 </div>

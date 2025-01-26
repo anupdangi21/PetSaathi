@@ -5,11 +5,12 @@ import App from './Main/App.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import Route from'../src/Routers/Router.jsx'
 import Vendor from './VendorRegistration/Vregister.jsx'
-
+import { AppContextProvider } from './Context/AppContext.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <AppContextProvider>
     <Route />
-
+    </AppContextProvider>
   </StrictMode>,
 )
 

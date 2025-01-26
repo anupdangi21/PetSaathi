@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Image1 from "../Images/vendor-register.jpeg"
 import Navbar from "../Components/Navbar"
+import Swal from "sweetalert2";
 
 const Vregister = () => {
 
@@ -17,10 +18,14 @@ const Vregister = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await axios.post('http://localhost:3000/registration', { organizationname,email,services,username, password });
+            const result = await axios.post('http://localhost:3000/registration', { organizationname,email,services,username, password }, { withCredentials: true });
             console.log(result);
             if (result.status === 200) {
-              alert('Registration success.');
+              Swal.fire({
+                title: "Vendor Registered Successfully",
+                icon: "success",
+                text: "Your are successfully registered to PetSaathi.",
+              });
               navigate('/dashboard')
             }
         } catch (error) {
@@ -29,7 +34,11 @@ const Vregister = () => {
           if (error.response && error.response.status === 400) {
               alert(error.response.data.message); 
           } else {
-              alert('An unexpected error occurred. Please try again.');
+              Swal.fire({
+                      icon: "error",
+                      title: "Oops...",
+                      text: "Something went wrong while registration!",
+                    });
           }
       }
     };
@@ -72,11 +81,11 @@ const Vregister = () => {
         </div>
         <div className="relative">
         <select
-    name="service"
-    required
-    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-    value={services}
-    onChange={(e) => setServices(e.target.value)}
+          name="service"
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          value={services}
+          onChange={(e) => setServices(e.target.value)}
 >
     <option value="" disabled>
         Choose your service

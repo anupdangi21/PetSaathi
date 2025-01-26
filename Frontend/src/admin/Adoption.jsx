@@ -1,4 +1,4 @@
-
+import { useNavigate } from "react-router-dom"
 import Aside from "../Components/aside"
 import React, { useState } from 'react';
 import { 
@@ -12,7 +12,12 @@ import {
 const Adoption = () => {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  return (
+    const navigate = useNavigate();
+
+  const handleAddPet = () => {
+  navigate("/dashboard/addpet");
+  }
+  return (  
     <div className="min-h-screen bg-gray-50 flex">
     <aside>
         <Aside />
@@ -22,7 +27,9 @@ const Adoption = () => {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-2xl font-semibold text-gray-800 ">Welcome to Adoption Dashboard</h2>
           <h3 className=" grid ml text-2xl font-semibold text-gray-800 place-items-end mr-12">Upload a pet
-          <button className=" grid bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 place-items-end m-8">
+          <button
+          onClick={handleAddPet}
+          className=" grid bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 place-items-end m-8">
             <BadgePlus /> 
           </button>
           </h3>
@@ -30,7 +37,7 @@ const Adoption = () => {
         </div>
         <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
           <h2 className=" grid ml text-2xl font-semibold text-gray-800 place-items-end">Recent Orders </h2>
-          <p classname="grid mt-2 place-items-end ">hello</p>
+          <p className="grid mt-2 place-items-end ">hello</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Bookings */}
@@ -79,11 +86,10 @@ const Adoption = () => {
           </div>
           </div>
       </main>
-
-        </div>
-      
-    
+    </div>
+ 
   )
 }
+
 
 export default Adoption

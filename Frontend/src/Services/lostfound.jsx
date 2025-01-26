@@ -2,8 +2,18 @@ import React from 'react'
 import { PawPrint, Search, AlertCircle } from 'lucide-react';
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
+import { useNavigate } from 'react-router-dom';
 
 const lostfound = () => {
+
+    const Navigate = useNavigate();
+
+    const handlelostPet = () => {
+        Navigate("/lostfound/lost");
+        }
+        const handlefoundPet = () => {
+            Navigate("/lostfound/found");
+            }
   return (
     <div>
         <header>
@@ -33,7 +43,9 @@ const lostfound = () => {
                     <p className="text-gray-600 mb-6">
                         Report your missing pet and let our community help you find them.
                     </p>
-                    <button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-300">
+                    <button
+                        onClick={handlelostPet}
+                        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-300">
                         Report Lost Pet
                     </button>
                     </div>
@@ -49,7 +61,9 @@ const lostfound = () => {
                     <p className="text-gray-600 mb-6">
                         Help reunite a found pet with their worried family.
                     </p>
-                    <button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-300">
+                    <button 
+                    onClick={handlefoundPet}
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-300">
                         Report Found Pet
                     </button>
                     </div>

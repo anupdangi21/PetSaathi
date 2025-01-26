@@ -1,4 +1,5 @@
 .header {
+  position: relative;
   width:100%;
   height:12vh;
   display: flex;
@@ -40,16 +41,30 @@
   border: 1px solid #ffffff; 
   border-radius: 50px; 
 }
+body.modal-open {
+  overflow: hidden;
+}
 
-.login-btn {
-  margin-right: 80px;
+/* .login-btn {
+  margin-left: 1px;
   padding: 8px 16px; 
   background-color: #e6ae72; 
   color: white; 
   border: none; 
   border-radius: 55px; 
   cursor: pointer; 
-}
+} */
+
+ .login-btn {
+  margin-right: 25px;
+  padding: 8px 16px; 
+  background-color: #e6ae72; 
+  color: white; 
+  border: none; 
+  border-radius: 55px; 
+  cursor: pointer; 
+  margin-left: auto;
+ }
 
 .login-btn:hover {
   background-color: #dbc9b5; 

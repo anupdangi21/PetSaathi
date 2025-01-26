@@ -13,6 +13,9 @@ import Hostel from "../Services/Hostel";
 import Training from "../Services/PetTraining";
 import Lostfound from "../Services/lostfound";
 import AdminAdoption from "../admin/Adoption"
+import AddPet from "../admin/addPets"
+import LostPet from "../Pages/Lost"
+import FoundPet from "../Pages/Found"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -41,7 +44,7 @@ function AppRouter() {
       element: (
         // <ProtectedRoute>
           <Dashboard />
-        // </ProtectedRoute>
+        // {/* </ProtectedRoute> */}
       ),
     },
     {
@@ -67,6 +70,18 @@ function AppRouter() {
     {
       path:"/dashboard/adoption",
       element: <AdminAdoption />
+    },
+    {
+      path:"/dashboard/addpet",
+      element: <AddPet />
+    },
+    {
+      path:"/lostfound/lost",
+      element: <LostPet />
+    },
+    {
+      path:"/lostfound/found",
+      element: <FoundPet />
     }
   ]);
 

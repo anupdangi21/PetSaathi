@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useContext, u } from 'react';
 import Icon from "../Images/logo.png"
+import { AppContext } from "../Context/AppContext.jsx";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+
 import { 
   LayoutDashboard, 
   Package,
@@ -15,6 +19,8 @@ import {
 
 const Aside = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  
+  const navigate = useNavigate();
 
   const services = [
     { name: 'Adoption', icon: Heart },
@@ -25,12 +31,14 @@ const Aside = () => {
 
   //handling vendor logout
 
-  const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-      window.location.href = "/";
-    }
-  };
+  // const handleLogout = () => {
+  //   const confirmLogout = window.confirm("Are you sure you want to logout?");
+  //   if (confirmLogout) {
+  //     window.location.href = "/";
+  //   }
+  // };
+
+  const { isAuthenticated, userData, logout } = useContext(AppContext);
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -41,12 +49,12 @@ const Aside = () => {
         </div>
         <div className=' rounded-full bg-white bg-red focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200'>
           <img src={Icon} className='rounded-lg  w-24 h-24 ml-8'></img>
-            <p className='ml-12 text-lg'>Hi Admin</p>
+            <p className='ml-12 text-lg'>Hi <span className='text-red-500'> {userData?.username}</span></p>
           </div>
         
         <nav className="mt-8">
           <div className="px-4">
-            <a href="/dashboard" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+            <a href="/dashboard" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <LayoutDashboard size={20} />
               {<span>Dashboard</span>}
             </a>
@@ -54,7 +62,7 @@ const Aside = () => {
             <div className="relative">
               <button 
                 onClick={() => setIsServicesOpen(!isServicesOpen)}
-                className="w-full flex items-center justify-between text-gray-700 p-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                className="w-full flex items-center justify-between text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <Package size={20} />
@@ -69,7 +77,7 @@ const Aside = () => {
                     <a
                       key={service.name}
                       href="/dashboard/adoption"
-                      className="flex items-center space-x-3 text-gray-600 p-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                      className="flex items-center space-x-3 text-gray-600 p-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
                     >
                       {service.icon && <service.icon size={18} />}
                       <span>{service.name}</span>
@@ -81,12 +89,28 @@ const Aside = () => {
           </div>
 
           <div className="absolute bottom-0 w-full p-4 border-t">
-            <button className="w-full flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+            <button className="w-full flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <Bell size={20} />
               { <span>Notifications</span>}
             </button>
             <button 
-              onClick={handleLogout}
+              onClick={()=>{
+                Swal.fire({
+                    title: "Are you sure you want to sign out?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "  Yes",
+                    cancelButtonText: "No",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        logout(); // Call the logout function
+                        Swal.fire("Signed out!", "You have been successfully signed out.", "success");
+                        navigate("/")
+                    }
+                });
+              }}
               className="w-full flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
             >
               <LogOut size={20} />

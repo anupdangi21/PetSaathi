@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Regbg from "../Images/rg.png"
 import Header from "../Components/Navbar"
 import App from "../Main/App"
+import Swal from 'sweetalert2';
 
 const RegisterForm = () => { 
   const [email, setEmail] = useState('');
@@ -15,10 +16,14 @@ const RegisterForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await axios.post('http://localhost:3000/register', { email,username, password });
+            const result = await axios.post('http://localhost:3000/register', { email,username, password }, { withCredentials: true });
             console.log(result);
             if (result.status === 201) {
-              alert('Registration success.');
+              Swal.fire({
+                  icon: "success",
+                  title: "Registration Complete",
+                  text: "Please login using your username and password.",
+              });
               navigate('/')
             }
         } catch (error) {
