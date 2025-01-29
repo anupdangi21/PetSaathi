@@ -22,7 +22,7 @@ export const AppContextProvider = (props) => {
             "user_data",
             JSON.stringify({ userToken: newToken, user: newData })
         );
-        setToken(newToken); // Move these lines inside the login function
+        setToken(newToken); 
         setUserData(newData);
         setisAuthenticated(true);
     };

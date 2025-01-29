@@ -3,10 +3,10 @@ import authController from '../Controllers/authController.js';
 import petController from '../Controllers/addPet.js';
 import userAuth from '../Middleware/userAuth.js';
 import found from "../Controllers/foundPet.js"
-
+import upload from "../multerConfig.js";
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
-const {petList, getPetlist}= petController;
+const {petList, getPetlist, updatePet}= petController;
 const {petFoundData,getPetFound }= found;
 
 const authRouter = express.Router();
@@ -23,11 +23,12 @@ authRouter.post("/sendresetotp", sendResetOtp);
 authRouter.post("/reset-password", resetPassword);
 
 // authRouter.post("/logout", logout);
-authRouter.post("/petlisting", petList)
+authRouter.post("/petlisting",upload.single("Image"), petList)
 authRouter.get("/petlisting", getPetlist)
+authRouter.put("/petlisting/:id", upload.single("Image"), updatePet);
 
 //router for posting the found pet
-authRouter.post("petfound", petFoundData)
+authRouter.post("/petfound",upload.single("Image"), petFoundData)
 authRouter.get("/petfound", getPetFound)
 
 export default authRouter;

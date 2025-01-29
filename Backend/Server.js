@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import path from "path";
+
 import mongoose from'./Connection.js'; 
 import authRoutes from './Route/authRoute.js'; 
 import cookieParser from 'cookie-parser'
@@ -18,6 +20,7 @@ app.use(cors({
 
 
 // Use the routes from authController.js
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(authRoutes);
 app.use('/user',userRouter)
 

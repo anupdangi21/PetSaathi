@@ -1,66 +1,118 @@
-import React, { useState } from "react";
+import { React, useState, useEffect,useRef } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Aside from "../Components/aside";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const AddPets = () => {
-      const Navigate = useNavigate();
-  
+  const Navigate = useNavigate();
+  const location = useLocation();
+  const { state } = location;
+  const isEdit = state?.isEdit;
+  const petData = state?.petData;
+
+  // State variables
   const [petname, setPetname] = useState("");
-  const [Categories, setCategories] = useState("");
+  const [Category, setCategory] = useState("");
   const [Description, setDescription] = useState("");
   const [Age, setPetAge] = useState("");
   const [Location, setLocation] = useState("");
+  const [Image, setImage] = useState(null);
+  const [petId, setPetId] = useState("");
+  const fileInputRef = useRef(null);
+
+  // Pre-fill form for edit mode
+  useEffect(() => {
+    if (isEdit && petData) {
+      setPetname(petData.petname || "");
+      setCategory(petData.Category || "");
+      setDescription(petData.Description || "");
+      setPetAge(petData.Age || "");
+      setLocation(petData.Location || "");
+      setPetId(petData._id || "");
+    }
+  }, [isEdit, petData]);
 
   const handlebackButton = () => {
     Navigate("/dashboard/adoption");
-}
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!petname || !Categories || !Description || !Age || !Location) {
+    
+    // Get user data from localStorage
+    const userData = JSON.parse(localStorage.getItem('user_data'));
+    if (!userData?.user?.email) {
       Swal.fire({
         icon: "error",
-        title: "Validation Error",
-        text: "Please fill all required fields.",
+        title: "Authentication Error",
+        text: "User email not found. Please login again.",
       });
       return;
     }
-
+  
+    const formData = new FormData();
+    formData.append("petname", petname);
+    formData.append("Category", Category);
+    formData.append("Description", Description);
+    formData.append("Age", Age);
+    formData.append("Location", Location);
+    formData.append("email", userData.user.email); // Email from localStorage
+    
+    // Only append new image if it exists
+    if (Image) {
+      formData.append("Image", Image);
+    }
+  
     try {
-      const result = await axios.post("http://localhost:3000/petlisting", {
-        petname,
-        Categories,
-        Description,
-        Age,
-        Location,
+      const url = isEdit 
+        ? `http://localhost:3000/petlisting/${petId}`
+        : 'http://localhost:3000/petlisting';
+  
+      const result = await axios({
+        method: isEdit ? 'put' : 'post',
+        url: url,
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       if (result.status === 200) {
         Swal.fire({
           icon: "success",
-          title: "Pet Added Successfully",
-          text: "Your pet has been added to the pet listing.",
+          title: isEdit ? "Pet Updated" : "Pet Added",
+          text: isEdit 
+            ? "Pet details updated successfully" 
+            : "Pet added to listing successfully",
         });
 
-        setPetname("");
-        setCategories("");
-        setDescription("");
-        setPetAge("");
-        setLocation("");
+        if (!isEdit) {
+          // Reset form for new entries
+          setPetname("");
+          setCategory("");
+          setDescription("");
+          setPetAge("");
+          setLocation("");
+          setImage(null);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+        }
+        
+        Navigate("/dashboard/adoption");
       }
     } catch (error) {
+      console.error(error);
       Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: "Something went wrong while uploading the pet!",
+        title: "Error",
+        text: isEdit 
+          ? "Failed to update pet details" 
+          : "Failed to add pet to listing",
       });
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -69,7 +121,7 @@ const AddPets = () => {
       </aside>
       <main className="w-full md:w-[800px] mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-semibold mb-6 text-center">
-          Upload A New <span className="text-orange-600">Pet</span>
+          {isEdit ? "Edit" : "Upload A New"} <span className="text-orange-600">Pet</span>
         </h2>
 
         <div>
@@ -97,12 +149,10 @@ const AddPets = () => {
                 </label>
                 <select
                   className="select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  value={Categories}
-                  onChange={(e) => setCategories(e.target.value)}
+                  value={Category}
+                  onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option disabled value="">
-                    Select a category
-                  </option>
+                  <option value="">Select a category</option>
                   <option value="Dog">Dog</option>
                   <option value="Cat">Cat</option>
                   <option value="Other">Other Pets</option>
@@ -122,6 +172,8 @@ const AddPets = () => {
                 />
               </div>
             </div>
+
+            {/* Age */}
             <div className="form-control mb-6 w-1/2">
               <label className="label">
                 <span className="label-text font-medium text-gray-700">Age*</span>
@@ -130,11 +182,13 @@ const AddPets = () => {
                 type="text"
                 value={Age}
                 placeholder="Enter Pet Age"
-                className=" mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 onChange={(e) => setPetAge(e.target.value)}
               />
             </div>
-            <div className="form-control mb-6 mb-6 w-1/2" >
+
+            {/* Location */}
+            <div className="form-control mb-6 w-1/2">
               <label className="label">
                 <span className="label-text font-medium text-gray-700">Location*</span>
               </label>
@@ -142,12 +196,27 @@ const AddPets = () => {
                 type="text"
                 value={Location}
                 placeholder="Enter Your location"
-                className=" mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 onChange={(e) => setLocation(e.target.value)}
               />
             </div>
 
-            {/* Submit Button */}
+            {/* Image Upload */}
+            <div className="form-control flex-1 w-1/2">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">
+                  {isEdit ? "Update pet image" : "Upload pet image"}
+                </span>
+              </label>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="mt-2 ml-4 input input-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setImage(e.target.files[0])}
+              />
+            </div>
+
+            {/* Submit Buttons */}
             <div className="flex justify-between mt-6">
               <button
                 type="button"  
@@ -160,7 +229,7 @@ const AddPets = () => {
                 type="submit" 
                 className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:outline-none transition duration-300"
               >
-                Upload
+                {isEdit ? "Update" : "Upload"}
               </button>
             </div>
           </form>

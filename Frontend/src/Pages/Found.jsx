@@ -1,143 +1,186 @@
-import React from 'react'
-import Navbar from '../Components/Navbar'
-import Footer from "../Components/foot"
+import { React, useState, } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import Navbar from '../Components/Navbar';
+import Footer from "../Components/foot";
+import axios from 'axios';
+import Swal from "sweetalert2";
 
 const Found = () => {
-    const Navigate = useNavigate();
+  const [Category, setCategory] = useState('');
+  const [Image, setImage] = useState('');
+  const [Description, setDescription] = useState('');
+  const [Color, setColor] = useState('');
+  const [Age, setAge] = useState('');
+  const [Location, setLocation] = useState('');
 
-    const handlebackButton = () => {
-        Navigate("/services/lostfound");
-    }
+  const Navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handlebackButton = () => {
+    Navigate("/services/lostfound");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("Category", Category);
+    formData.append("Image", Image);
+    formData.append("Description", Description);
+    formData.append("Color", Color);
+    formData.append("Age", Age);
+    formData.append("Location", Location);
+
+    try {
+      const result = await axios.post('http://localhost:3000/petfound', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", 
+        },
+      });
+
+      console.log(result);
+
+      if (result.status === 200) {
+        Swal.fire({
+          title: "Pet reported successfully",
+          icon: "success",
+          text: "Found pet successfully reported",
+        });
+        setCategory('')
+        setImage('')
+        setDescription('')
+        setColor('')
+        setAge('')
+        setLocation('')
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong while uploading!",
+      });
     }
+  };
+
   return (
-    <div className='container'>
-        <header>
-            <Navbar />
-        </header>
-        <main className="w-full md:w-[800px] mx-auto bg-white rounded-lg shadow-lg p-6">
+    <div className="container">
+      <header>
+        <Navbar />
+      </header>
+      <main className="w-full md:w-[800px] mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-semibold mb-6 text-center">
           Report <span className="text-orange-600">Found</span> Pet
         </h2>
 
-        <div>
-          <form onSubmit={handleSubmit}>
-            {/* Categories and Description */}
-            <div className="flex-wrap gap-6">
-              {/* Categories */}
-              <div className="flex gap-6">
-                <div className="form-control flex-1">
-                  <label className="label">
-                    <span className="label-text font-medium text-gray-700">Category*</span>
-                  </label>
-                  <select
-                    className="mt-2 ml-4 select select-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  //   value={Categories}
-                    onChange={(e) => setCategories(e.target.value)}
-                  >
-                    <option disabled value="">
-                      Select a category
-                    </option>
-                    <option value="Dog">Dog</option>
-                    <option value="Cat">Cat</option>
-                    <option value="Other">Other Pets</option>
-                  </select>
-                </div>
-
-                <div className="form-control flex-1">
-                  <label className="label">
-                    <span className="label-text font-medium text-gray-700">Upload pet image*</span>
-                  </label>
-                    <input type='file'
-                      className=" mt-2 ml-4  input input-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    ></input>
-                </div>
-              </div>
+        <form onSubmit={handleSubmit}>
+          <div className="flex-wrap gap-6">
+            <div className="flex gap-6">
               <div className="form-control flex-1">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">Description*</span>
+                  <span className="label-text font-medium text-gray-700">Category*</span>
                 </label>
-                <textarea
-                  className="textarea textarea-bordered w-full h-[110px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                //   value={Description}
-                  placeholder="Add pet description here!"
-                //   onChange={(e) => setDescription(e.target.value)}
+                <select
+                value={Category}
+                  className="mt-2 ml-4 select select-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  onChange={(e) => setCategory(e.target.value)} // Correctly updating Category
+                >
+                  <option value="">Select a category</option>
+                  <option value="Dog">Dog</option>
+                  <option value="Cat">Cat</option>
+                  <option value="Other">Other Pets</option>
+                </select>
+              </div>
+
+              <div className="form-control flex-1">
+                <label className="label">
+                  <span className="label-text font-medium text-gray-700">Upload pet image*</span>
+                </label>
+                <input
+                  type="file"
+                  value={Image}
+                  className="mt-2 ml-4 input input-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  onChange={(e) => setImage(e.target.files[0])} // Set the file
                 />
               </div>
-              
             </div>
-            <div className="form-control mb-6 w-1/2" >
+            <div className="form-control flex-1">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">Description*</span>
+              </label>
+              <textarea
+              value={Description}
+                className="textarea textarea-bordered w-full h-[110px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Add pet description here!"
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
+            <div className="form-control mb-6 w-1/2">
               <label className="label">
                 <span className="label-text font-medium text-gray-700">Pet Color*</span>
               </label>
               <input
                 type="text"
-                // value={Location}
+                value={Color}
                 placeholder="Enter the color of the pet"
-                className=" mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                // onChange={(e) => setLocation(e.target.value)}
+                className="mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setColor(e.target.value)}
               />
             </div>
+
             <div className="form-control mb-6 w-1/2">
               <label className="label">
                 <span className="label-text font-medium text-gray-700">Pet Estimated Age*</span>
               </label>
               <select
-                  className="select mt-2 select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                //   value={Categories}
-                placeholder="Select age:"
-                  onChange={(e) => setCategories(e.target.value)}
-                >
-                  <option value="text-color-white-50" disabled >
-                    Select estimated age: 
-                  </option>
-                  <option value="3month">3Months</option>
-                  <option value="">6-9Months</option>
-                  <option value="1year">1 year</option>
-                  <option value="">Between 1-2 years</option>
-                  <option value="">Above 2 years</option>
-
-                </select>
+              value={Age}
+                className="select mt-2 select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setAge(e.target.value)}
+              >
+                <option value="">Select estimated age:</option>
+                <option value="3month">3Months</option>
+                <option value="6-9Months">6-9Months</option>
+                <option value="1year">1 year</option>
+                <option value="1-2years">Between 1-2 years</option>
+                <option value="above2years">Above 2 years</option>
+              </select>
             </div>
-            <div className="form-control mb-6 mb-6 w-1/2" >
+
+            <div className="form-control mb-6 w-1/2">
               <label className="label">
                 <span className="label-text font-medium text-gray-700">Location*</span>
               </label>
               <input
                 type="text"
-                // value={Location}
+                value={Location}
                 placeholder="Enter location where you found pet"
-                className=" mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                // onChange={(e) => setLocation(e.target.value)}
+                className="mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
 
             <div className="flex justify-between mt-6">
-            <button
+              <button
+              type="button"
                 onClick={handlebackButton}
                 className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:outline-none transition duration-300"
-            >
+              >
                 Back
-            </button>
-            <button
+              </button>
+              <button
                 type="submit"
                 className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:outline-none transition duration-300"
-            >
+              >
                 Post
-            </button> 
+              </button>
+            </div>
             </div>
           </form>
-        </div>
-      </main>
+        </main>
       <footer>
         <Footer />
       </footer>
     </div>
-  )
+  );
 }
 
-export default Found
+export default Found;

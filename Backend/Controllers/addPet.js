@@ -1,21 +1,21 @@
 import mongoose from "../Connection.js";
 import cors from "cors";
 import express from "express";
+import multer from "multer";
 import petListModel from "../Models/addPet.js";
+import upload from "../multerConfig.js"
 
-const router = express.Router();
-const app = express();
-router.use(express.json())
-router.use(cors());
+
 
 const petList = async(req,res)=>{
     try {
-        const {petname, Categories, Description, Age, Location } = req.body;
-        if(!petname || !Categories || !Description || !Age || !Location){
+        const {petname, Category, Description, Age, Location, email } = req.body;
+        const Image = req.file ? req.file.path.replace(/\\/g, "/") : null;
+        if(!petname || !Category || !Description || !Age || !Location || !Image){
             return res.status(400).json({message: "please fill all the empty fields"})
             }
             const pet = new petListModel({
-                petname, Categories, Description, Age, Location
+                petname, Category, Description, Age, Location, Image, email
             });
             await pet.save();
 
@@ -27,10 +27,41 @@ const petList = async(req,res)=>{
 
 const getPetlist = async(req, res)=>{
     try {
-        const getPetData= await petListModel.find();
+        const getPetData= await petListModel.find().sort({ createdAt: -1 });;
         res.status(200).json({success: true, data: getPetData})
     } catch (error) {
     res.json(400).json({success: false, message:"cannot find the pets in the database"})
     }
 }
-export default {petList, getPetlist };
+
+const updatePet = async (req, res) => {
+    try {
+        const { petname, Category, Description, Age, Location } = req.body;
+        const petId = req.params.id;  // Pet ID from the URL
+
+        // Check if the pet exists
+        const pet = await petListModel.findById(petId);
+
+        if (!pet) {
+            return res.status(404).json({ success: false, message: "Pet not found" });
+        }
+
+        // Update pet details
+        pet.petname = petname || pet.petname;
+        pet.Category = Category || pet.Category;
+        pet.Description = Description || pet.Description;
+        pet.Age = Age || pet.Age;
+        pet.Location = Location || pet.Location;
+
+        if (req.file) {
+            pet.Image = req.file.path.replace(/\\/g, "/");
+        }
+        await pet.save();
+        res.status(200).json({ success: true, message: "Pet updated successfully", data: pet });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export default {petList, getPetlist, updatePet};

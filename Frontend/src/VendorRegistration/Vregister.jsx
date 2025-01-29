@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { React, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Image1 from "../Images/vendor-register.jpeg"

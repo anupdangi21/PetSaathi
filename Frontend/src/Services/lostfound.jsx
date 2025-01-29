@@ -10,7 +10,7 @@ const lostfound = () => {
 
     const handlelostPet = () => {
         Navigate("/lostfound/lost");
-        }
+    }
         const handlefoundPet = () => {
             Navigate("/lostfound/found");
             }

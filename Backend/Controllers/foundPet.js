@@ -1,29 +1,37 @@
 import express from "express";
 import petFound from "../Models/foundPet.js";
 import upload from "../multerConfig.js";
+import multer from "multer";
+import petListModel from "../Models/addPet.js";
 
-const app = express();
 
-const petFoundData = async(req, res)=>{
+const petFoundData = async (req, res) => {
     try {
-        const {Category, Image, Description, Color, Age, Location} = req.body;
-        if(!Category || !Image || !Description || !Color || !Age || !Location){
-            return res.status(400).json({message:"validation error please fill all fields"})
+        const {Category, Description, Color,Age, Location } = req.body; 
+        const Image = req.file ? req.file.path.replace(/\\/g, "/") : null; 
+
+        if (!Category || !Image || !Description || !Color || !Age || !Location) {
+            return res.status(400).json({ message: "Validation error: Please fill all fields correctly" });
         }
+
         const foundPet = new petFound({
             Category, Image, Description, Color, Age, Location
-        })
+        });
+
         await foundPet.save();
-        res.status(200).json({success: true, message: "Pet successfully reported"})
+        res.status(200).json({ success: true, message: "Pet successfully reported" });
+
     } catch (error) {
-        res.status(400).json({success: false, message: error.message})
+        console.error("Error in petFoundData:", error);
+        res.status(400).json({ success: false, message: error.message });
     }
-}
+};
+
 
 const getPetFound = async(req, res)=>{
     try {
-        const petFound = await petFound.find()
-        res.status(200).json({status: ture, message: "Pet successfuly found"})
+        const petFound = await petListModel.find()
+        res.status(200).json({status: true, message: "Pet successfuly found"})
     } catch (error) {
         return res.status(400).json({message: false, message:error.message})
     }

@@ -42,14 +42,15 @@ const Aside = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <aside className={` 'w-full'} bg-white shadow-lg transition-all duration-300 fixed h-full`}>
-        <div className="p-4 flex items-center justify-between">
-          <h1 className={`font-bold text-xl text-orange-600 ml-8 mt-8 `}>Admin Panel</h1>
+      <aside className={` 'w-auto'} bg-white shadow-lg transition-all duration-300 fixed h-full`}>
+        <div className="ml-24 px-4 py-4 flex items-center justify-between">
+
           
         </div>
         <div className=' rounded-full bg-white bg-red focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200'>
-          <img src={Icon} className='rounded-lg  w-24 h-24 ml-8'></img>
-            <p className='ml-12 text-lg'>Hi <span className='text-red-500'> {userData?.username}</span></p>
+        <h1 className={` ml-12 font-bold text-xl text-orange-600 mt-2 `}>Admin Panel</h1>
+          <img src={Icon} className='rounded-lg  w-24 h-24 ml-12 mt-4 '></img>
+            <p className=' ml-4 text-lg'>Welcome <span className='text-red-500'> {userData?.username}    </span></p>
           </div>
         
         <nav className="mt-8">
