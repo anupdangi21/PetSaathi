@@ -1,3 +1,4 @@
+import express from "express"
 import jwt from "jsonwebtoken"
 
 
@@ -24,5 +25,6 @@ const userAuth = async (req, res, next )=>{
 
     }
 }
+
 
 export default userAuth;

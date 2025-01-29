@@ -35,10 +35,6 @@ const Adoption = () => {
           </h3>
           <p className="mt-2 text-gray-600 ">Click on the + button to start listing your pets.</p>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
-          <h2 className=" grid ml text-2xl font-semibold text-gray-800 place-items-end">Recent Orders </h2>
-          <p className="grid mt-2 place-items-end ">hello</p>
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Bookings */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -51,19 +47,16 @@ const Adoption = () => {
                 {
                   name: "Golden Retriever - Max",
                   date: "Today, 2:00 PM",
-                  status: "Confirmed",
                   icon: DogIcon
                 },
                 {
                   name: "Persian Cat - Luna",
                   date: "Today, 11:30 AM",
-                  status: "Pending",
                   icon: CatIcon
                 },
                 {
                   name: "Labrador - Charlie",
                   date: "Yesterday, 4:15 PM",
-                  status: "Confirmed",
                   icon: DogIcon
                 }
               ].map((booking, index) => (

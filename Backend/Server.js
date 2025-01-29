@@ -1,8 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-
-import mongoose from'./Connection.js'; // Adjust the path if needed
-import authRoutes from './Route/authRoute.js'; // Import the routes
+import mongoose from'./Connection.js'; 
+import authRoutes from './Route/authRoute.js'; 
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv';
 import userRouter from './Route/userRoutes.js';

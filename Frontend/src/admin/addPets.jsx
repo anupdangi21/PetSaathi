@@ -2,13 +2,21 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Aside from "../Components/aside";
+import { useNavigate } from 'react-router-dom';
+
 
 const AddPets = () => {
+      const Navigate = useNavigate();
+  
   const [petname, setPetname] = useState("");
   const [Categories, setCategories] = useState("");
   const [Description, setDescription] = useState("");
   const [Age, setPetAge] = useState("");
   const [Location, setLocation] = useState("");
+
+  const handlebackButton = () => {
+    Navigate("/dashboard/adoption");
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +60,7 @@ const AddPets = () => {
       });
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -139,9 +148,16 @@ const AddPets = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="text-center mt-6">
+            <div className="flex justify-between mt-6">
               <button
-                type="submit"
+                type="button"  
+                onClick={handlebackButton}
+                className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:outline-none transition duration-300"
+              >
+                Back
+              </button>
+              <button
+                type="submit" 
                 className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:outline-none transition duration-300"
               >
                 Upload

@@ -19,8 +19,12 @@ const Aboutus = () => {
                 <h1 className='text-3xl font-bold text-gray-900 dark:text-black   mt-4'>About us</h1>
                 <div className=' w-100 text-gray-500 dark:text-white-400 rounded-lg dark:bg-orange-100 ml-8 mr-8 mb-8'>
                   <p className='my-4 text-lg '>Its now our responsibilities about your pets</p>
+                  
                   <div className='flex justify-end mr-8 '>
-                    <img src={image} className='h-96 w-100 rounded-lg mb-8 '></img>
+                  <p className=' text-center ml-8 mr-12 text-lg ' style={{ lineHeight: '2', textAlign: 'justify' }}>
+                       Welcome to PetSaathi, the ultimate multi-vendor platform designed specifically for pet lovers! We connect passionate pet owners with a diverse range of trusted vendors offering everything from premium pet food and toys to grooming services and accessories. Our mission is to provide a one-stop-shop for all your pet needs while supporting small businesses and entrepreneurs in the pet industry. Explore our marketplace, discover unique products, and join a community that shares your love for pets!
+                  </p>                    
+                  <img src={image} className='h-96 w-100 rounded-lg mb-8 '></img>
                   </div>
                 </div>
             </div>

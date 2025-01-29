@@ -65,6 +65,17 @@ router.use(cors());
     }
 }
 
+//getting all registers data in a api endpoint
+const registerGetData = async (req, res) => {
+    try {
+        const registerData = await registerModel.find()
+        res.status(200).json({ success: true, data: registerData });
+        
+    } catch (error) {
+        res.status(400).json({success: false, message:"cannot get data cuz endpoint empty"})
+    }
+}
+
 
 // Vendor registration
  const vendorRegister = async (req, res) => {
@@ -120,6 +131,17 @@ router.use(cors());
         res.status(500).json({ success: false, message: err.message });
     }
 };
+
+//getting all Vendor registers data in a api endpoint
+const VendorregisterGetData = async (req, res) => {
+    try {
+        const vendorregisterData = await vendorregisterModel.find()
+        res.status(200).json({ success: true, data: vendorregisterData });
+        
+    } catch (error) {
+        res.status(400).json({success: false, message:"cannot get data cuz endpoint empty"})
+    }
+}
 
 
 // Sign in
@@ -343,4 +365,4 @@ const resetPassword = async (req, res)=>{
         return res.status(500).json({ message: error.message });
     }
 }
-export default { register, vendorRegister, signin, logout ,sendVerifyOtp , verifyEmail, isAuthenticated, sendResetOtp, resetPassword };
+export default { register,registerGetData, vendorRegister, VendorregisterGetData, signin, logout ,sendVerifyOtp , verifyEmail, isAuthenticated, sendResetOtp, resetPassword };

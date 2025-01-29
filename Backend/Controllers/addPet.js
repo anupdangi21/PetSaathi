@@ -24,4 +24,13 @@ const petList = async(req,res)=>{
         res.status(500).json({success: false, message: error.message})
     }
 }
-export default petList;
+
+const getPetlist = async(req, res)=>{
+    try {
+        const getPetData= await petListModel.find();
+        res.status(200).json({success: true, data: getPetData})
+    } catch (error) {
+    res.json(400).json({success: false, message:"cannot find the pets in the database"})
+    }
+}
+export default {petList, getPetlist };

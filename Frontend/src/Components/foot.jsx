@@ -1,11 +1,11 @@
 const foot = () => {
   return (
-    <footer className="bg-orange-200 text-black  py-2">
+    <footer className="bg-orange-200 text-white  py-2">
       <div className="max-w-screen-xl mx-auto px-2">
         {/* Contact Section */}
         <div className="flex flex-col items-center ">
           <h3 className="text-xl font-semibold mb-2 ">Contact us:</h3>
-          <ul className="flex space-x-6 text-sm text-black">
+          <ul className="flex space-x-6 text-sm text-white">
             <li>Email: anupdangi92@gmail.com</li>
             <li>Phone: +977 9876543210</li>
             <li>Address: Bhaktapur, Nepal</li>
@@ -14,7 +14,7 @@ const foot = () => {
 
         {/* Bottom section: Copyright */}
         <div className="mt-4 border-t border-gray-700 pt-2 text-center">
-          <p className="text-sm text-black">© 2024 PetSaathi. All rights reserved.</p>
+          <p className="text-sm text-white">© 2024 PetSaathi. All rights reserved.</p>
         </div>
       </div>
     </footer>
