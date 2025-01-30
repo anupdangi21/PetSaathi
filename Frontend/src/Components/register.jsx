@@ -1,44 +1,46 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Regbg from "../Images/rg.png"
-import Header from "../Components/Navbar"
-import App from "../Main/App"
+import RegistrationImage from "../Images/user-registration.jpeg";
 import Swal from 'sweetalert2';
 
 const RegisterForm = () => { 
   const [email, setEmail] = useState('');
-  const [username,setUsername]=useState('')
-    const [password, setPassword] = useState(''); 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState(''); 
     
-    const navigate = useNavigate(); 
+  const navigate = useNavigate(); 
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const result = await axios.post('http://localhost:3000/register', { email,username, password }, { withCredentials: true });
-            console.log(result);
-            if (result.status === 201) {
-              Swal.fire({
-                  icon: "success",
-                  title: "Registration Complete",
-                  text: "Please login using your username and password.",
-              });
-              navigate('/')
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Please check your db connection');
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await axios.post('http://localhost:3000/register', { email, username, password }, { withCredentials: true });
+      console.log(result);
+      if (result.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Registration Complete",
+          text: "Please login using your username and password.",
+        });
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Please check your db connection');
+    }
+  };
+
   return (
-    <div className="bg-white shadow-md rounded-lg min-h-[40vh] w-full max-w-md mx-auto">
-      
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mt-2" >
-        
+    <div className="flex min-h-screen">
+      {/* Image Section */}
+      <div className="hidden lg:flex flex-1 items-center justify-center">
+        <img src={RegistrationImage} alt="Registration" className="w-50 rounded-lg h-auto object-cover" />
+      </div>
+
+      {/* Form Section */}
+      <div className="flex-1 bg-white shadow-md rounded-lg p-8 w-full max-w-md mx-auto">
         <form onSubmit={handleSubmit} className="space-y-6">
           <h1 className="text-2xl font-bold text-gray-800 text-center">Register here</h1>
-          
 
           <div className="relative">
             <input
@@ -84,21 +86,20 @@ const RegisterForm = () => {
           </button>
 
           <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Already have an account?{' '}
-            <span
-              className="text-blue-500 hover:underline cursor-pointer"
-              onClick={() => navigate('/')}
-            >
-              Login
-            </span>
-          </p>
+            <p className="text-sm text-gray-600">
+              Already have an account?{' '}
+              <span
+                className="text-blue-500 hover:underline cursor-pointer"
+                onClick={() => navigate('/')}
+              >
+                Login
+              </span>
+            </p>
           </div>
         </form>
       </div>
     </div>
   );
-
 };
 
 export default RegisterForm;

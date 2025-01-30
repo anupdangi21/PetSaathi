@@ -69,8 +69,9 @@ const Adoption = () => {
           const userPets = petsArray.filter(pet => 
             pet.email === userData.user.email
           );
-    
-          setPets(userPets);
+          //reversing the array so that the recent pet that are just posted will show at the first
+          const reversedPets = [...userPets].reverse();
+          setPets(reversedPets);
           setLoading(false);
     
         } catch (err) {

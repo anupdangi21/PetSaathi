@@ -10,7 +10,7 @@ import About4 from "../Images/rg.png"
 
 const Aboutus = () => {
   return (
-    <div className='container bg-orange-100'>
+    <div className=' bg-orange-100'>
         <header >
             <Navbar />
         </header>

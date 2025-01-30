@@ -2,7 +2,6 @@ import express from "express";
 import petFound from "../Models/foundPet.js";
 import upload from "../multerConfig.js";
 import multer from "multer";
-import petListModel from "../Models/addPet.js";
 
 
 const petFoundData = async (req, res) => {
@@ -30,8 +29,13 @@ const petFoundData = async (req, res) => {
 
 const getPetFound = async(req, res)=>{
     try {
-        const petFound = await petListModel.find()
-        res.status(200).json({status: true, message: "Pet successfuly found"})
+        const petfound = await petFound.find()
+        res.status(200).json({status: true, data:petfound})
+
+        const matchingPets = await FoundPet.find({
+            category: new RegExp(category, "i"), // Case-insensitive
+            color: new RegExp(color, "i") // Case-insensitive
+          });
     } catch (error) {
         return res.status(400).json({message: false, message:error.message})
     }

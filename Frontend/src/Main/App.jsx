@@ -44,11 +44,12 @@ function App() {
   ];
 
   return (
-    <div className="container">
+    <div>
       <header>
         <Navbar />
       </header>
-      <div className="min-h-screen bg-orange-100">
+      <main>
+      <div className="min-h-screen w-full bg-orange-100">
       <div className="container ml-24 max-w-screen-xl">
         <div className="flex flex-col lg:flex-row items-center gap-8">
           <div className="lg:w-1/2">
@@ -129,8 +130,9 @@ function App() {
     
       </div>
 
-      
+      </main>
     </div>
+    
   );
 }
 

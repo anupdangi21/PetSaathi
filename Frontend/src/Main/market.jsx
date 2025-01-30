@@ -5,7 +5,7 @@ import {BadgePlus } from 'lucide-react';
 
 function market(){
   return (
-    <div className='container'>
+    <div>
       <header>
         <Navbar />
       </header>

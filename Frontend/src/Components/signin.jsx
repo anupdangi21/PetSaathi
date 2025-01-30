@@ -43,6 +43,11 @@ const Signin = ({ closeModal }) => {
             }
         } catch (error) {
             console.error(error);
+            Swal.fire({
+                icon: "",
+                title: "User or vendor not found",
+                text: "Please try again.",
+            });
             alert(error.response?.data?.message || "An error occurred. Please try again.");
         }
     };

@@ -27,7 +27,7 @@ const petList = async(req,res)=>{
 
 const getPetlist = async(req, res)=>{
     try {
-        const getPetData= await petListModel.find().sort({ createdAt: -1 });;
+        const getPetData= await petListModel.find().sort({ createdAt: -1 });
         res.status(200).json({success: true, data: getPetData})
     } catch (error) {
     res.json(400).json({success: false, message:"cannot find the pets in the database"})
