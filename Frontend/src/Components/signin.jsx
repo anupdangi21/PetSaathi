@@ -48,7 +48,6 @@ const Signin = ({ closeModal }) => {
                 title: "User or vendor not found",
                 text: "Please try again.",
             });
-            alert(error.response?.data?.message || "An error occurred. Please try again.");
         }
     };
 

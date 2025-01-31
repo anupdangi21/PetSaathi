@@ -80,22 +80,17 @@ const registerGetData = async (req, res) => {
 // Vendor registration
  const vendorRegister = async (req, res) => {
     try {
-        const { organizationname, email ,services, username, password } = req.body;
+        const { organizationname, Email ,services, username, password } = req.body;
 
-        if ( !organizationname|| !email ||!services || !username || !password) {
+        if ( !organizationname ||!services || !username || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Checking if the username or email already exists
-        const existingVendor = await vendorregisterModel.findOne({ email });
-        if (existingVendor) {
-            return res.status(400).json({ message: "Email already exists" });
-        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newVendor = new vendorregisterModel({
-            organizationname, email, services, username, password: hashedPassword
+            organizationname, Email, services, username, password: hashedPassword
         });
 
         await newVendor.save();
@@ -114,7 +109,7 @@ const registerGetData = async (req, res) => {
         // sending the email using nodemailer
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
-            to: email,
+            to: Email,
             subject: 'welcome to petsaathi',
             text: `Dear vendor, your account has been created successfully. Please login to your account using username: ${username}`
         }
@@ -124,7 +119,7 @@ const registerGetData = async (req, res) => {
             user:{
                 _id: newVendor._id,
                 username: newVendor.username,
-                email: newVendor.email,
+                Email: newVendor.Email,
             }
          });
     } catch (err) {
@@ -193,7 +188,7 @@ const signin = async (req, res) => {
                 user:{
                     _id: vendor._id,
                     username: vendor.username,
-                    email: vendor.email,
+                    email: vendor.Email,
                 }
              });
         }

@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 function Nav() {
     const [visible, setVisible] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [vendorData, setVendorData] = useState(null);
 
     const { isAuthenticated, userData, logout } = useContext(AppContext);
     const modalRef = useRef(null);
@@ -20,6 +21,38 @@ function Nav() {
     const closeModal = () => setVisible(false);
 
     const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
+
+    // Fetch vendor data when authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+          const userData = JSON.parse(localStorage.getItem('user_data'));
+          const token = userData?.userToken;
+      
+          fetch('http://localhost:3000/registration', {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+          .then(response => response.json())
+          .then(apiResponse => {
+            console.log("Full API Response:", apiResponse);
+            setVendorData(apiResponse);
+          });
+        }
+      }, [isAuthenticated]);
+      
+      const userDataFromStorage = JSON.parse(localStorage.getItem('user_data'));
+      const userEmail = userDataFromStorage?.user?.email; 
+      
+      // Check if any vendor in the array matches the email
+      const isVendor = vendorData?.data?.some(vendor => 
+        vendor?.Email && userEmail && 
+        vendor.Email.toLowerCase() === userEmail.toLowerCase()
+      );
+      
+    //   console.log("Final Verification", {
+    //     userEmail, 
+    //     vendorEmails: vendorData?.data?.map(v => v.email),
+    //     isVendor
+    //   });
 
     useEffect(() => {
         if (visible) {
@@ -118,63 +151,70 @@ function Nav() {
                     </div>
                 )}
 
-{isAuthenticated ? (
-    <div>
-        <Menu as="div" className="relative mr-4">
-            <div>
-                <MenuButton className="relative mr-20 flex items-center justify-center w-12 h-12 rounded-full bg-orange-300 text-white text-lg font-bold focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200">
-                    {userData?.username?.substring(0, 2).toUpperCase()}
-                </MenuButton>
-            </div>
-            <MenuItems className="absolute right-0 mt-2 mr-2 w-48 origin-top-right rounded-md bg-orange-200 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
-                <MenuItem>
-                    <Link
-                        to="/dashboard"
-                        className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
-                    >
-                        Dashboard
-                    </Link>
-                </MenuItem>
-                <MenuItem>
-                    <a
-                        href="/profile"
-                        className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
-                    >
-                        Your Profile
-                    </a>
-                </MenuItem>
-                <MenuItem>
-                <a
-        href="#"
-        className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
-        onClick={() => {
-            Swal.fire({
-                title: "Are you sure you want to sign out?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "  Yes",
-                cancelButtonText: "No",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    logout(); // Call the logout function
-                    Swal.fire("Signed out!", "You have been successfully signed out.", "success");
-                }
-            });
-        }}
-    >
-        Sign out
-    </a>
-                </MenuItem>
-            </MenuItems>
-        </Menu>
-    </div>
-) : (
-    <button className="login-btn" onClick={openModal}>
-        Login/Sign Up
-    </button>
-)}
+                {isAuthenticated ? (
+                    <div>
+                        <Menu as="div" className="relative mr-4">
+                            <MenuButton className="relative mr-20 flex items-center justify-center w-12 h-12 rounded-full bg-orange-300 text-white text-lg font-bold focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200">
+                                {userData?.username?.substring(0, 2).toUpperCase()}
+                            </MenuButton>
+                            <MenuItems className="absolute right-0 mt-2 mr-2 w-48 origin-top-right rounded-md bg-orange-200 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                                <MenuItem>
+                                    {isVendor ? (
+                                        <Link
+                                            to="/dashboard"
+                                            className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
+                                        >
+                                            Dashboard
+                                        </Link>
+                                    ) : (
+                                        <Link
+                                            to="/vendor/register"
+                                            className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
+                                        >
+                                            Become Vendor
+                                        </Link>
+                                    )}
+                                </MenuItem>
+                                <MenuItem>
+                                    <a
+                                        href="/profile"
+                                        className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
+                                    >
+                                        Your Profile
+                                    </a>
+                                </MenuItem>
+                                <MenuItem>
+                                    <a
+                                        href="#"
+                                        className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
+                                        onClick={() => {
+                                            Swal.fire({
+                                                title: "Are you sure you want to sign out?",
+                                                icon: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#d33",
+                                                cancelButtonColor: "#3085d6",
+                                                confirmButtonText: "Yes",
+                                                cancelButtonText: "No",
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    logout();
+                                                    Swal.fire("Signed out!", "You have been successfully signed out.", "success");
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        Sign out
+                                    </a>
+                                </MenuItem>
+                            </MenuItems>
+                        </Menu>
+                    </div>
+                ) : (
+                    <button className="login-btn" onClick={openModal}>
+                        Login/Sign Up
+                    </button>
+                )}
             </div>
         </div>
     );

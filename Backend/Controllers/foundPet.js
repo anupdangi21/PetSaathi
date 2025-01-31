@@ -32,10 +32,10 @@ const getPetFound = async(req, res)=>{
         const petfound = await petFound.find()
         res.status(200).json({status: true, data:petfound})
 
-        const matchingPets = await FoundPet.find({
-            category: new RegExp(category, "i"), // Case-insensitive
-            color: new RegExp(color, "i") // Case-insensitive
-          });
+        // const matchingPets = await FoundPet.find({
+        //     category: new RegExp(category, "i"), // Case-insensitive
+        //     color: new RegExp(color, "i") // Case-insensitive
+        //   });
     } catch (error) {
         return res.status(400).json({message: false, message:error.message})
     }

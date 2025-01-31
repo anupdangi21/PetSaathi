@@ -13,7 +13,7 @@ const getUserData =async ()=>{
             success:true,
             userData:{
                 name:user.name,
-                email:user.email,
+                Email:user.email,
             }
         })
     } catch (error) {

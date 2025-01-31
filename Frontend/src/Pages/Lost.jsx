@@ -13,13 +13,36 @@ const Lost = () => {
     location: ''
   });
 
-  const [matchingPets, setMatchingPets] = useState([]);
+  const [allFoundPets, setAllFoundPets] = useState([]); // State to store all found pets
   const [isLoading, setIsLoading] = useState(false);
+  const [petsLoading, setPetsLoading] = useState(true); // Loading state for fetching pets
 
-  // Debugging: Log matchingPets state update
+  // Fetch all found pets from the /petfound endpoint
   useEffect(() => {
-    console.log("Updated Matching Pets:", matchingPets);
-  }, [matchingPets]);
+    const fetchAllFoundPets = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/petfound');
+        console.log("Raw API Response:", response.data); // Log the response data
+  
+        // Extract the pets array from response.data.data
+        const petsArray = response.data.data || [];
+        console.log("Processed Pets Array:", petsArray);
+  
+        setAllFoundPets(petsArray);
+      } catch (error) {
+        console.error('Error fetching found pets:', error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to fetch found pets. Please try again later.",
+          icon: "error"
+        });
+      } finally {
+        setPetsLoading(false);
+      }
+    };
+  
+    fetchAllFoundPets();
+  }, []);;
 
   const handleChange = (e) => {
     setFormData({
@@ -58,18 +81,6 @@ const Lost = () => {
           timer: 2000,
           showConfirmButton: false
         });
-
-        // Fetch matching pets
-        const fetchResponse = await axios.get(`http://localhost:3000/petfound`, {
-          params: {
-            category: formData.category.toLowerCase(),
-            color: formData.color.toLowerCase()
-          }
-        });
-
-        console.log("Backend Response:", fetchResponse.data);
-
-        setMatchingPets(fetchResponse.data?.pets || fetchResponse.data || []);
 
         // Reset form after submission
         setFormData({
@@ -171,29 +182,40 @@ const Lost = () => {
           </div>
         </form>
 
-        {/* Display matching pets */}
-        {Array.isArray(matchingPets) && matchingPets.length > 0 ? (
+        {/* Display all found pets */}
+        {petsLoading ? (
+          <div className="text-center py-8">
+            <ClipLoader size={40} color="#F97316" />
+          </div>
+        ) : (
           <div className="bg-white rounded-xl p-6 shadow-lg">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Matching Pets Found</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">All Found Pets</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {matchingPets.map((pet, index) => {
-                console.log("Rendering Pet:", pet); // Debugging
-                return (
+              {Array.isArray(allFoundPets) && allFoundPets.length > 0 ? (
+                allFoundPets.map((pet, index) => (
                   <div key={index} className="bg-gray-50 p-4 rounded-lg border border-orange-100">
+                    {pet.Image && (
+                      <img 
+                        src={`http://localhost:3000/${pet.Image}`} 
+                        alt={pet.Category} 
+                        className="w-full h-48 object-cover mb-4 rounded-lg"
+                      />
+                    )}
                     <h3 className="text-xl font-semibold mb-2 capitalize">{pet.Category || pet.category}</h3>
                     <div className="space-y-1">
                       <p><span className="font-medium">Color:</span> {pet.Color || pet.color}</p>
                       <p><span className="font-medium">Age:</span> {pet.Age || pet.age}</p>
-                      {/* <p><span className="font-medium">Location:</span> {pet.Location || pet.location}</p> */}
+                      <p><span className="font-medium">Location:</span> {pet.Location || pet.location}</p>
+                      <p><span className="font-medium">Status:</span> {pet.status || 'Found'}</p>
                     </div>
                   </div>
-                );
-              })}
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  No found pets available.
+                </div>
+              )}
             </div>
-          </div>
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            {!isLoading && "No matching pets found. We'll notify you if any matches appear!"}
           </div>
         )}
       </main>
