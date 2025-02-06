@@ -10,11 +10,9 @@ import {
   Target, 
   Heart, 
   Home, 
-  ShoppingBag, 
   ChevronDown,
   Bell,
   LogOut,
-  Menu
 } from 'lucide-react';
 
 const Aside = () => {
@@ -25,7 +23,6 @@ const Aside = () => {
   const services = [
     { name: 'Adoption', icon: Heart },
     { name: 'Hostel', icon: Home },
-    { name: 'Marketplace', icon: ShoppingBag },
     { name: 'Training', icon: Target }, // Assign a default icon to Training
   ];
 

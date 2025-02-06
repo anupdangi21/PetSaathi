@@ -27,26 +27,25 @@ const petList = async(req,res)=>{
 
 const getPetlist = async(req, res)=>{
     try {
-        const getPetData= await petListModel.find().sort({ createdAt: -1 });
+        const getPetData= await petListModel.find()
         res.status(200).json({success: true, data: getPetData})
     } catch (error) {
     res.json(400).json({success: false, message:"cannot find the pets in the database"})
     }
 }
 
+
 const updatePet = async (req, res) => {
     try {
         const { petname, Category, Description, Age, Location } = req.body;
-        const petId = req.params.id;  // Pet ID from the URL
+        const petId = req.params.id;  
 
-        // Check if the pet exists
         const pet = await petListModel.findById(petId);
 
         if (!pet) {
             return res.status(404).json({ success: false, message: "Pet not found" });
         }
 
-        // Update pet details
         pet.petname = petname || pet.petname;
         pet.Category = Category || pet.Category;
         pet.Description = Description || pet.Description;
@@ -64,4 +63,19 @@ const updatePet = async (req, res) => {
     }
 };
 
-export default {petList, getPetlist, updatePet};
+const deletePet = async (req, res) => {
+    try {
+        const {_id } = req.params;  
+        const deletedPet = await petListModel.findByIdAndDelete(_id);
+        if (!deletedPet) {
+            return res.status(404).json({ success: false, message: "Pet not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Pet deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting pet:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
+
+export default {petList, getPetlist, updatePet, deletePet};

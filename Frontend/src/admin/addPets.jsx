@@ -178,13 +178,18 @@ const AddPets = () => {
               <label className="label">
                 <span className="label-text font-medium text-gray-700">Age*</span>
               </label>
-              <input
-                type="text"
+              <select
                 value={Age}
-                placeholder="Enter Pet Age"
-                className="mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="select mt-2 select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 onChange={(e) => setPetAge(e.target.value)}
-              />
+              >
+                <option value="">Select estimated age:</option>
+                <option value="3month">1-3 Months</option>
+                <option value="6-9Months">6-9 Months</option>
+                <option value="1year">1 year</option>
+                <option value="1-2years">Between 1-2 years</option>
+                <option value="above2years">Above 2 years</option>
+              </select>
             </div>
 
             {/* Location */}

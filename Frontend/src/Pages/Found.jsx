@@ -54,7 +54,6 @@ const Found = () => {
           text: "Found pet successfully reported",
         });
 
-        // ✅ Correct way to reset file input
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }

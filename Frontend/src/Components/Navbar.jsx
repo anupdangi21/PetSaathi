@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import "./navbar.css";
 import Signin from "./signin.jsx";
 import Logo from "../Images/logo.png";
-import User from "../Images/logo.png";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { AppContext } from "../Context/AppContext.jsx";
 import Swal from "sweetalert2";
@@ -12,7 +10,7 @@ function Nav() {
     const [visible, setVisible] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [vendorData, setVendorData] = useState(null);
-
+    
     const { isAuthenticated, userData, logout } = useContext(AppContext);
     const modalRef = useRef(null);
     const dropdownRef = useRef(null);
@@ -25,34 +23,24 @@ function Nav() {
     // Fetch vendor data when authenticated
     useEffect(() => {
         if (isAuthenticated) {
-          const userData = JSON.parse(localStorage.getItem('user_data'));
-          const token = userData?.userToken;
-      
-          fetch('http://localhost:3000/registration', {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-          .then(response => response.json())
-          .then(apiResponse => {
-            console.log("Full API Response:", apiResponse);
-            setVendorData(apiResponse);
-          });
+            const userData = JSON.parse(localStorage.getItem('user_data'));
+            const token = userData?.userToken;
+
+            fetch('http://localhost:3000/registration', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(response => response.json())
+            .then(apiResponse => setVendorData(apiResponse));
         }
-      }, [isAuthenticated]);
-      
-      const userDataFromStorage = JSON.parse(localStorage.getItem('user_data'));
-      const userEmail = userDataFromStorage?.user?.email; 
-      
-      // Check if any vendor in the array matches the email
-      const isVendor = vendorData?.data?.some(vendor => 
+    }, [isAuthenticated]);
+
+    const userDataFromStorage = JSON.parse(localStorage.getItem('user_data'));
+    const userEmail = userDataFromStorage?.user?.email; 
+
+    const isVendor = vendorData?.data?.some(vendor => 
         vendor?.Email && userEmail && 
         vendor.Email.toLowerCase() === userEmail.toLowerCase()
-      );
-      
-    //   console.log("Final Verification", {
-    //     userEmail, 
-    //     vendorEmails: vendorData?.data?.map(v => v.email),
-    //     isVendor
-    //   });
+    );
 
     useEffect(() => {
         if (visible) {
@@ -63,10 +51,7 @@ function Nav() {
             };
 
             document.addEventListener("mousedown", handleClickOutside);
-
-            return () => {
-                document.removeEventListener("mousedown", handleClickOutside);
-            };
+            return () => document.removeEventListener("mousedown", handleClickOutside);
         }
     }, [visible]);
 
@@ -79,114 +64,76 @@ function Nav() {
             };
 
             document.addEventListener("mousedown", handleClickOutside);
-
-            return () => {
-                document.removeEventListener("mousedown", handleClickOutside);
-            };
+            return () => document.removeEventListener("mousedown", handleClickOutside);
         }
     }, [dropdownVisible]);
 
     const ServicesDropdown = () => (
-        <div
-            ref={dropdownRef}
-            className={`absolute mt-2 w-48 bg-orange-200 shadow-lg rounded-lg ${
-                dropdownVisible ? "block" : "hidden"
-            }`}
-        >
-            <a href="/services/adoption" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
-                Adopt a Pet
-            </a>
-            <a href="/services/hostel" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
-                Hostel
-            </a>
-            <a href="/services/training" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
-                Pet Training
-            </a>
-            <a href="/services/lostfound" className="block px-4 py-2 text-gray-700 hover:bg-orange-100">
-                Lost and Found
-            </a>
+        <div ref={dropdownRef} className={`absolute mt-2 w-48 bg-orange-200 shadow-lg rounded-lg ${dropdownVisible ? "block" : "hidden"}`}>
+            <a href="/services/adoption" className="block px-4 py-2 text-white hover:bg-orange-100">Adopt a Pet</a>
+            <a href="/services/hostel" className="block px-4 py-2 text-white hover:bg-orange-100">Hostel</a>
+            <a href="/services/training" className="block px-4 py-2 text-white hover:bg-orange-100">Pet Training</a>
+            <a href="/services/lostfound" className="block px-4 py-2 text-white hover:bg-orange-100">Lost and Found</a>
         </div>
     );
 
     return (
-        <div className="header flex items-center justify-between">
-            <div className="logo">
-                <img src={Logo} alt="Logo" />
+        <div className="header flex items-center justify-between px-6 py-3 bg-[#e8c7a3] w-full h-[12vh]">
+            
+            {/* Logo */}
+            <div className="logo flex-shrink-0 ml-[30px]">
+                <img src={Logo} alt="Logo" className="w-[80px] h-auto object-cover rounded-full" />
             </div>
-            <nav className="nav relative">
-                <a href="/" className="mr-8">
-                    Home
-                </a>
 
+            {/* Navbar */}
+            <nav className="nav flex gap-x-8 ml-[35px]">
+                <Link to="/" className="text-white font-medium hover:text-orange-100">Home</Link>
                 <div className="relative">
-                    <a
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            toggleDropdown();
-                        }}
-                        className="flex items-center text-red-800 hover:text-white-100 cursor-pointer"
-                    >
+                    <a href="#" onClick={(e) => { e.preventDefault(); toggleDropdown(); }} 
+                        className="text-white font-medium hover:text-orange-100 cursor-pointer">
                         Services
                     </a>
                     <ServicesDropdown />
                 </div>
-                <a href="/marketplace" className="mr-4">
-                    Marketplace
-                </a>
-                <a href="/about" className="mr-4">
-                    About us
-                </a>
+                <Link to="/marketplace" className="text-white font-medium hover:text-orange-100">Marketplace</Link>
+                <Link to="/about" className="text-white font-medium hover:text-orange-100">About us</Link>
             </nav>
-            <div className="search-bar">
-                <input type="text" placeholder="Search for pets" />
+
+            {/* Search Bar */}
+            <div className="search-bar ml-24 flex items-center w-[10%] flex-grow">
+                <input type="text" placeholder="Search for pets" 
+                    className="w-1/2 px-4 py-2 border border-white rounded-full" />
             </div>
 
-            <div className="flex items-center space-x-0">
-                {visible && (
-                    <div className="signin-form-overlay">
-                        <div className="signin-form-container" ref={modalRef}>
-                            <Signin closeModal={closeModal} />
+                {/* Authentication */}
+                <div className="flex items-center">
+                    {visible && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="bg-white p-6 rounded-md shadow-md w-[350px] h-[52vh]" ref={modalRef}>
+                                <Signin closeModal={closeModal} />
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {isAuthenticated ? (
-                    <div>
+                    {isAuthenticated ? (
                         <Menu as="div" className="relative mr-4">
                             <MenuButton className="relative mr-20 flex items-center justify-center w-12 h-12 rounded-full bg-orange-300 text-white text-lg font-bold focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200">
                                 {userData?.username?.substring(0, 2).toUpperCase()}
                             </MenuButton>
-                            <MenuItems className="absolute right-0 mt-2 mr-2 w-48 origin-top-right rounded-md bg-orange-200 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                            <MenuItems className="absolute right-0 mt-2 w-48 bg-orange-200 rounded-md shadow-lg py-1">
                                 <MenuItem>
                                     {isVendor ? (
-                                        <Link
-                                            to="/dashboard"
-                                            className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
-                                        >
-                                            Dashboard
-                                        </Link>
+                                        <Link to="/dashboard" className="block px-4 py-2 text-white hover:bg-orange-100">Dashboard</Link>
                                     ) : (
-                                        <Link
-                                            to="/vendor/register"
-                                            className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
-                                        >
-                                            Become Vendor
-                                        </Link>
+                                        <Link to="/vendor/register" className="block px-4 py-2 text-white hover:bg-orange-100">Become Vendor</Link>
                                     )}
                                 </MenuItem>
                                 <MenuItem>
-                                    <a
-                                        href="/profile"
-                                        className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
-                                    >
-                                        Your Profile
-                                    </a>
+                                    <Link to="/profile" className="block px-4 py-2 text-white hover:bg-orange-100">Your Profile</Link>
                                 </MenuItem>
                                 <MenuItem>
-                                    <a
-                                        href="#"
-                                        className="block px-4 py-2 text-sm text-white hover:bg-orange-50"
+                                    <button
+                                        className="block w-full text-left px-4 py-2 text-white hover:bg-orange-100"
                                         onClick={() => {
                                             Swal.fire({
                                                 title: "Are you sure you want to sign out?",
@@ -205,18 +152,17 @@ function Nav() {
                                         }}
                                     >
                                         Sign out
-                                    </a>
+                                    </button>
                                 </MenuItem>
                             </MenuItems>
                         </Menu>
-                    </div>
-                ) : (
-                    <button className="login-btn" onClick={openModal}>
-                        Login/Sign Up
-                    </button>
-                )}
+                    ) : (
+                        <button className="relative mr-8 px-6 py-2 flex items-center justify-center rounded-full bg-orange-300 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200" onClick={openModal}>
+                            Login/Sign Up
+                        </button>
+                    )}
+                </div>
             </div>
-        </div>
     );
 }
 

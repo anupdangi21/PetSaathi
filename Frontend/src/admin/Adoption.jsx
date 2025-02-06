@@ -2,12 +2,10 @@ import { useNavigate } from "react-router-dom"
 import Aside from "../Components/aside"
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2";
 import { 
     BadgePlus,
-    Star,
     TrendingUp,
-    DogIcon,
-    CatIcon,
 } from 'lucide-react';
 
 const Adoption = () => {
@@ -18,7 +16,7 @@ const Adoption = () => {
     const navigate = useNavigate();
 
     const handleEditPet = (pet, event) => {
-      event.preventDefault();  // Prevents the default action of the button
+      event.preventDefault();
       navigate("/dashboard/addpet", { 
         state: { 
           petData: pet,
@@ -26,7 +24,44 @@ const Adoption = () => {
         } 
       });
     };
-    
+
+    const handleDeletePet = async (id) => {
+      Swal.fire({
+          title: "Are you sure?",
+          text: "This action cannot be undone!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Yes, delete it!"
+      }).then(async (result) => {
+          if (result.isConfirmed) {
+              try {
+                  const response = await fetch(`http://localhost:3000/petlisting/${id}`, {
+                      method: "DELETE",
+                      headers: {
+                          "Content-Type": "application/json"
+                      }
+                  });
+  
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+  
+                  const result = await response.json();
+  
+                  Swal.fire("Deleted!", result.message || "Pet has been deleted.", "success");
+  
+                  setPets((prevPets) => prevPets.filter((pet) => pet._id !== id));
+  
+              } catch (err) {
+                  console.error("Error deleting pet:", err);
+
+                  Swal.fire("Error", "Failed to delete pet. Please try again.", "error");
+              }
+          }
+      });
+  };
 
     useEffect(() => {
       const fetchPets = async () => {
@@ -69,7 +104,6 @@ const Adoption = () => {
           const userPets = petsArray.filter(pet => 
             pet.email === userData.user.email
           );
-          //reversing the array so that the recent pet that are just posted will show at the first
           const reversedPets = [...userPets].reverse();
           setPets(reversedPets);
           setLoading(false);
@@ -130,17 +164,20 @@ const Adoption = () => {
                                     </div>
                                   </div>
                                   <div className="flex gap-2">
-                                      <button className="text-blue-500 hover:text-blue-700"
+                                      <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
                                       onClick={(e) => handleEditPet(pet, e)}>
                                           Edit
                                       </button>
-                                      <button className="text-red-500 hover:text-red-700">
+                                      <button 
+                                        className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none transition duration-300"
+                                        onClick={() => handleDeletePet(pet._id)}
+                                      >
                                        Delete
                                     </button>
                                 </div>
                             </div>
                           ))
-                       )}
+                       )} 
                     </div>
                   </div>
               </div>

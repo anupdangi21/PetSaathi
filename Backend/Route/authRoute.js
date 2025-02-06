@@ -7,7 +7,7 @@ import upload from "../multerConfig.js";
 import lost from "../Controllers/lostPet.js"
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
-const {petList, getPetlist, updatePet}= petController;
+const {petList, getPetlist, updatePet, deletePet}= petController;
 const {petFoundData,getPetFound }= found;
 const {petLostData, getLostPetData}= lost;
 
@@ -28,6 +28,7 @@ authRouter.post("/reset-password", resetPassword);
 authRouter.post("/petlisting",upload.single("Image"), petList)
 authRouter.get("/petlisting", getPetlist)
 authRouter.put("/petlisting/:id", upload.single("Image"), updatePet);
+authRouter.delete("/petlist/:id", deletePet);
 
 //router for posting the found pet
 authRouter.post("/petfound",upload.single("Image"), petFoundData)
