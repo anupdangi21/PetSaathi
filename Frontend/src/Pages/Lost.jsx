@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { ClipLoader } from 'react-spinners';
 import Navbar from "../Components/Navbar.jsx";
 import Footer from "../Components/foot.jsx";
+import { Info } from 'lucide-react';
 
 const Lost = () => {
   const [formData, setFormData] = useState({
@@ -13,22 +14,16 @@ const Lost = () => {
     location: ''
   });
 
-  const [allFoundPets, setAllFoundPets] = useState([]); // State to store all found pets
+  const [allFoundPets, setAllFoundPets] = useState([]);
+  const [filteredPets, setFilteredPets] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [petsLoading, setPetsLoading] = useState(true); // Loading state for fetching pets
+  const [petsLoading, setPetsLoading] = useState(true);
 
-  // Fetch all found pets from the /petfound endpoint
   useEffect(() => {
     const fetchAllFoundPets = async () => {
       try {
         const response = await axios.get('http://localhost:3000/petfound');
-        console.log("Raw API Response:", response.data); // Log the response data
-  
-        // Extract the pets array from response.data.data
-        const petsArray = response.data.data || [];
-        console.log("Processed Pets Array:", petsArray);
-  
-        setAllFoundPets(petsArray);
+        setAllFoundPets(response.data.data || []);
       } catch (error) {
         console.error('Error fetching found pets:', error);
         Swal.fire({
@@ -40,15 +35,33 @@ const Lost = () => {
         setPetsLoading(false);
       }
     };
-  
     fetchAllFoundPets();
-  }, []);;
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleFilter = () => {
+    const { category, color } = formData;
+    
+    if (!category && !color) {
+      setFilteredPets(null);
+      return;
+    }
+
+    const filtered = allFoundPets.filter(pet => {
+      const categoryMatch = category ? 
+        pet.Category.toLowerCase() === category.toLowerCase() : true;
+      const colorMatch = color ? 
+        pet.Color.toLowerCase().includes(color.toLowerCase()) : true;
+      return categoryMatch && colorMatch;
+    });
+
+    setFilteredPets(filtered);
   };
 
   const handleSubmit = async (e) => {
@@ -65,7 +78,6 @@ const Lost = () => {
 
     setIsLoading(true);
     try {
-      // Post lost pet data
       const postResponse = await axios.post('http://localhost:3000/lostpet', {
         Category: formData.category,
         Color: formData.color,
@@ -82,13 +94,13 @@ const Lost = () => {
           showConfirmButton: false
         });
 
-        // Reset form after submission
         setFormData({
           category: "",
           color: '',
           age: '',
           location: ''
         });
+        setFilteredPets(null);
       }
     } catch (error) {
       Swal.fire({
@@ -100,6 +112,8 @@ const Lost = () => {
       setIsLoading(false);
     }
   };
+
+  const petsToDisplay = filteredPets !== null ? filteredPets : allFoundPets;
 
   return (
     <div className='container min-h-screen'>
@@ -164,35 +178,47 @@ const Lost = () => {
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="bg-orange-500 text-white px-8 py-2 rounded-lg font-semibold hover:bg-orange-600 disabled:bg-orange-300 flex items-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <ClipLoader size={20} color="#ffffff" />
-                    Processing...
-                  </>
-                ) : (
-                  "Report & Search"
-                )}
-              </button>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={handleFilter}
+                  className="bg-gray-200 text-gray-800 px-8 py-2 rounded-lg font-semibold hover:bg-gray-300"
+                >
+                  Filter
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-orange-500 text-white px-8 py-2 rounded-lg font-semibold hover:bg-orange-600 disabled:bg-orange-300 flex items-center gap-2"
+                >
+                  {isLoading ? (
+                    <>
+                      <ClipLoader size={20} color="#ffffff" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Report"
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </form>
 
-        {/* Display all found pets */}
+        {/* Display found pets */}
         {petsLoading ? (
           <div className="text-center py-8">
             <ClipLoader size={40} color="#F97316" />
           </div>
         ) : (
           <div className="bg-white rounded-xl p-6 shadow-lg">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">All Found Pets</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">
+              {filteredPets !== null ? "Filtered Pets" : "All Found Pets"}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.isArray(allFoundPets) && allFoundPets.length > 0 ? (
-                allFoundPets.map((pet, index) => (
+              {petsToDisplay.length > 0 ? (
+                petsToDisplay.map((pet, index) => (
                   <div key={index} className="bg-gray-50 p-4 rounded-lg border border-orange-100">
                     {pet.Image && (
                       <img 
@@ -201,18 +227,30 @@ const Lost = () => {
                         className="w-full h-48 object-cover mb-4 rounded-lg"
                       />
                     )}
-                    <h3 className="text-xl font-semibold mb-2 capitalize">{pet.Category || pet.category}</h3>
+                    <h3 className="text-xl font-semibold mb-2 capitalize">{pet.Category}</h3>
                     <div className="space-y-1">
-                      <p><span className="font-medium">Color:</span> {pet.Color || pet.color}</p>
-                      <p><span className="font-medium">Age:</span> {pet.Age || pet.age}</p>
-                      <p><span className="font-medium">Location:</span> {pet.Location || pet.location}</p>
-                      <p><span className="font-medium">Status:</span> {pet.status || 'Found'}</p>
+                      <p><span className="font-medium">Color:</span> {pet.Color}</p>
+                      <p><span className="font-medium">Age:</span> {pet.Age}</p>
+                      <p><span className="font-medium">Location:</span> {pet.Location}</p>
+                    </div>
+                    <div className="flex gap-3 mt-6">
+                      <button className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
+                        That's my pet
+                      </button>
+                      <button 
+                        className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                      >
+                        <Info size={20} />
+                      </button>
                     </div>
                   </div>
                 ))
               ) : (
                 <div className="text-center py-8 text-gray-500">
-                  No found pets available.
+                  {filteredPets !== null ? 
+                    "No matching pets found. Try different filters." : 
+                    "No found pets available."
+                  }
                 </div>
               )}
             </div>

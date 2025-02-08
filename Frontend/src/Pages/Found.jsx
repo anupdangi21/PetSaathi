@@ -110,9 +110,9 @@ const Found = () => {
                 </label>
                 <input
                   type="file"
-                  ref={fileInputRef} // ✅ Using ref to reset
+                  ref={fileInputRef} 
                   className="mt-2 ml-4 input input-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  onChange={(e) => setImage(e.target.files[0])} // ✅ Correct file handling
+                  onChange={(e) => setImage(e.target.files[0])}
                 />
               </div>
             </div>

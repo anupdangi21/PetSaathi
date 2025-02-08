@@ -27,12 +27,12 @@ const Vregister = () => {
     try {
       const result = await axios.post(
         'http://localhost:3000/registration', 
-        { organizationname, Email: email, services, username, password }, 
+        { organizationname, email, services, username, password }, 
         { withCredentials: true }
       );
       console.log("Submission data:", { // Add this to verify
         organizationname,
-        Email: email,
+        email,
         services,
         username,
         password

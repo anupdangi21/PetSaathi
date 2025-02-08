@@ -2,7 +2,7 @@ import  mongoose from "mongoose"
 
 const vendorregisterSchema = new mongoose.Schema({
     organizationname: { type: String }, 
-    Email: { type: String, unique: true },
+    email: { type: String, unique: true },
     services: { type: String},
     username: { type: String, unique: true }, 
     password: { type: String  }, 

@@ -14,6 +14,7 @@ const getUserData =async ()=>{
             userData:{
                 name:user.name,
                 Email:user.email,
+                services:user.services,
             }
         })
     } catch (error) {

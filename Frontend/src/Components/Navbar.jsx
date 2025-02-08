@@ -117,7 +117,7 @@ function Nav() {
 
                     {isAuthenticated ? (
                         <Menu as="div" className="relative mr-4">
-                            <MenuButton className="relative mr-20 flex items-center justify-center w-12 h-12 rounded-full bg-orange-300 text-white text-lg font-bold focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200">
+                            <MenuButton className="relative mr-16 flex items-center justify-center w-12 h-12 rounded-full bg-orange-300 text-white text-lg font-bold focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200">
                                 {userData?.username?.substring(0, 2).toUpperCase()}
                             </MenuButton>
                             <MenuItems className="absolute right-0 mt-2 w-48 bg-orange-200 rounded-md shadow-lg py-1">
