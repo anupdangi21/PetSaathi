@@ -5,8 +5,16 @@ import { ClipLoader } from 'react-spinners';
 import Navbar from "../Components/Navbar.jsx";
 import Footer from "../Components/foot.jsx";
 import { Info } from 'lucide-react';
+import useAuthGuard from "../Context/useAuthGuard.jsx"
 
 const Lost = () => {
+  const withAuth = useAuthGuard();
+
+  const handleProtectedAction = () => {
+
+      console.log("User is authenticated.");
+  };
+
   const [formData, setFormData] = useState({
     category: "",
     color: '',
@@ -234,7 +242,9 @@ const Lost = () => {
                       <p><span className="font-medium">Location:</span> {pet.Location}</p>
                     </div>
                     <div className="flex gap-3 mt-6">
-                      <button className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
+                      <button
+                      onClick={withAuth(handleProtectedAction)}
+                      className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
                         That's my pet
                       </button>
                       <button 

@@ -129,6 +129,9 @@ function Nav() {
                                     )}
                                 </MenuItem>
                                 <MenuItem>
+                                    <Link to="/profile" className="block px-4 py-2 text-white hover:bg-orange-100">Tracking</Link>
+                                </MenuItem>
+                                <MenuItem>
                                     <Link to="/profile" className="block px-4 py-2 text-white hover:bg-orange-100">Your Profile</Link>
                                 </MenuItem>
                                 <MenuItem>

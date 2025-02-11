@@ -5,7 +5,9 @@ import Footer from "../Components/foot";
 import axios from 'axios';
 import Swal from "sweetalert2";
 
+
 const Found = () => {
+
   const [Category, setCategory] = useState('');
   const [Image, setImage] = useState(null);
   const [Description, setDescription] = useState('');
@@ -13,7 +15,7 @@ const Found = () => {
   const [Age, setAge] = useState('');
   const [Location, setLocation] = useState('');
 
-  const fileInputRef = useRef(null); // ✅ Using ref to reset file input
+  const fileInputRef = useRef(null); 
   const Navigate = useNavigate();
 
   const handlebackButton = () => {

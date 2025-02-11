@@ -120,6 +120,7 @@ const registerGetData = async (req, res) => {
                 _id: newVendor._id,
                 username: newVendor.username,
                 Email: newVendor.Email,
+                services: newVendor.services
             }
          });
     } catch (err) {
@@ -189,6 +190,7 @@ const signin = async (req, res) => {
                     _id: vendor._id,
                     username: vendor.username,
                     email: vendor.Email,
+                    services: vendor.services,
                 }
              });
         }

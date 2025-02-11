@@ -5,10 +5,17 @@ import "./App.css";
 import Navbar from "../Components/Navbar"; // Importing Navbar component
 import Foot from "../Components/foot"; // Importing foot component
 import pet from "../Images/display-main1.png";
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { PawPrint, Heart, MapPin, Calendar, Info } from 'lucide-react';
+import { PawPrint, Heart, MapPin, } from 'lucide-react';
+import useAuthGuard from "../Context/useAuthGuard.jsx"
+
 
 function App() {
+  const withAuth = useAuthGuard();
+
+  const handleProtectedAction = () => {
+      console.log("user is logged in");
+  };
+
   const navigate = useNavigate();
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
@@ -108,7 +115,11 @@ function App() {
                       </div>
 
                       <div className="flex gap-3">
-                        <button className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
+                        <button
+                        onClick={() => {
+                          withAuth(handleProtectedAction)();      
+                      }}
+                        className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
                           Adopt Now
                         </button>
                       </div>

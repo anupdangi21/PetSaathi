@@ -25,7 +25,7 @@ const Adoption = () => {
       });
     };
 
-    const handleDeletePet = async (id) => {
+    const handleDeletePet = async (_id) => {
       Swal.fire({
           title: "Are you sure?",
           text: "This action cannot be undone!",
@@ -37,7 +37,7 @@ const Adoption = () => {
       }).then(async (result) => {
           if (result.isConfirmed) {
               try {
-                  const response = await fetch(`http://localhost:3000/petlisting/${id}`, {
+                  const response = await fetch(`http://localhost:3000/petlisting/${_id}`, {
                       method: "DELETE",
                       headers: {
                           "Content-Type": "application/json"
@@ -52,7 +52,7 @@ const Adoption = () => {
   
                   Swal.fire("Deleted!", result.message || "Pet has been deleted.", "success");
   
-                  setPets((prevPets) => prevPets.filter((pet) => pet._id !== id));
+                  setPets((prevPets) => prevPets.filter((pet) => pet._id !== _id));
   
               } catch (err) {
                   console.error("Error deleting pet:", err);

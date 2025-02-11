@@ -2,10 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Heart, MapPin, Calendar, Info } from 'lucide-react';
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
+import useAuthGuard from "../Context/useAuthGuard.jsx"
 
 
 // export const AdoptionMain
  function Adoption () {
+
+  const withAuth = useAuthGuard();
+
+  const handleProtectedAction = () => {
+
+      console.log("user is logged in");
+  };
+
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
 
@@ -100,7 +109,12 @@ import Footer from "../Components/foot"
                 </div>
 
                 <div className="flex gap-3">
-                  <button className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
+                  <button
+                  onClick={() => {
+                    withAuth(handleProtectedAction)();
+                    // handleAdopt();        
+                }}
+                  className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
                     Adopt Now
                   </button>
                   <button 
@@ -150,7 +164,10 @@ import Footer from "../Components/foot"
                   </div>
                 </div>
                 <button 
-                  onClick={handleAdopt}
+                  onClick={() => {
+                    withAuth(handleProtectedAction)();
+                    handleAdopt();        
+                }}
                   className="w-full bg-orange-300 text-white px-6 py-3 rounded-lg hover:bg-orange-200"
                 >
                   Adopt Now
