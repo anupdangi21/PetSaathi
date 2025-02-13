@@ -14,7 +14,7 @@ router.use(express.json());
 router.use(cors());
 
 // User registration
- const register = async (req, res)=>{
+const register = async (req, res)=>{
     try {
         const { email, username, password } = req.body;
 
@@ -80,7 +80,7 @@ const registerGetData = async (req, res) => {
 // Vendor registration
  const vendorRegister = async (req, res) => {
     try {
-        const { organizationname, Email ,services, username, password } = req.body;
+        const { organizationname, email ,services, username, password } = req.body;
 
         if ( !organizationname ||!services || !username || !password) {
             return res.status(400).json({ message: "All fields are required" });
@@ -90,9 +90,8 @@ const registerGetData = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newVendor = new vendorregisterModel({
-            organizationname, Email, services, username, password: hashedPassword
+            organizationname, email, services, username, password: hashedPassword
         });
-
         await newVendor.save();
 
         // Generate a JWT token
@@ -109,7 +108,7 @@ const registerGetData = async (req, res) => {
         // sending the email using nodemailer
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
-            to: Email,
+            to: email,
             subject: 'welcome to petsaathi',
             text: `Dear vendor, your account has been created successfully. Please login to your account using username: ${username}`
         }
@@ -119,7 +118,7 @@ const registerGetData = async (req, res) => {
             user:{
                 _id: newVendor._id,
                 username: newVendor.username,
-                Email: newVendor.Email,
+                email: newVendor.email,
                 services: newVendor.services
             }
          });
@@ -161,7 +160,6 @@ const signin = async (req, res) => {
         if (user) {
             isUserMatch = await bcrypt.compare(password, user.password);
         }
-
         if (vendor) {
             isVendorMatch = await bcrypt.compare(password, vendor.password);
         }
@@ -178,9 +176,12 @@ const signin = async (req, res) => {
 
                 user:{
                     _id: user._id,
+                    // organizationname:vendor.organizationname,
                     username: user.username,
                     email: user.email,
+                    // services: vendor.services,   
                 }
+                
             })
         } else if (isVendorMatch) {
             token = jwt.sign({ id: vendor._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -188,8 +189,9 @@ const signin = async (req, res) => {
                  token,
                 user:{
                     _id: vendor._id,
+                    organizationname:vendor.organizationname,
                     username: vendor.username,
-                    email: vendor.Email,
+                    email: vendor.email,
                     services: vendor.services,
                 }
              });

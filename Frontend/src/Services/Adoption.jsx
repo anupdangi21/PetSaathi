@@ -3,20 +3,20 @@ import { Heart, MapPin, Calendar, Info } from 'lucide-react';
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
 import useAuthGuard from "../Context/useAuthGuard.jsx"
+import AdoptPetReservation from "../Reservation/AdoptPetReservation.jsx"
 
-
-// export const AdoptionMain
  function Adoption () {
 
   const withAuth = useAuthGuard();
 
   const handleProtectedAction = () => {
-
       console.log("user is logged in");
   };
 
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  
 
 
   useEffect(() => {
@@ -25,16 +25,15 @@ import useAuthGuard from "../Context/useAuthGuard.jsx"
         const response = await fetch('http://localhost:3000/petlisting');
         const result = await response.json();
   
-        // Ensure we are setting the 'data' array inside pets, not the whole response object
         if (result.success && Array.isArray(result.data)) {
           setPets(result.data);
         } else {
           console.error("Unexpected API response format:", result);
-          setPets([]); // Fallback to prevent mapping errors
+          setPets([]); 
         }
       } catch (error) {
         console.error('Error fetching pets:', error);
-        setPets([]); // Ensure pets is always an array
+        setPets([]); 
       }
     };
   
@@ -45,6 +44,7 @@ import useAuthGuard from "../Context/useAuthGuard.jsx"
   const handleAdopt = () => {
     // Handle adoption logic here
     alert(`Adoption request for ${selectedPet.name} submitted!`);
+
     setSelectedPet(null);
   };
   return (

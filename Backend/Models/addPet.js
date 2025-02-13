@@ -8,6 +8,7 @@ const petListschema= new mongoose.Schema({
     Location:String,
     Image: String,
     email: String,
+    organizationname: String,
 
 })
 

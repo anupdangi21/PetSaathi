@@ -38,8 +38,8 @@ function Nav() {
     const userEmail = userDataFromStorage?.user?.email; 
 
     const isVendor = vendorData?.data?.some(vendor => 
-        vendor?.Email && userEmail && 
-        vendor.Email.toLowerCase() === userEmail.toLowerCase()
+        vendor?.email && userEmail && 
+        vendor.email.toLowerCase() === userEmail.toLowerCase()
     );
 
     useEffect(() => {

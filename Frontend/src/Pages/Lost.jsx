@@ -6,6 +6,7 @@ import Navbar from "../Components/Navbar.jsx";
 import Footer from "../Components/foot.jsx";
 import { Info } from 'lucide-react';
 import useAuthGuard from "../Context/useAuthGuard.jsx"
+import FoundPetConfirmation from "../Reservation/FoundPetConfirmation.jsx"
 
 const Lost = () => {
   const withAuth = useAuthGuard();
@@ -26,6 +27,7 @@ const Lost = () => {
   const [filteredPets, setFilteredPets] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [petsLoading, setPetsLoading] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     const fetchAllFoundPets = async () => {
@@ -52,6 +54,12 @@ const Lost = () => {
       [e.target.name]: e.target.value
     });
   };
+
+  const handleConfirmPet = () => {
+    withAuth(handleProtectedAction)();
+    setShowConfirmation(true); 
+  };
+  
 
   const handleFilter = () => {
     const { category, color } = formData;
@@ -243,7 +251,7 @@ const Lost = () => {
                     </div>
                     <div className="flex gap-3 mt-6">
                       <button
-                      onClick={withAuth(handleProtectedAction)}
+                      onClick={handleConfirmPet}
                       className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
                         That's my pet
                       </button>
@@ -266,6 +274,7 @@ const Lost = () => {
             </div>
           </div>
         )}
+        {showConfirmation && <FoundPetConfirmation />}
       </main>
       <Footer />
     </div>
