@@ -9,13 +9,14 @@ import upload from "../multerConfig.js"
 
 const petList = async(req,res)=>{
     try {
-        const {petname, Category, Description, Age, Location, email } = req.body;
+        console.log(req.body)
+        const {petname, Category, Description, Age, Location, email, organizationname } = req.body;
         const Image = req.file ? req.file.path.replace(/\\/g, "/") : null;
         if(!petname || !Category || !Description || !Age || !Location || !Image){
             return res.status(400).json({message: "please fill all the empty fields"})
             }
             const pet = new petListModel({
-                petname, Category, Description, Age, Location, Image, email
+                petname, Category, Description, Age, Location, Image, email, organizationname
             });
             await pet.save();
 
@@ -66,7 +67,6 @@ const updatePet = async (req, res) => {
 const deletePet = async (req, res) => {
     try {
         const {_id } = req.params;  
-        console.log(_id)
         const deletedPet = await petListModel.findByIdAndDelete(_id);
         if (!deletedPet) {
             return res.status(404).json({ success: false, message: "Pet not found" });

@@ -43,6 +43,9 @@ const RegisterForm = () => {
           <h1 className="text-2xl font-bold text-gray-800 text-center">Register here</h1>
 
           <div className="relative">
+           <label className="block text-gray-700 text-sm font-bold mb-2">
+            Enter your valid email
+            </label>
             <input
               type="email"
               name="email"
@@ -54,7 +57,10 @@ const RegisterForm = () => {
             <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-400"></i>
           </div>
 
-          <div className="relative">
+          <div className="relative mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Enter your username
+            </label>
             <input
               type="text"
               name="username"
@@ -66,7 +72,10 @@ const RegisterForm = () => {
             <i className="fa-solid fa-user absolute right-3 top-3 text-gray-400"></i>
           </div>
 
-          <div className="relative">
+          <div className="relative mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Enter your username
+            </label>
             <input
               type="password"
               name="password"

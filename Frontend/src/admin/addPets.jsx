@@ -57,7 +57,8 @@ const AddPets = () => {
     formData.append("Description", Description);
     formData.append("Age", Age);
     formData.append("Location", Location);
-    formData.append("email", userData.user.email); // Email from localStorage
+    formData.append("email", userData.user.email);
+    formData.append("organizationname", userData.user.organizationname) // Email from localStorage
     
     // Only append new image if it exists
     if (Image) {

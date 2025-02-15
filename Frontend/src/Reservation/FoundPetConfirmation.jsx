@@ -1,54 +1,84 @@
-import React from 'react'
+import React, { useState,  } from 'react';
+import Calendar from 'react-calendar';
+import { useNavigate } from 'react-router-dom';
+import 'react-calendar/dist/Calendar.css';
 
 const FoundPetConfirmation = () => {
-  return (
-<div className="bg-white shadow-md rounded-lg p-4 min-h-[40vh] w-full max-w-md mx-auto">
-            <h1 className="text-2xl font-bold text-gray-800 text-center mb-4">Reservation to reunite with your pet</h1>
-            {/* onSubmit={handleSubmit} */}
-            <form >
-                <div className="flex flex-col gap-4">
-                    <div className="relative">
+
+    const Navigate = useNavigate()
+    const [date, setDate] = useState(null);
+    const formattedDate = date ? date.toDateString() : "";
+
+    const cancelButton=()=>{
+        Navigate("/lostfound/lost")
+    } 
+
+    return (
+        <div className='w-full max-w-[800px] mx-auto'>
+            <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
+                Reunite with your pet
+            </h1>
+            
+            <form className='bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full'>
+                <div className="flex flex-col gap-6">
+                    <div className="flex flex-wrap gap-4">
+                        {/* Full Name Field */}
+                        <div className="flex-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                                Enter your full name
+                            </label>
+                            <input
+                                type="text"
+                                name="fullname"
+                                placeholder="Full Name"
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            />
+                        </div>
+
+                        {/* Calendar Field */}
+                        <div className="flex-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                                Book a date
+                            </label>
+                            <input
+                                type="text"
+                                value={formattedDate}
+                                readOnly
+                                placeholder="Select a date"
+                                className="w-full px-3 py-2 border rounded-md"
+                            />
+                            <Calendar className="mt-4" onChange={setDate} value={date} />
+                        </div>
+                    </div>
+
+                    {/* Location Field */}
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Enter location where you want to meet
+                        </label>
                         <input
-                            id="username"
                             type="text"
-                            name="username"
-                            placeholder="Username"
+                            name="location"
+                            placeholder="Location"
                             required
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            // onChange={(e) => setName(e.target.value)}
                         />
-                        <i className="fa-solid fa-user absolute right-3 top-3 text-gray-400"></i>
                     </div>
 
-                    <div className="relative">
-                        <input
-                            id="password"
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            // onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <i className="fa-solid fa-lock absolute right-3 top-3 text-gray-400"></i>
+                    {/* Buttons */}
+                    <div className="flex flex-row-reverse mt-6">
+                        <button
+                            type="submit"
+                            className=" bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition duration-300"
+                        >
+                            Submit
+                        </button>
                     </div>
-                    <button
-                        type="submit"
-                        className="w-1/2 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        className="w-1/2 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    >
-                        Submit
-                    </button>
-
                 </div>
             </form>
         </div>
-  )
-}
+    );
+};
 
-export default FoundPetConfirmation
+export default FoundPetConfirmation;

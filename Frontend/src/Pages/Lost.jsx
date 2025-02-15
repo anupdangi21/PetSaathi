@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import { ClipLoader } from 'react-spinners';
@@ -9,6 +9,29 @@ import useAuthGuard from "../Context/useAuthGuard.jsx"
 import FoundPetConfirmation from "../Reservation/FoundPetConfirmation.jsx"
 
 const Lost = () => {
+  const [allFoundPets, setAllFoundPets] = useState([]);
+  const [filteredPets, setFilteredPets] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [petsLoading, setPetsLoading] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const modalRef = useRef(null);
+
+  const openModal = () => setShowConfirmation(true);
+  const closeModal = () => setShowConfirmation(false);
+
+  useEffect(() => {
+    if (showConfirmation) {
+      const handleClickOutside = (event) => {
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
+          closeModal();
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showConfirmation]);
+
   const withAuth = useAuthGuard();
 
   const handleProtectedAction = () => {
@@ -23,11 +46,7 @@ const Lost = () => {
     location: ''
   });
 
-  const [allFoundPets, setAllFoundPets] = useState([]);
-  const [filteredPets, setFilteredPets] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [petsLoading, setPetsLoading] = useState(true);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+
 
   useEffect(() => {
     const fetchAllFoundPets = async () => {
@@ -243,7 +262,7 @@ const Lost = () => {
                         className="w-full h-48 object-cover mb-4 rounded-lg"
                       />
                     )}
-                    <h3 className="text-xl font-semibold mb-2 capitalize">{pet.Category}</h3>
+                    <h3 className="text-xl font-semibold mb-2 capitalize">Category: {pet.Category}</h3>
                     <div className="space-y-1">
                       <p><span className="font-medium">Color:</span> {pet.Color}</p>
                       <p><span className="font-medium">Age:</span> {pet.Age}</p>
@@ -251,7 +270,10 @@ const Lost = () => {
                     </div>
                     <div className="flex gap-3 mt-6">
                       <button
-                      onClick={handleConfirmPet}
+                      onClick={()=>{
+                        openModal()
+                        handleConfirmPet()
+                      }}
                       className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
                         That's my pet
                       </button>
@@ -274,10 +296,19 @@ const Lost = () => {
             </div>
           </div>
         )}
-        {showConfirmation && <FoundPetConfirmation />}
       </main>
+      {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" >
+          <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]" >
+            <FoundPetConfirmation onClick={closeModal} />
+          </div>
+        </div>
+      )}
+      <footer>
       <Footer />
+    </footer>
     </div>
+    
   );
 };
 
