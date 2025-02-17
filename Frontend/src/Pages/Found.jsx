@@ -22,8 +22,16 @@ const Found = () => {
     Navigate("/services/lostfound");
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+      //getting the pet finder email from the localstorage
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    if(!userData?.user?.email && !userData?.user?.username){
+      return;
+    }
 
     if (!Category || !Image || !Description || !Color || !Age || !Location) {
       Swal.fire({
@@ -41,6 +49,8 @@ const Found = () => {
     formData.append("Color", Color);
     formData.append("Age", Age);
     formData.append("Location", Location);
+    formData.append("email", userData.user.email);
+    formData.append("username",userData.user.username )
 
     try {
       const result = await axios.post('http://localhost:3000/petfound', formData, {

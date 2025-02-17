@@ -6,7 +6,7 @@ import mongoose from'./Connection.js';
 import authRoutes from './Route/authRoute.js'; 
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv';
-// import userRouter from './Route/userRoutes.js';
+import userRouter from './Route/userRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -22,7 +22,7 @@ app.use(cors({
 // Use the routes from authController.js
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(authRoutes);
-// app.use('/user',userRouter)
+app.use('/user',userRouter)
 
 // Starting the server
 const PORT = process.env.PORT || 3000;

@@ -6,7 +6,7 @@ import multer from "multer";
 
 const petFoundData = async (req, res) => {
     try {
-        const {Category, Description, Color,Age, Location } = req.body; 
+        const {Category, Description, Color,Age, Location,email,username } = req.body; 
         const Image = req.file ? req.file.path.replace(/\\/g, "/") : null; 
 
         if (!Category || !Image || !Description || !Color || !Age || !Location) {
@@ -14,7 +14,7 @@ const petFoundData = async (req, res) => {
         }
 
         const foundPet = new petFound({
-            Category, Image, Description, Color, Age, Location
+            Category, Image, Description, Color, Age, Location,email,username
         });
 
         await foundPet.save();

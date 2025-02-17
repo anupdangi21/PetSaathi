@@ -42,7 +42,7 @@ const AddPets = () => {
     
     // Get user data from localStorage
     const userData = JSON.parse(localStorage.getItem('user_data'));
-    if (!userData?.user?.email) {
+    if (!userData?.user?.email && !userData?.user?.organizationname) {
       Swal.fire({
         icon: "error",
         title: "Authentication Error",
@@ -58,7 +58,7 @@ const AddPets = () => {
     formData.append("Age", Age);
     formData.append("Location", Location);
     formData.append("email", userData.user.email);
-    formData.append("organizationname", userData.user.organizationname) // Email from localStorage
+    formData.append("organizationname", userData.user.organizationname) 
     
     // Only append new image if it exists
     if (Image) {

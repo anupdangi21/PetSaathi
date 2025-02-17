@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { Heart, MapPin, Calendar, Info } from 'lucide-react';
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
@@ -8,16 +8,26 @@ import AdoptPetReservation from "../Reservation/AdoptPetReservation.jsx"
  function Adoption () {
 
   const withAuth = useAuthGuard();
-
-  const handleProtectedAction = () => {
-      console.log("user is logged in");
-  };
+  const modalRef = useRef(null);
 
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   
+  const openModal = () => setShowConfirmation(true);
+  const closeModal = () => setShowConfirmation(false);
 
+    useEffect(() => {
+      if (showConfirmation) {
+        const handleClickOutside = (event) => {
+          if (modalRef.current && !modalRef.current.contains(event.target)) {
+            closeModal();
+          }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+      }
+    }, [showConfirmation])
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -42,8 +52,7 @@ import AdoptPetReservation from "../Reservation/AdoptPetReservation.jsx"
   
 
   const handleAdopt = () => {
-    // Handle adoption logic here
-    alert(`Adoption request for ${selectedPet.name} submitted!`);
+
 
     setSelectedPet(null);
   };
@@ -110,10 +119,7 @@ import AdoptPetReservation from "../Reservation/AdoptPetReservation.jsx"
 
                 <div className="flex gap-3">
                   <button
-                  onClick={() => {
-                    withAuth(handleProtectedAction)();
-                    // handleAdopt();        
-                }}
+                  onClick= {withAuth(openModal) }
                   className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
                     Adopt Now
                   </button>
@@ -164,10 +170,7 @@ import AdoptPetReservation from "../Reservation/AdoptPetReservation.jsx"
                   </div>
                 </div>
                 <button 
-                  onClick={() => {
-                    withAuth(handleProtectedAction)();
-                    handleAdopt();        
-                }}
+                onClick= {withAuth(openModal) }
                   className="w-full bg-orange-300 text-white px-6 py-3 rounded-lg hover:bg-orange-200"
                 >
                   Adopt Now
@@ -176,16 +179,23 @@ import AdoptPetReservation from "../Reservation/AdoptPetReservation.jsx"
             </div>
           </div>
         )}
-      {/* Schedule Visit Section */}
+      {/* Schedule Visit Section
       <div className="mt-12 text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Want to meet in person?</h2>
         <button className="inline-flex items-center gap-2 bg-orange-300 text-white px-6 py-3 rounded-lg hover:bg-orange-200">
           <Calendar size={20} />
           Schedule a Visit
         </button>
-      </div>
+      </div> */}
       
     </main>
+    {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" >
+          <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]" >
+            <AdoptPetReservation onClick={closeModal} />
+          </div>
+        </div>
+      )}
     <footer>
         <Footer />
       </footer>

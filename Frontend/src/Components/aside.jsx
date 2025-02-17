@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Bell,
   LogOut,
+  CirclePlus
 } from 'lucide-react';
 
 const Aside = () => {
@@ -27,13 +28,6 @@ const Aside = () => {
   ];
 
   //handling vendor logout
-
-  // const handleLogout = () => {
-  //   const confirmLogout = window.confirm("Are you sure you want to logout?");
-  //   if (confirmLogout) {
-  //     window.location.href = "/";
-  //   }
-  // };
 
   const { isAuthenticated, userData, logout } = useContext(AppContext);
 
@@ -72,25 +66,29 @@ const Aside = () => {
               {isServicesOpen && (
                 <div className="pl-10 space-y-2 mt-2">
                   {services.map((service) => (
-                    <a
-                      key={service.name}
-                      href="/dashboard/adoption"
-                      className="flex items-center space-x-3 text-gray-600 p-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                    >
-                      {service.icon && <service.icon size={18} />}
-                      <span>{service.name}</span>
-                    </a>
-                  ))}
+                <a
+                  key={service.name}
+                  href={`/dashboard/${service.name.toLowerCase()}`} 
+                  className="flex items-center space-x-3 text-gray-600 p-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                >
+                  {service.icon && <service.icon size={18} />}
+                  <span>{service.name}</span>
+                  
+                </a>
+              ))}
+              <button className='flex items-center space-x-3 w-36 h-10 ml-2 hover:bg-orange-50 hover:text-orange-600 transition-colors'>
+               <CirclePlus  size={16}/> <soan>Add service</soan>
+              </button>
                 </div>
               )}
             </div>
           </div>
 
           <div className="absolute bottom-0 w-full p-4 border-t">
-            <button className="w-full flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
+          <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <Bell size={20} />
               { <span>Notifications</span>}
-            </button>
+              </a>
             <button 
               onClick={()=>{
                 Swal.fire({

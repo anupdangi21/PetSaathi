@@ -176,10 +176,8 @@ const signin = async (req, res) => {
 
                 user:{
                     _id: user._id,
-                    // organizationname:vendor.organizationname,
                     username: user.username,
-                    email: user.email,
-                    // services: vendor.services,   
+                    email: user.email,  
                 }
                 
             })

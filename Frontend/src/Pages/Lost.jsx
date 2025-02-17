@@ -16,9 +16,34 @@ const Lost = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [visible, setVisible] = useState(false);
   const modalRef = useRef(null);
+  const [isPopupShown, setIsPopupShown] = useState(false);
 
-  const openModal = () => setShowConfirmation(true);
-  const closeModal = () => setShowConfirmation(false);
+  // const openModal = () => setShowConfirmation(true);
+  // const closeModal = () => setShowConfirmation(false);
+
+  const openModal = () => {
+    if (!isPopupShown) {
+      Swal.fire({
+        title: "Is this your pet?",
+        text: "Are you sure this pet belongs to you?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#5cb85c",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setShowConfirmation(true);
+        }
+        setIsPopupShown(false); 
+      });
+    }
+  };
+  const closeModal = () => {
+    setShowConfirmation(false);
+    setIsPopupShown(false); //reseting the popup status after clicking once
+  };
 
   useEffect(() => {
     if (showConfirmation) {
@@ -34,10 +59,6 @@ const Lost = () => {
 
   const withAuth = useAuthGuard();
 
-  const handleProtectedAction = () => {
-
-      console.log("User is authenticated.");
-  };
 
   const [formData, setFormData] = useState({
     category: "",
@@ -74,10 +95,10 @@ const Lost = () => {
     });
   };
 
-  const handleConfirmPet = () => {
-    withAuth(handleProtectedAction)();
-    setShowConfirmation(true); 
-  };
+  // const handleConfirmPet = () => {
+  //   withAuth(handleProtectedAction)();
+  //   setShowConfirmation(false); 
+  // };
   
 
   const handleFilter = () => {
@@ -270,10 +291,7 @@ const Lost = () => {
                     </div>
                     <div className="flex gap-3 mt-6">
                       <button
-                      onClick={()=>{
-                        openModal()
-                        handleConfirmPet()
-                      }}
+                      onClick={withAuth(openModal) }
                       className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
                         That's my pet
                       </button>

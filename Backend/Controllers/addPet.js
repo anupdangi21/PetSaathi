@@ -66,7 +66,8 @@ const updatePet = async (req, res) => {
 
 const deletePet = async (req, res) => {
     try {
-        const {_id } = req.params;  
+
+        const {_id} = req.params;  
         const deletedPet = await petListModel.findByIdAndDelete(_id);
         if (!deletedPet) {
             return res.status(404).json({ success: false, message: "Pet not found" });

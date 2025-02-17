@@ -16,6 +16,9 @@ import AdminAdoption from "../admin/Adoption"
 import AddPet from "../admin/addPets"
 import LostPet from "../Pages/Lost"
 import FoundPet from "../Pages/Found"
+import NotificationAdmin from "../admin/notificationAdmin"
+import HostelAdmin from "../admin/Hostel";
+import TrainingAdmin from "../admin/Training";
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -70,6 +73,18 @@ function AppRouter() {
     {
       path:"/dashboard/adoption",
       element: <AdminAdoption />
+    },
+    {
+      path: "/dashboard/hostel",
+      element: <HostelAdmin />
+    },
+    {
+      path: "/dashboard/training",
+      element: <TrainingAdmin />
+    },
+    {
+      path:"/dashboard/notification",
+      element: <NotificationAdmin />
     },
     {
       path:"/dashboard/addpet",
