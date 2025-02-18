@@ -113,7 +113,19 @@ const AdoptPetReservation = () => {
                     {/* Location Field */}
                     <div>
                         <label className="block text-gray-700 text-sm font-bold mb-2">
-                            Enter location where you want to meet
+                            Enter your location
+                        </label>
+                        <input
+                            type="text"
+                            name="location"
+                            placeholder="Location"
+                            required
+                            className="w-96 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Enter your contact number
                         </label>
                         <input
                             type="text"

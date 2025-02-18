@@ -10,14 +10,15 @@ const Vregister = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [number, setNumber] = useState('');
 
   const navigate = useNavigate();
 
-  // Fetch email from localStorage on component mount
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user_data"));
-    if (userData?.user?.email) {
-      setEmail(userData.user.email); // Set to state
+    if (userData?.user?.email && userData?.user?.number) {
+      setEmail(userData.user.email ); 
+      setNumber(userData.user.number); // Set to state
       console.log("Fetched email:", userData.user.email); 
     }
   }, []);
@@ -27,7 +28,7 @@ const Vregister = () => {
     try {
       const result = await axios.post(
         'http://localhost:3000/registration', 
-        { organizationname, email, services, username, password }, 
+        { organizationname, email, services, username, password,number }, 
         { withCredentials: true }
       );
       console.log("Submission data:", { // Add this to verify
@@ -103,7 +104,6 @@ const Vregister = () => {
               </select>
               <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-500"></i>
             </div>
-
             <div className="relative">
               <input
                 type="text"

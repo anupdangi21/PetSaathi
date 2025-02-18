@@ -7,8 +7,6 @@ import axios from 'axios';
 
 const FoundPetConfirmation = () => {
 
-    // const Navigate = useNavigate()
-    // const [date, setDate] = useState(null);
 
     //setting the the state variable to store the data in the database
 
@@ -71,8 +69,7 @@ const FoundPetConfirmation = () => {
             <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
                 Reunite with your pet
             </h1>
-            
-            <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full'>
+             <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full'>
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-wrap gap-2">
                         {/* Full Name Field */}

@@ -19,6 +19,8 @@ import FoundPet from "../Pages/Found"
 import NotificationAdmin from "../admin/notificationAdmin"
 import HostelAdmin from "../admin/Hostel";
 import TrainingAdmin from "../admin/Training";
+import Tracking from "../Pages/Tracking"
+import UpdateProfile from "../Pages/cProfile"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -66,6 +68,15 @@ function AppRouter() {
       path: "/services/lostfound",
       element: <Lostfound />,
     },
+    {
+      path: "/tracking",
+      element: <Tracking />,
+    },
+    {
+      path:"updateprofile",
+      element:<UpdateProfile />,
+    },
+
     {
       path: "/vendor/register",
       element: <Vregister />,

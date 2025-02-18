@@ -21,7 +21,7 @@ const Signin = ({ closeModal }) => {
 
                 if (role === "user") {
                     console.log("User login success");
-                    login(token, user); // Use the `login` method from context
+                    login(token, user); 
                     Swal.fire({
                         icon: "success",
                         title: "User Login Successfully",
@@ -30,7 +30,7 @@ const Signin = ({ closeModal }) => {
                     navigate("/"); // Redirect to user home
                 } else if (role === "vendor") {
                     console.log("Vendor login success");
-                    login(token, user); // Update auth state
+                    login(token, user); 
                     Swal.fire({
                         icon: "success",
                         title: "Vendor Login Successfully",

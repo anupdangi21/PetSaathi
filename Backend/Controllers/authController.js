@@ -16,9 +16,10 @@ router.use(cors());
 // User registration
 const register = async (req, res)=>{
     try {
-        const { email, username, password } = req.body;
+        console.log(req.body)
+        const { email, username, password, number } = req.body;
 
-        if (!email || !username || !password) {
+        if (!email || !username || !password ||!number) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -29,9 +30,9 @@ const register = async (req, res)=>{
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new registerModel({ email, username, password: hashedPassword });
+        const newUser = new registerModel({ email, username, number,  password: hashedPassword });
         await newUser.save();
-        const signinUser = new SigninModel({ email,username,  password: hashedPassword });
+        const signinUser = new SigninModel({ email,username,number ,  password: hashedPassword });
         await signinUser.save();
     
 
@@ -58,6 +59,7 @@ const register = async (req, res)=>{
                 _id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
+                number: newUser.number
             }
          });
     } catch (error) {
@@ -80,17 +82,17 @@ const registerGetData = async (req, res) => {
 // Vendor registration
  const vendorRegister = async (req, res) => {
     try {
-        const { organizationname, email ,services, username, password } = req.body;
+        console.log(req.body)
+        const { organizationname, email ,services, username, password, number } = req.body;
 
         if ( !organizationname ||!services || !username || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newVendor = new vendorregisterModel({
-            organizationname, email, services, username, password: hashedPassword
+            organizationname, email, services, number, username, password: hashedPassword
         });
         await newVendor.save();
 
@@ -119,7 +121,8 @@ const registerGetData = async (req, res) => {
                 _id: newVendor._id,
                 username: newVendor.username,
                 email: newVendor.email,
-                services: newVendor.services
+                services: newVendor.services,
+                number:newVendor.number
             }
          });
     } catch (err) {
@@ -177,7 +180,8 @@ const signin = async (req, res) => {
                 user:{
                     _id: user._id,
                     username: user.username,
-                    email: user.email,  
+                    email: user.email, 
+                    number: user.number
                 }
                 
             })
@@ -191,6 +195,7 @@ const signin = async (req, res) => {
                     username: vendor.username,
                     email: vendor.email,
                     services: vendor.services,
+                    number: vendor.number
                 }
              });
         }

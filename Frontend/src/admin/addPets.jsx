@@ -40,7 +40,7 @@ const AddPets = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Get user data from localStorage
+    // Geting user data from localStorage
     const userData = JSON.parse(localStorage.getItem('user_data'));
     if (!userData?.user?.email && !userData?.user?.organizationname) {
       Swal.fire({

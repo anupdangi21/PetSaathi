@@ -8,13 +8,14 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState(''); 
+  const [number, setNumber] = useState(''); 
     
   const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post('http://localhost:3000/register', { email, username, password }, { withCredentials: true });
+      const result = await axios.post('http://localhost:3000/register', { email, username, password, number }, { withCredentials: true });
       console.log(result);
       if (result.status === 201) {
         Swal.fire({
@@ -53,6 +54,20 @@ const RegisterForm = () => {
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               onChange={(e) => setEmail(e.target.value)}
+            />
+            <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-400"></i>
+          </div>
+          <div className="relative">
+           <label className="block text-gray-700 text-sm font-bold mb-2">
+            Enter your contact number:
+            </label>
+            <input
+              type="text"
+              name="email"
+              placeholder="Contact number"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onChange={(e) => setNumber(e.target.value)}
             />
             <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-400"></i>
           </div>
