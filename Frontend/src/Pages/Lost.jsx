@@ -21,23 +21,35 @@ const Lost = () => {
 
   useEffect(() => {
     const fetchAllFoundPets = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/petfound');
-        setAllFoundPets(response.data.data || []);
-        setFilteredPets(response.data.data || []);
-      } catch (error) {
-        console.error('Error fetching found pets:', error);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to fetch found pets. Please try again later.",
-          icon: "error"
-        });
-      } finally {
-        setPetsLoading(false);
-      }
+        try {
+            const response = await axios.get('http://localhost:3000/petfound');
+            const userData = JSON.parse(localStorage.getItem('user_data'));
+            const userEmail = userData?.user?.email;
+
+            const data = response.data.data || [];
+
+            // Filter pets to show only those with status "found" and not belonging to the current user
+            const filteredData = data.filter(pet => 
+                pet.status === "Found" && (!userEmail || pet.email !== userEmail)
+            );
+
+            setAllFoundPets(filteredData);
+            setFilteredPets(filteredData);
+        } catch (error) {
+            console.error('Error fetching found pets:', error);
+            Swal.fire({
+                title: "Error!",
+                text: "Failed to fetch found pets. Please try again later.",
+                icon: "error"
+            });
+        } finally {
+            setPetsLoading(false);
+        }
     };
+
     fetchAllFoundPets();
-  }, []);
+}, []);
+
 
   const handleChange = (e) => {
     setFormData({
@@ -104,9 +116,11 @@ const Lost = () => {
   };
 
   return (
-    <div className='container min-h-screen'>
+    <div className=''>
+      <header>
       <Navbar />
-      <main className='max-w-7xl mx-auto px-4 py-8'>
+      </header>
+      <main className='max-w-7xl mx-auto'>
         <form className='mb-12'>
           <div className="bg-gradient-to-r from-orange-200 to-orange-50 rounded-2xl p-8 text-gray-800">
             <div className="flex flex-wrap gap-4 items-end">
@@ -203,7 +217,9 @@ const Lost = () => {
           <PetFilter pets={filteredPets} />
         )}
       </main>
+      <footer>
       <Footer />
+      </footer>
     </div>
   );
 };

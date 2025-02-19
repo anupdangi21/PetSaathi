@@ -9,6 +9,7 @@ const petListschema= new mongoose.Schema({
     Image: String,
     email: String,
     organizationname: String,
+    status:{ type: String, default: "open" ,required: true },
 
 })
 

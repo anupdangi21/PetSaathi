@@ -51,6 +51,7 @@ const Found = () => {
     formData.append("Location", Location);
     formData.append("email", userData.user.email);
     formData.append("username",userData.user.username )
+    formData.append("findercontact",userData.user.number)
 
     try {
       const result = await axios.post('http://localhost:3000/petfound', formData, {

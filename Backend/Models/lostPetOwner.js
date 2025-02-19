@@ -2,16 +2,17 @@ import mongoose from "mongoose";
 
 const LostPetOwnerSchema = new mongoose.Schema({
     image: String,
-    fullname: String,
-    email: String,
-    category: String,
-    color: String,
-    location: String,
-    ownercontact:String,
-    date: String,
-    finderemail: String,
-    finderusername:String,
-    foundlocation: String,
+    fullname: String, 
+    email: String, 
+    petCategory: String,
+    petColor: String,
+    location: String, 
+    ownercontact:String, 
+    date: String, 
+    finderEmail: String,
+    finderContact:String,
+    finderUsername:String,
+    petLocationFound: String,
 
 })
 

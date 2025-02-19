@@ -9,6 +9,8 @@ const foundPetschema = new mongoose.Schema({
     Color:String,
     Age: String,
     Location: String,
+    findercontact:String,
+    status:{ type: String, default: "found" ,required: true },
 })
 
 const petFound= mongoose.model('petFound', foundPetschema)

@@ -9,7 +9,7 @@ import petOwn from "../Controllers/petOwner.js"
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet}= petController;
-const {petFoundData,getPetFound }= found;
+const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
 const {petOwner, getpetOwner}=petOwn;
 
@@ -37,6 +37,8 @@ authRouter.delete("/petlisting/:_id", deletePet);
 //router for posting the found pet
 authRouter.post("/petfound",upload.single("Image"), petFoundData)
 authRouter.get("/petfound", getPetFound)
+authRouter.put("/petfound/:id",updateStatus)
+authRouter.delete("/petfound/:id",deleteFoundPet)
 
 //router for posting the lost pet and getting the lost pet
 authRouter.post("/lostpet", petLostData)

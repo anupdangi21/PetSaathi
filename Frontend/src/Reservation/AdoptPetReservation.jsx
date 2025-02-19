@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
 const AdoptPetReservation = () => {
     const [hasFirstPet, setHasFirstPet] = useState('');
     const [hasEnoughSpace, setHasEnoughSpace] = useState('');
+    const [selectedPet, setSelectedPet] = useState(null);
+
+    useEffect(() => {
+        // Get the selected pet details from localStorage
+        const petDetails = JSON.parse(localStorage.getItem('selectedPet'));
+        setSelectedPet(petDetails); // Set the state with the pet details
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -45,31 +52,35 @@ const AdoptPetReservation = () => {
             <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
                 Get your pet now!!!
             </h1>
-            
+
+            {/* Display the selected pet details */}
+            {selectedPet ? (
+                <div className="flex items-center bg-white p-6 rounded-lg shadow-md mb-6">
+                    <div className="flex-1">
+                        <h3 className="text-xl font-bold">Selected Pet Details:</h3>
+                        <p className='mt-2'><strong>Pet Name:</strong> {selectedPet.petname}</p>
+                        <p className='mt-2'><strong>Category:</strong> {selectedPet.Category}</p>
+                        <p className='mt-2'><strong>Age:</strong> {selectedPet.Age}</p>
+                        <p className='mt-2'><strong>Image:</strong> {selectedPet.Image}</p>
+                        <p className='mt-2'><strong>Organization Location:</strong> {selectedPet.Location}</p>
+                    </div>
+                </div>
+            ) : (
+                <p className="text-center text-gray-500">No pet selected.</p>
+            )}
+
+            {/* Reservation Form */}
             <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full'>
                 <div className="flex flex-col gap-6">
-                    <div className="flex flex-wrap gap-4">
-                        <div className="flex-1">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">
-                                Enter your full name
-                            </label>
-                            <input
-                                type="text"
-                                name="fullname"
-                                placeholder="Full Name"
-                                required
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-
-                        <div className="flex-1">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <div className="flex flex-wrap gap-2">
+                        <div className="flex-1 w-48">
+                            <label className="block text-gray-700 text-sm font-bold mb-2 w-96">
                                 Book a date
                             </label>
                             <input
                                 type="date"
                                 name="date"
-                                className="w-full px-3 py-2 border rounded-md"
+                                className="w-96 px-3 py-2 border rounded-md"
                                 required
                             />
                         </div>
@@ -77,7 +88,7 @@ const AdoptPetReservation = () => {
 
                     {/* First Pet Question */}
                     <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                        <label className="block text-gray-700 text-sm font-bold mb-2 pr-20">
                             Is this your first pet?
                         </label>
                         <select 
@@ -110,41 +121,14 @@ const AdoptPetReservation = () => {
                         </div>
                     )}
 
-                    {/* Location Field */}
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                            Enter your location
-                        </label>
-                        <input
-                            type="text"
-                            name="location"
-                            placeholder="Location"
-                            required
-                            className="w-96 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                            Enter your contact number
-                        </label>
-                        <input
-                            type="text"
-                            name="location"
-                            placeholder="Location"
-                            required
-                            className="w-96 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                    </div>
-
-                    {/* Buttons */}
-                        <button
-                            type="submit"
-                            className="w-24 bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition duration-300"
-                        >
-                            Submit
-                        </button>
-                    </div>
-
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-24 bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition duration-300"
+                    >
+                        Submit
+                    </button>
+                </div>
             </form>
         </div>
     );

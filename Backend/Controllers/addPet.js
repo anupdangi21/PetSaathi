@@ -16,7 +16,7 @@ const petList = async(req,res)=>{
             return res.status(400).json({message: "please fill all the empty fields"})
             }
             const pet = new petListModel({
-                petname, Category, Description, Age, Location, Image, email, organizationname
+                petname, Category, Description, Age, Location, Image, email, organizationname,status:"Available"
             });
             await pet.save();
 

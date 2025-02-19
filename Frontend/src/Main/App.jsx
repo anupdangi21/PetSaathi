@@ -18,7 +18,6 @@ function App() {
 
   const navigate = useNavigate();
   const [pets, setPets] = useState([]);
-  const [selectedPet, setSelectedPet] = useState(null);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -40,7 +39,10 @@ function App() {
 
     fetchPets();
   }, []);
-
+  
+  const viewAll=()=>{
+    navigate('/services/adoption')
+ }
   return (
     <div className="min-h-screen w-full bg-orange-100">
       <header>
@@ -73,7 +75,7 @@ function App() {
                 </button>
               </div>
               <div className="lg:w-1/2">
-                <img src={pet} alt="Pet adoption" className="mt-16" />
+                <img src={pet} alt="Pet adoption" className="mt-16 ml-8" />
               </div>
             </div>
           </div>
@@ -117,10 +119,11 @@ function App() {
                       <div className="flex gap-3">
                         <button
                         onClick={() => {
-                          withAuth(handleProtectedAction)();      
+                          withAuth(handleProtectedAction)()
+                          viewAll()    
                       }}
                         className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200">
-                          Adopt Now
+                          View more details
                         </button>
                       </div>
                     </div>

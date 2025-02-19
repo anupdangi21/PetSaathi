@@ -12,25 +12,28 @@ const PetFilter = ({ pets }) => {
   const [isPopupShown, setIsPopupShown] = useState(false);
   const withAuth = useAuthGuard();
 
-  const openModal = () => {
-    if (!isPopupShown) {
-      Swal.fire({
-        title: "Is this your pet?",
-        text: "Are you sure this pet belongs to you?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#5cb85c",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setShowConfirmation(true);
-        }
-        setIsPopupShown(false);
-      });
-    }
+  const handleClaimPet = (pet) => {
+    Swal.fire({
+      title: "Is this your pet?",
+      text: "Are you sure this pet belongs to you?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#5cb85c",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setSelectedPet(pet);
+        setShowConfirmation(true);
+      }
+    });
   };
+  
+  // const showPetDetails = (pet) => {
+  //   setSelectedPet(pet);
+  // };
+  
 
   const closeModal = () => {
     setShowConfirmation(false);
@@ -52,26 +55,10 @@ const PetFilter = ({ pets }) => {
     }
   }, [showConfirmation]);
 
-  //useeffect for displaying the data in overlay
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (infoModalRef.current && !infoModalRef.current.contains(event.target)) {
-        setSelectedPet(null);
-      }
-    };
-
     if (selectedPet) {
-      document.addEventListener("mousedown", handleClickOutside);
     }
-    
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, [selectedPet]);
-
-  const showPetDetails = (pet) => {
-    setSelectedPet(pet);
-  };
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg">
@@ -92,19 +79,15 @@ const PetFilter = ({ pets }) => {
                 <p><span className="font-medium">Color:</span> {pet.Color}</p>
                 <p><span className="font-medium">Age:</span> {pet.Age}</p>
                 <p><span className="font-medium">Location:</span> {pet.Location}</p>
+                <p className='font-medium'>Status:<span className="text-green-500 ml-2">{pet.status}</span> </p>
               </div>
               <div className="flex gap-3 mt-6">
-                <button
-                  onClick={withAuth(openModal)}
-                  className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200"
-                >
-                  That's my pet
-                </button>
-                <button
-                onClick={() => showPetDetails(pet)}
-                className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                  <Info size={20} />
-                </button>
+              <button
+                onClick={withAuth(() => handleClaimPet(pet))}
+                className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200"
+              >
+                That's my pet
+              </button>
               </div>
             </div>
           ))
@@ -114,71 +97,13 @@ const PetFilter = ({ pets }) => {
           </div>
         )}
       </div>
-
-      {selectedPet && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div ref={infoModalRef} className="bg-white rounded-lg p-6 max-w-2xl w-full relative">
-            <button
-              onClick={() => setSelectedPet(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <X size={24} />
-            </button>
-            
-            <h2 className="text-2xl font-bold mb-4">{selectedPet.Category} Details</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {selectedPet.Image && (
-                <img
-                  src={`http://localhost:3000/${selectedPet.Image}`}
-                  alt={selectedPet.Category}
-                  className="w-full h-80 object-cover rounded-lg"
-                />
-              )}
-              
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-lg">Posted by:</h3>
-                  <ul className="mt-2 space-y-2">
-                    <li><span className="font-medium">Username:</span> {selectedPet.username}</li>
-                    <li><span className="font-medium">Email:</span> {selectedPet.email}</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg">Basic Information</h3>
-                  <ul className="mt-2 space-y-2">
-                    <li><span className="font-medium">Color:</span> {selectedPet.Color}</li>
-                    <li><span className="font-medium">Age:</span> {selectedPet.Age}</li>
-                    <li><span className="font-medium">Location Found:</span> {selectedPet.Location}</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-lg">Description of lost pet:</h3>
-                  <p className="mt-2 text-gray-600">
-                    {selectedPet.Description || "No additional description provided"}
-                  </p>
-                </div>
-                <button
-                  onClick={withAuth(openModal)}
-                  className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200"
-                >
-                  That's my pet
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Existing confirmation modal */}
-      {showConfirmation && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]">
-            <FoundPetConfirmation onClick={closeModal} />
-          </div>
-        </div>
-      )}
+ {showConfirmation && selectedPet && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[700px]">
+      <FoundPetConfirmation pet={selectedPet} onClick={closeModal} />
+    </div>
+  </div>
+)}
     </div>
   );
 };
