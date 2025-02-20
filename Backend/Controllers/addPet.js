@@ -9,15 +9,15 @@ import upload from "../multerConfig.js"
 
 const petList = async(req,res)=>{
     try {
-        console.log(req.body)
-        const {petname, Category, Description, Age, Location, email, organizationname } = req.body;
+        const {petname, Category, Description, Age, Location, email, organizationname,vendorcontact } = req.body;
         const Image = req.file ? req.file.path.replace(/\\/g, "/") : null;
         if(!petname || !Category || !Description || !Age || !Location || !Image){
             return res.status(400).json({message: "please fill all the empty fields"})
             }
             const pet = new petListModel({
-                petname, Category, Description, Age, Location, Image, email, organizationname,status:"Available"
+                petname, Category, Description, Age, Location, Image, email, organizationname, vendorcontact, status:"Available", 
             });
+            console.log(pet)
             await pet.save();
 
             res.status(200).json({ success: true, message: "Pet Uploaded successfully"});

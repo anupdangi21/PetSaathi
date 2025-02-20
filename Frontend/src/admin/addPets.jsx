@@ -59,6 +59,8 @@ const AddPets = () => {
     formData.append("Location", Location);
     formData.append("email", userData.user.email);
     formData.append("organizationname", userData.user.organizationname) 
+    formData.append("vendorcontact", userData.user.number) 
+
     
     // Only append new image if it exists
     if (Image) {

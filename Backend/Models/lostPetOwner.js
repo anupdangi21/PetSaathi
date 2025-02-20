@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const LostPetOwnerSchema = new mongoose.Schema({
-    image: String,
+    petImage: String,
     fullname: String, 
     email: String, 
     petCategory: String,

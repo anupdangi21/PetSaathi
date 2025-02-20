@@ -7,6 +7,7 @@ const Tracking = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userEmail, setUserEmail] = useState('');
+  const [ownerpet, setOwnerpet] = useState([]);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user_data'));
@@ -118,6 +119,40 @@ if (!result.isConfirmed) {
     }
   };
 
+  //fetchung the pet ownership data from the db
+  useEffect(() => {
+    const fetchOwnerPets = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/petreunite");
+        if (!response.ok) throw new Error("Failed to fetch data");
+        const result = await response.json();
+        
+        // Extract pet data from response
+        const petData = Array.isArray(result.data) ? result.data : [];
+  
+        // Filter pets where ownerEmail matches logged-in user's email
+        const filteredPets = petData.filter(pet => 
+          pet.email === userEmail
+        );
+  
+        setOwnerpet(filteredPets);
+      } catch (err) {
+        setError(err.message);
+        setOwnerpet([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userEmail) {
+      fetchOwnerPets();
+    } else {
+      setLoading(false);
+      setOwnerpet([]);
+    }
+  }, [userEmail]);
+
+
   // Filter pets by matching email
   const filteredPets = pets.filter((pet) => pet.email === userEmail);
 
@@ -127,14 +162,15 @@ if (!result.isConfirmed) {
         <Navbar />
       </header>
       <main>
-        <div className="min-h-screen w-full bg-orange-100">
-          <div className="container ml-24 max-w-screen-xl bg-orange-100">
+        <div className="min-h-screen w-full bg-orange-200">
+          <div className="container ml-24 max-w-screen-xl bg-orange-200">
             <h1 className="font-medium mt-6">Service Tracking</h1>
           </div>
         </div>
-        <div className="min-h-screen w-full bg-orange-50">
-          <div className="container ml-24 max-w-screen-xl bg-orange-50">
-            <h1 className="font-medium text-2xl">Lost and Found Pet Tracking</h1>
+        {/* for tracking the found pet post data */}
+        <div className="min-h-90 w-full bg-orange-100">
+          <div className="container ml-24 max-w-screen-xl bg-orange-100">
+            <h1 className="font-medium text-2xl">Found Pet Tracking</h1>
 
             {loading && <p>Loading pets...</p>}
             {error && <p className="text-red-500">Error: {error}</p>}
@@ -172,7 +208,39 @@ if (!result.isConfirmed) {
               </div>
             )}
           </div>
+          <div>
+
+            {/* for tracking the lost pet owner ship */}
+          <div className="min-h-screen w-full bg-orange-50 mt-4">
+          <div className="container ml-24 max-w-screen-xl bg-orange-50">
+            <h1 className="font-medium text-2xl mt-4">Lost Pet Ownership</h1>
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-40 mt-4">
+      {ownerpet.length > 0 ? (
+        ownerpet.map((pet) => (
+          <div key={pet._id} className="border p-8 rounded-lg bg-white shadow-md">
+            <img
+              src={`http://localhost:3000/${pet.petImage}`}
+              alt={pet.petname}
+              className="w-full h-64 object-cover"
+            />
+            <h3 className="text-xl font-semibold mb-2">
+              Pet found by: {pet.finderUsername}
+            </h3>
+            <p className="text-gray-600 mt-2">Finder contact: {pet.finderContact}</p>
+            <p className="text-gray-600 mt-2">Found Location: {pet.petLocationFound}</p>
+            <p className="text-gray-600 mt-2">Reunite date: {pet.date}</p>
+            <p className="text-gray-600 mt-2">Owner {pet.fullname}</p>
+          </div>
+        ))
+      ) : (
+        <p>No pets were found for your ownership</p>
+      )}
+    </div>
+          </div>
+          </div>
         </div>
+        </div>
+
       </main>
 
       <footer>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const AdoptPetReservation = () => {
+    const [date, setDate]=useState("")
     const [hasFirstPet, setHasFirstPet] = useState('');
     const [hasEnoughSpace, setHasEnoughSpace] = useState('');
     const [selectedPet, setSelectedPet] = useState(null);
@@ -11,6 +13,17 @@ const AdoptPetReservation = () => {
         const petDetails = JSON.parse(localStorage.getItem('selectedPet'));
         setSelectedPet(petDetails); // Set the state with the pet details
     }, []);
+
+    const userData = JSON.parse(localStorage.getItem("user_data"))
+        if(!userData?.user?.email){
+            Swal.fire({
+                icon: 'error',
+                title: "Authentication error",
+                text: "email not found"
+            })
+            return ;
+        }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,16 +48,60 @@ const AdoptPetReservation = () => {
 
         // Proceed with form submission
         const formData = new FormData(e.target);
+        formData.append("image",selectedPet.Image)
+        formData.append("date", date);
+        formData.append("firstPet", hasFirstPet)
+        formData.append("enoughSpace", hasEnoughSpace)
+        formData.append("petname", selectedPet.petname);
+        formData.append("location", selectedPet.Location);
+        formData.append("Category", selectedPet.Category);
+        formData.append("fullname",userData.user.username);
+        formData.append("email", userData.user.email);
+        formData.append("ownercontact", userData.user.number);
+        formData.append("vendorcontact", selectedPet.vendorcontact);
+        formData.append("vendoremail", selectedPet.email);
+        formData.append("status", selectedPet.status);
         const submissionData = {
-            fullname: formData.get('fullname'),
+            image:formData.get("image"),
             date: formData.get('date'),
-            firstPet: hasFirstPet,
-            spaceAvailable: hasEnoughSpace,
-            location: formData.get('location')
+            firstPet: formData.get("firstPet"),
+            enoughSpace: formData.get("enoughSpace"),
+            petname: formData.get("petname"),
+            location: formData.get("location"),
+            Category: formData.get("Category"),
+            fullname: formData.get('fullname'),
+            email:formData.get("email"),
+            ownercontact: formData.get("ownercontact"),
+            vendorcontact: formData.get("vendorcontact"),
+            vendoremail: formData.get("vendoremail"),
+            status: formData.get("status"),
         };
 
         console.log('Submission data:', submissionData);
         Swal.fire('Success!', 'Your application has been submitted!', 'success');
+
+        try {
+            const response = await axios.post("http://localhost:3000/adoption",submissionData,{
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+
+            if(response.status===200){
+                            Swal.fire({
+                                icon: 'success',
+                                title: "Pet Adoption request",
+                                text: "Your request has been submitted successfully"
+                                })
+                        }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: "Error",
+                text: "Error in sending data"
+            })
+        }
     };
 
     return (
@@ -82,6 +139,7 @@ const AdoptPetReservation = () => {
                                 name="date"
                                 className="w-96 px-3 py-2 border rounded-md"
                                 required
+                                onChange={(e)=>setDate(e.target.value)}
                             />
                         </div>
                     </div>

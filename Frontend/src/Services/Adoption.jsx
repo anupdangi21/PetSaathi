@@ -177,6 +177,10 @@ function Adoption() {
               />
               <div className="p-6">
                 <h2 className="text-2xl font-bold mb-4">{selectedPet.petname}</h2>
+                {/* <h2 className="text-xl font-bold mb-4">from:{selectedPet.petname}</h2> */}
+                <div className='flex flex'>
+                <h2 className="text-xl font-medium mb-4">Contact vendor:</h2><p className='mt-1 ml-2'>{selectedPet.email}</p>
+                </div>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="flex items-center">
                     <MapPin size={20} className="mr-2" />

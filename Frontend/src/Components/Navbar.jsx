@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Signin from "./signin.jsx";
 import Logo from "../Images/logo.png";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
@@ -17,6 +17,7 @@ function Nav() {
 
     const openModal = () => setVisible(true);
     const closeModal = () => setVisible(false);
+    const navigate = useNavigate()
 
     const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
 
@@ -76,6 +77,10 @@ function Nav() {
             <a href="/services/lostfound" className="block px-4 py-2 text-white hover:bg-orange-100">Lost and Found</a>
         </div>
     );
+
+    const getLogout=()=>{
+        navigate("/")
+    }
 
     return (
         <div className="header flex items-center justify-between px-6 py-3 bg-[#e8c7a3] w-full h-[12vh]">
@@ -149,6 +154,7 @@ function Nav() {
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
                                                     logout();
+                                                    getLogout()
                                                     Swal.fire("Signed out!", "You have been successfully signed out.", "success");
                                                 }
                                             });

@@ -12,7 +12,6 @@ const petOwner = async (req, res)=>{
         const petOwn = new petOwnersModel({
             fullname,date,location,ownercontact,email,petCategory,petColor,petLocationFound,finderUsername,finderEmail,finderContact,petImage
         })
-
         await petOwn.save();
         res.status(200).json({status: true , message: "pet ownership request submitted successfully"})
 

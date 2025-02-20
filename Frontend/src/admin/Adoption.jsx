@@ -128,7 +128,7 @@ const Adoption = () => {
                 <Aside />
             </aside>
 
-            <main className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-20'} transition-all duration-300 p-8`}>
+            <main className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-64'} transition-all duration-300 p-8`}>
                 <div className="bg-white rounded-lg shadow-sm p-6">
                     <h2 className="text-2xl font-semibold text-gray-800 ">Welcome to Adoption Dashboard</h2>
                     <h3 className=" grid ml text-2xl font-semibold text-gray-800 place-items-end mr-12">Upload a pet

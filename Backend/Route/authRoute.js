@@ -6,12 +6,14 @@ import found from "../Controllers/foundPet.js"
 import upload from "../multerConfig.js";
 import lost from "../Controllers/lostPet.js"
 import petOwn from "../Controllers/petOwner.js"
+import petAdoption from '../Controllers/petAdoption.js';
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet}= petController;
 const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
 const {petOwner, getpetOwner}=petOwn;
+const {petAdopt, getpetAdopt}=petAdoption;
 
 
 //routes for posting the data and getting the data
@@ -43,6 +45,10 @@ authRouter.delete("/petfound/:id",deleteFoundPet)
 //router for posting the lost pet and getting the lost pet
 authRouter.post("/lostpet", petLostData)
 authRouter.get("/lostpet", getLostPetData)
+
+//router for posting the data of the pet adoption and getting the data
+authRouter.post("/adoption", petAdopt)
+authRouter.get("/adoption", getpetAdopt)
 
 //router for posting the details of lost petowner and getting its data
 authRouter.post("/petreunite", petOwner)
