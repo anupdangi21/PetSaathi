@@ -14,6 +14,7 @@ const AddPets = () => {
   // State variables
   const [petname, setPetname] = useState("");
   const [Category, setCategory] = useState("");
+  const [Breed, setBreed]=useState("")
   const [Description, setDescription] = useState("");
   const [Age, setPetAge] = useState("");
   const [Location, setLocation] = useState("");
@@ -26,6 +27,7 @@ const AddPets = () => {
     if (isEdit && petData) {
       setPetname(petData.petname || "");
       setCategory(petData.Category || "");
+      setBreed(petData.Breed || "");
       setDescription(petData.Description || "");
       setPetAge(petData.Age || "");
       setLocation(petData.Location || "");
@@ -54,6 +56,7 @@ const AddPets = () => {
     const formData = new FormData();
     formData.append("petname", petname);
     formData.append("Category", Category);
+    formData.append("Breed",Breed);
     formData.append("Description", Description);
     formData.append("Age", Age);
     formData.append("Location", Location);
@@ -94,6 +97,7 @@ const AddPets = () => {
           // Reset form for new entries
           setPetname("");
           setCategory("");
+          setBreed("")
           setDescription("");
           setPetAge("");
           setLocation("");
@@ -161,6 +165,28 @@ const AddPets = () => {
                   <option value="Other">Other Pets</option>
                 </select>
               </div>
+
+              {Category === "Dog" && (
+                <div className="form-control flex-1">
+                  <label className="label">
+                  <span className="label-text font-medium text-gray-700">Choose breed*</span>
+                </label>
+                <select
+                  className="select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  value={Breed}
+                  onChange={(e) => setBreed(e.target.value)}
+                >
+                  <option value="">Select a Breed</option>
+                  <option value="German Shepherd">German Shepherd</option>
+                  <option value="Labrador">Labrador</option>
+                  <option value="Golden Retriever">Golden Retriever</option>
+                  <option value="Pug">Pug</option>
+                  <option value="Japanese Spitzz">Japanese Spitzz</option>
+                  <option value="Husky">Husky</option>
+                  <option value="Other">Other</option>
+                </select>
+                </div>
+              )}
 
               {/* Description */}
               <div className="form-control flex-1">

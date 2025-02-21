@@ -77,7 +77,7 @@ const Aside = () => {
                 </a>
               ))}
               <button className='flex items-center space-x-3 w-36 h-10 ml-2 hover:bg-orange-50 hover:text-orange-600 transition-colors'>
-               <CirclePlus  size={16}/> <soan>Add service</soan>
+               <CirclePlus  size={16}/> <span>Add service</span>
               </button>
                 </div>
               )}

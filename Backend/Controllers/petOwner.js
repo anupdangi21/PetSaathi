@@ -32,16 +32,16 @@ const petOwner = async (req, res)=>{
         
         await transporter.sendMail(mailOptionsOwner);
 // Email to Finder
-const mailOptionsFinder = {
-    from: process.env.SENDER_EMAIL,
-    to: finderEmail, // Finder's email
-    subject: "Pet Reuniting Confirmation",
-    text: `Hello ${finderUsername}, you have reported a found pet. The owner (${fullname}) will meet you on ${date} at ${location}. 
+            const mailOptionsFinder = {
+                from: process.env.SENDER_EMAIL,
+                to: finderEmail, // Finder's email
+                subject: "Pet Reuniting Confirmation",
+                text: `Hello ${finderUsername}, you have reported a found pet. The owner (${fullname}) will meet you on ${date} at ${location}. 
 
-    Please be available to complete the reunification.
+                Please be available to complete the reunification.
 
-    If there are any changes, you can contact the owner at ${ownercontact}.`
-};
+                If there are any changes, you can contact the owner at ${ownercontact}.`
+            };
 
 await transporter.sendMail(mailOptionsFinder);
     } catch (error) {

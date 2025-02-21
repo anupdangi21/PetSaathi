@@ -3,12 +3,107 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/foot";
 import Swal from 'sweetalert2';
 const Tracking = () => {
+  const [adoptions, setAdoptions] = useState([]);
+  const [adoptionsLoading, setAdoptionsLoading] = useState(true);
+  const [adoptionsError, setAdoptionsError] = useState(null);
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userEmail, setUserEmail] = useState('');
   const [ownerpet, setOwnerpet] = useState([]);
 
+  // useeffcet for displaying the adoption request taken by the user
+  useEffect(() => {
+    const fetchAdoptions = async () => {
+      try {
+        setAdoptionsLoading(true);
+        const response = await fetch('http://localhost:3000/adoption/');
+        if (!response.ok) throw new Error('Failed to fetch adoptions');
+        
+        const result = await response.json();
+        const data = Array.isArray(result.data) ? result.data : [];
+        const filteredAdoptions = data.filter(adoption => 
+          adoption.email === userEmail
+        );
+        
+        setAdoptions(filteredAdoptions);
+        setAdoptionsError(null);
+      } catch (err) {
+        setAdoptionsError(err.message);
+        setAdoptions([]);
+      } finally {
+        setAdoptionsLoading(false);
+      }
+    };
+
+    if (userEmail) fetchAdoptions();
+  }, [userEmail]);
+
+  // Add these handler functions
+  const handleConfirm = async (adoptionId) => {
+    const result = await Swal.fire({
+      title: "Confirm Adoption",
+      text: "Are you sure you want to confirm this adoption?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Confirm"
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:3000/adoption/${adoptionId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Confirmed' })
+        });
+
+        if (!response.ok) throw new Error('Confirmation failed');
+
+        setAdoptions(prev => prev.map(adoption => 
+          adoption._id === adoptionId ? { ...adoption, status: 'Confirmed' } : adoption
+        ));
+
+        Swal.fire("Confirmed!", "Adoption has been confirmed.", "success");
+      } catch (err) {
+        Swal.fire("Error!", err.message, "error");
+      }
+    }
+  };
+
+
+  const handleCancel = async (adoptionId) => {
+    const result = await Swal.fire({
+      title: "Cancel Adoption",
+      text: "Are you sure you want to cancel and delete this adoption?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Delete"
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:3000/adoption/${adoptionId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        });
+  
+        if (!response.ok) throw new Error('Deletion failed');
+  
+        // Remove the deleted adoption from the local state
+        setAdoptions(prev => prev.filter(adoption => adoption._id !== adoptionId));
+  
+        Swal.fire("Deleted!", "Adoption has been cancelled and deleted.", "success");
+      } catch (err) {
+        Swal.fire("Error!", err.message, "error");
+      }
+    }
+  };
+
+  // for handling the petfound history 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user_data'));
     if (userData && userData.user.email) {
@@ -162,11 +257,61 @@ if (!result.isConfirmed) {
         <Navbar />
       </header>
       <main>
-        <div className="min-h-screen w-full bg-orange-200">
-          <div className="container ml-24 max-w-screen-xl bg-orange-200">
-            <h1 className="font-medium mt-6">Service Tracking</h1>
+      <div className="min-h-screen w-full bg-orange-200">
+          <div className="container ml-24 max-w-screen-xl bg-orange-200 p-6">
+            <h1 className="font-medium text-2xl mb-6">Service Tracking</h1>
+            
+            {adoptionsLoading ? (
+              <p>Loading adoption records...</p>
+            ) : adoptionsError ? (
+              <p className="text-red-500">{adoptionsError}</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {adoptions.map(adoption => (
+                  <div key={adoption._id} className="bg-white p-6 rounded-lg shadow-md">
+                    <div className="mb-4">
+                      <h3 className="text-lg font-semibold">Adoption Request</h3>
+                      <img
+                      src={`http://localhost:3000/${adoption.image}`}
+                      alt={adoption.petname}
+                      className="w-full h-64 object-cover rounded-lg mt-4"
+                    />
+                    <p className="mt-2 font-medium">Booked by you </p>
+                      <p className="mt-2">Vendor Contact: {adoption.vendorcontact}</p>
+                      <p className="mt-1">Vendor Email: {adoption.vendoremail}</p>
+                      <p className="mt-1">Status: 
+                        <span className={`ml-2 px-2 py-1 rounded ${adoption.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-green-100 text-green-800'}`}>
+                          {adoption.status}
+                        </span>
+                      </p>
+                    </div>
+                    
+                    {adoption.status === 'Available' && (
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => handleConfirm(adoption._id)}
+                          className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={() => handleCancel(adoption._id)}
+                          className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {adoptions.length === 0 && !adoptionsLoading && (
+                  <p>No adoption records found for your account.</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
+
         {/* for tracking the found pet post data */}
         <div className="min-h-90 w-full bg-orange-100">
           <div className="container ml-24 max-w-screen-xl bg-orange-100">
@@ -213,7 +358,7 @@ if (!result.isConfirmed) {
             {/* for tracking the lost pet owner ship */}
           <div className="min-h-screen w-full bg-orange-50 mt-4">
           <div className="container ml-24 max-w-screen-xl bg-orange-50">
-            <h1 className="font-medium text-2xl mt-4">Lost Pet Ownership</h1>
+            <h1 className="font-medium text-2xl mt-4">Your lost pet found</h1>
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-40 mt-4">
       {ownerpet.length > 0 ? (
         ownerpet.map((pet) => (

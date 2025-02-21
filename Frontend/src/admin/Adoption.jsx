@@ -140,47 +140,58 @@ const Adoption = () => {
                     </h3>
                     <p className="mt-2 text-gray-600 ">Click on the + button to start listing your pets.</p>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Recent Uploads */}
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-lg font-semibold text-gray-800">Recent uploads</h2>
-                            <TrendingUp className="h-5 w-5 text-gray-400" />
-                        </div>
-                        <div className="space-y-4">
-                            {loading ? (
-                                <p>Loading...</p>
-                            ) : error ? (
-                                <p className="text-red-500">{error}</p>
-                            ) : pets.length === 0 ? (
-                                <p>No recent uploads found</p>
-                            ) : (
-                              pets.map((pet, index) => (
-                                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                                  <div className="flex items-center space-x-4">
-                                    <div>
-                                      <p className="font-medium text-gray-800">{pet.petname}</p>
-                                      <p className="text-sm text-gray-500">Age: {pet.Age}</p>
-                                    </div>
-                                  </div>
-                                  <div className="flex gap-2">
-                                      <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
-                                      onClick={(e) => handleEditPet(pet, e)}>
-                                          Edit
-                                      </button>
-                                      <button 
-                                        className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none transition duration-300"
-                                        onClick={() => handleDeletePet(pet._id)}
-                                      >
-                                       Delete
-                                    </button>
-                                </div>
-                            </div>
-                          ))
-                       )} 
-                    </div>
+                <div className="flex flex-col lg:flex-row gap-6">
+      {/* Recent Uploads Section */}
+      <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-gray-800">Recent Uploads</h2>
+          <TrendingUp className="h-5 w-5 text-gray-400" />
+        </div>
+        <div className="space-y-4">
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : pets.length === 0 ? (
+            <p>No recent uploads found</p>
+          ) : (
+            pets.map((pet, index) => (
+              <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-between">
+                  <img
+                    src={`http://localhost:3000/${pet.Image}`}
+                    alt={pet.petname}
+                    className="w-24 h-24 object-cover rounded-lg"
+                  />
+                    <p className="font-medium text-gray-800 ml-8">Name: {pet.petname}</p>
+                    <p className="text-medium text-gray-800 ml-8">Age: {pet.Age}</p>
+                    <p className="text-medium text-gray-800 ml-8">Category: {pet.Category}</p>
+                    <p className="text-medium text-gray-800 ml-8">Location: {pet.Location}</p>
                   </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
+                    onClick={(e) => handleEditPet(pet, e)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none transition duration-300"
+                    onClick={() => handleDeletePet(pet._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
+            ))
+          )}
+        </div>
+      </div>
+
+    </div>
+
           </main>
     </div>
     );

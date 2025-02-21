@@ -21,6 +21,7 @@ import HostelAdmin from "../admin/Hostel";
 import TrainingAdmin from "../admin/Training";
 import Tracking from "../Pages/Tracking"
 import UpdateProfile from "../Pages/cProfile"
+import AdoptionNotification from "../Notifications/adoptionNotification"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -96,6 +97,10 @@ function AppRouter() {
     {
       path:"/dashboard/notification",
       element: <NotificationAdmin />
+    },
+    {
+      path:"/dashboard/notification/adoptionnotification",
+      element: <AdoptionNotification />
     },
     {
       path:"/dashboard/addpet",

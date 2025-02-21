@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const petListschema= new mongoose.Schema({
     petname: String,
     Category: String,
+    Breed: String,
     Description: String,
     Age: String,
     Location:String,

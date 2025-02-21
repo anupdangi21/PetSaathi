@@ -9,13 +9,14 @@ import upload from "../multerConfig.js"
 
 const petList = async(req,res)=>{
     try {
-        const {petname, Category, Description, Age, Location, email, organizationname,vendorcontact } = req.body;
+        console.log(req.body)
+        const {petname, Category,Breed, Description, Age, Location, email, organizationname,vendorcontact } = req.body;
         const Image = req.file ? req.file.path.replace(/\\/g, "/") : null;
         if(!petname || !Category || !Description || !Age || !Location || !Image){
             return res.status(400).json({message: "please fill all the empty fields"})
             }
             const pet = new petListModel({
-                petname, Category, Description, Age, Location, Image, email, organizationname, vendorcontact, status:"Available", 
+                petname, Category, Breed, Description, Age, Location, Image, email, organizationname, vendorcontact, status:"Available", 
             });
             console.log(pet)
             await pet.save();
@@ -38,7 +39,7 @@ const getPetlist = async(req, res)=>{
 
 const updatePet = async (req, res) => {
     try {
-        const { petname, Category, Description, Age, Location } = req.body;
+        const { petname, Category,Breed, Description, Age, Location } = req.body;
         const petId = req.params.id;  
 
         const pet = await petListModel.findById(petId);
@@ -49,9 +50,12 @@ const updatePet = async (req, res) => {
 
         pet.petname = petname || pet.petname;
         pet.Category = Category || pet.Category;
+        pet.Breed = Breed || pet.Breed
         pet.Description = Description || pet.Description;
         pet.Age = Age || pet.Age;
         pet.Location = Location || pet.Location;
+        
+        pet.status="Booked"
 
         if (req.file) {
             pet.Image = req.file.path.replace(/\\/g, "/");

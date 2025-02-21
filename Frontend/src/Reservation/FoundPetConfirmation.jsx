@@ -53,7 +53,8 @@ const FoundPetConfirmation = ({ pet, onClick }) => {
         try {
             const response = await axios.post("http://localhost:3000/petreunite", formData,{
                 headers: {
-'Content-Type': 'application/json',                    'Accept': 'application/json'
+'Content-Type': 'application/json',   
+                 'Accept': 'application/json'
                     }
             })
 

@@ -13,7 +13,7 @@ const {petList, getPetlist, updatePet, deletePet}= petController;
 const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
 const {petOwner, getpetOwner}=petOwn;
-const {petAdopt, getpetAdopt}=petAdoption;
+const {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}=petAdoption;
 
 
 //routes for posting the data and getting the data
@@ -49,6 +49,8 @@ authRouter.get("/lostpet", getLostPetData)
 //router for posting the data of the pet adoption and getting the data
 authRouter.post("/adoption", petAdopt)
 authRouter.get("/adoption", getpetAdopt)
+authRouter.put("/adoption/:id",updateAdoptionStatus)
+authRouter.delete ("/adoption/:id",cancelAdoption)
 
 //router for posting the details of lost petowner and getting its data
 authRouter.post("/petreunite", petOwner)
