@@ -45,7 +45,7 @@ const Vregister = () => {
           icon: "success",
           text: "You are successfully registered to PetSaathi.",
         });
-        navigate('/dashboard');
+        navigate('/');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -100,7 +100,7 @@ const Vregister = () => {
                 </option>
                 <option value="hostel">Hostel</option>
                 <option value="pet-training">Pet Training</option>
-                <option value="adoption">Adoption</option>
+                <option value="pet-grooming">Pet Grooming</option>
               </select>
               <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-500"></i>
             </div>

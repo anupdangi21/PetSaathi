@@ -74,6 +74,7 @@ function Nav() {
             <a href="/services/adoption" className="block px-4 py-2 text-white hover:bg-orange-100">Adopt a Pet</a>
             <a href="/services/hostel" className="block px-4 py-2 text-white hover:bg-orange-100">Hostel</a>
             <a href="/services/training" className="block px-4 py-2 text-white hover:bg-orange-100">Pet Training</a>
+            <a href="/services/grooming" className="block px-4 py-2 text-white hover:bg-orange-100">Pet Grooming</a>
             <a href="/services/lostfound" className="block px-4 py-2 text-white hover:bg-orange-100">Lost and Found</a>
         </div>
     );

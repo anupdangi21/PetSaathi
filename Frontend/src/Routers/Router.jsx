@@ -11,6 +11,7 @@ import Dashboard from "../admin/dashboard";
 import Adoption from "../Services/Adoption";
 import Hostel from "../Services/Hostel";
 import Training from "../Services/PetTraining";
+import Grooming from "../Services/Grooming"
 import Lostfound from "../Services/lostfound";
 import AdminAdoption from "../admin/Adoption"
 import AddPet from "../admin/addPets"
@@ -22,6 +23,8 @@ import TrainingAdmin from "../admin/Training";
 import Tracking from "../Pages/Tracking"
 import UpdateProfile from "../Pages/cProfile"
 import AdoptionNotification from "../Notifications/adoptionNotification"
+import AddService from "../admin/addService";
+import PetGroom from "../admin/petGroom"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -65,6 +68,11 @@ function AppRouter() {
       path: "/services/training",
       element: <Training />,
     },
+
+    {
+      path:"/services/grooming",
+      element:<Grooming />
+    },
     {
       path: "/services/lostfound",
       element: <Lostfound />,
@@ -91,12 +99,20 @@ function AppRouter() {
       element: <HostelAdmin />
     },
     {
-      path: "/dashboard/training",
+      path: "/dashboard/pet-training",
       element: <TrainingAdmin />
+    },
+    {
+      path:"/dashboard/pet-grooming",
+      element: < PetGroom/>
     },
     {
       path:"/dashboard/notification",
       element: <NotificationAdmin />
+    },
+    {
+      path:"/dashboard/addservice",
+      element: <AddService />
     },
     {
       path:"/dashboard/notification/adoptionnotification",

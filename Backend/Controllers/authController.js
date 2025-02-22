@@ -99,7 +99,6 @@ const registerGetData = async (req, res) => {
         // Generate a JWT token
         const token = jwt.sign({ id: newVendor._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-        // Set the token as a cookie
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -152,59 +151,60 @@ const signin = async (req, res) => {
 
         const user = await registerModel.findOne({ username }).exec();
         const vendor = await vendorregisterModel.findOne({ username }).exec();
-
+        
         if (!user && !vendor) {
             return res.status(400).json({ message: "User or Vendor not found" });
         }
 
         let isUserMatch = false;
         let isVendorMatch = false;
+        let vendorData = null;
 
         if (user) {
             isUserMatch = await bcrypt.compare(password, user.password);
+            // Check if the same email exists in vendor database
+            vendorData = await vendorregisterModel.findOne({ email: user.email }).exec();
         }
         if (vendor) {
             isVendorMatch = await bcrypt.compare(password, vendor.password);
         }
 
         if (!isUserMatch && !isVendorMatch) {
-            return res.status(400).json({ message: err.message });
+            return res.status(400).json({ message: "Incorrect password" });
         }
 
-        let token;
-        if (isUserMatch) {
-            token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            return res.json({ role: 'user',
-                 token ,
+        let tokenPayload = { id: (isUserMatch ? user._id : vendor._id) };
 
-                user:{
-                    _id: user._id,
-                    username: user.username,
-                    email: user.email, 
-                    number: user.number
-                }
-                
-            })
-        } else if (isVendorMatch) {
-            token = jwt.sign({ id: vendor._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            return res.json({ role: 'vendor',
-                 token,
-                user:{
-                    _id: vendor._id,
-                    organizationname:vendor.organizationname,
-                    username: vendor.username,
-                    email: vendor.email,
-                    services: vendor.services,
-                    number: vendor.number
-                }
-             });
+        // If the user also has a vendor account, add vendor details to the token
+        if (vendorData) {
+            tokenPayload.organizationname = vendorData.organizationname;
+            tokenPayload.services = vendorData.services;
         }
+
+        // If logging in as a vendor, include vendor details in the token
+        if (isVendorMatch) {
+            tokenPayload.organizationname = vendor.organizationname;
+            tokenPayload.services = vendor.services;
+        }
+
+        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        return res.json({
+            role: isUserMatch ? 'user' : 'vendor',
+            token,
+            user: {
+                _id: isUserMatch ? user._id : vendor._id,
+                username: isUserMatch ? user.username : vendor.username,
+                email: isUserMatch ? user.email : vendor.email,
+                number: isUserMatch ? user.number : vendor.number,
+                ...(vendorData || isVendorMatch ? { organizationname: (vendorData || vendor).organizationname, services: (vendorData || vendor).services } : {})
+            }
+        });
+
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
 };
-
-
 
  const logout = async (req, res)=>{
     try {

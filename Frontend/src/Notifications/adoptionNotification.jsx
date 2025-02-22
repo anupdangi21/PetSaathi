@@ -133,7 +133,6 @@ const AdoptionNotification = () => {
                   Status: {petFromListing ? petFromListing.status : "Loading..."}
                 </p>
 
-                {/* ✅ Show Approve Button Only If Status is "Available" */}
                 {petFromListing?.status === "Available" ? (
                   <button
                     onClick={() => handleApprove(petFromListing._id)}

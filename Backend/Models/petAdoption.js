@@ -10,7 +10,7 @@ const petAdoptSchema = new mongoose.Schema({
     location:String,
     vendoremail:String,
     vendorcontact:String,
-    date: Date,
+    date: String,
     firstPet:String,
     enoughSpace:String,
     status:String

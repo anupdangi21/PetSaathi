@@ -7,12 +7,14 @@ import upload from "../multerConfig.js";
 import lost from "../Controllers/lostPet.js"
 import petOwn from "../Controllers/petOwner.js"
 import petAdoption from '../Controllers/petAdoption.js';
+import addServic from "../Controllers/addService.js"
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet}= petController;
 const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
 const {petOwner, getpetOwner}=petOwn;
+const {addService}=addServic;
 const {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}=petAdoption;
 
 
@@ -51,6 +53,9 @@ authRouter.post("/adoption", petAdopt)
 authRouter.get("/adoption", getpetAdopt)
 authRouter.put("/adoption/:id",updateAdoptionStatus)
 authRouter.delete ("/adoption/:id",cancelAdoption)
+
+//router for posting the new services 
+authRouter.post("/addservice", addService)
 
 //router for posting the details of lost petowner and getting its data
 authRouter.post("/petreunite", petOwner)
