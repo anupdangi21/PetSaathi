@@ -6,6 +6,7 @@ const vendorregisterSchema = new mongoose.Schema({
     services: { type: [String]},
     number: { type: String },
     username: { type: String, unique: true }, 
+    location:{type:String},
     password: { type: String  }, 
     resetOtp: { type: String, default: "" },
     resetOtpExipreAt: { type: Date, default: null }, 

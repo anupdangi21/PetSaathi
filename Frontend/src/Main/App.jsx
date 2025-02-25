@@ -24,19 +24,29 @@ function App() {
       try {
         const response = await fetch('http://localhost:3000/petlisting');
         const result = await response.json();
-
+  
         if (result.success && Array.isArray(result.data)) {
-          setPets(result.data);
+          // Get current user's email from localStorage
+          const userData = JSON.parse(localStorage.getItem('user_data'));
+          const userEmail = userData?.user?.email;
+
+          const filteredPets = result.data.filter(pet => {
+            const isAvailable = pet.status === "Available";
+            const isNotOwnPet = !userEmail || pet.email !== userEmail;
+            return isAvailable && isNotOwnPet;
+          });
+  
+          setPets(filteredPets);
         } else {
           console.error("Unexpected API response format:", result);
-          setPets([]); // Fallback to prevent mapping errors
+          setPets([]);
         }
       } catch (error) {
         console.error('Error fetching pets:', error);
-        setPets([]); // Ensure pets is always an array
+        setPets([]);
       }
     };
-
+  
     fetchPets();
   }, []);
   

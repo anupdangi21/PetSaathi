@@ -1,4 +1,5 @@
 import vendorregisterModel from "../Models/vendorregistration.js"
+import  jwt from'jsonwebtoken';
 
 const addService = async (req, res) => {
     try {
@@ -49,6 +50,27 @@ const addService = async (req, res) => {
         message: "Service(s) added successfully",
         service: updatedService.services
       });
+
+      const token = jwt.sign({ id: newVendor._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+      
+              res.cookie('token', token, {
+                  httpOnly: true,
+                  secure: process.env.NODE_ENV === 'production',
+                  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+                  maxAge: 24 * 60 * 60 * 1000, 
+              });
+
+              res.status(200).json({ success: true, message: "service extended successfully", token,
+                user:{
+                    _id: newVendor._id,
+                    username: newVendor.username,
+                    email: newVendor.email,
+                    services: newVendor.services,
+                    number:newVendor.number
+                }
+             });
+
+              
   
     } catch (error) {
       console.error("Error in addService:", error);

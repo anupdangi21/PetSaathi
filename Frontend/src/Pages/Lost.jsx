@@ -120,7 +120,7 @@ const Lost = () => {
       <header>
       <Navbar />
       </header>
-      <main className='max-w-7xl mx-auto'>
+      <main className='max-w-7xl mx-auto mt-6'>
         <form className='mb-12'>
           <div className="bg-gradient-to-r from-orange-200 to-orange-50 rounded-2xl p-8 text-gray-800">
             <div className="flex flex-wrap gap-4 items-end">

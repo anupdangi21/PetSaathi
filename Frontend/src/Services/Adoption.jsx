@@ -13,6 +13,13 @@ function Adoption() {
   const [selectedPet, setSelectedPet] = useState(null);
   const [selectedSpecies, setSelectedSpecies] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showAdopt, setShowAdopt] = useState([]);
+
+  const [formData, setFormData]= useState({
+          category:"",
+          breed:"",
+          
+        })
 
   const openModal = () => setShowConfirmation(true);
   const closeModal = () => setShowConfirmation(false);
@@ -44,7 +51,8 @@ function Adoption() {
                     pet.status !== "Booked" && (!userEmail || pet.email !== userEmail)
                 );
 
-                setPets(filteredPets);
+                setPets(filteredPets.reverse());
+                setShowAdopt(filteredPets)
             } else {
                 console.error("Unexpected API response format:", result);
                 setPets([]);
@@ -58,18 +66,42 @@ function Adoption() {
     fetchPets();
 }, []);
 
+
+const handleChange = (e) =>{
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  })
+}
+
+
+const handleFilter = () => {
+  const { breed } = formData;
+  
+  const filtered = pets.filter(pet => {
+    const speciesMatch = selectedSpecies 
+      ? pet.Category.toLowerCase() === selectedSpecies.toLowerCase()
+      : true;
+      
+    const breedMatch = breed
+      ? pet.Breed.toLowerCase().startsWith(breed.toLowerCase())
+      : true;
+
+    return speciesMatch && breedMatch;
+  });
+
+  setShowAdopt(filtered);
+};
+
   const handleAdopt = (pet) => {
     const { Description, ...petDetails } = pet;
     localStorage.setItem('selectedPet', JSON.stringify(petDetails));
 
     setTimeout(() => {
       localStorage.removeItem('selectedPet');
-  }, 60000);
-
-    // Open the confirmation modal
+  }, 30000);
     openModal();
 
-    // Close the pet details overlay
     setSelectedPet(null);
   };
 
@@ -79,6 +111,10 @@ function Adoption() {
         <Navbar />
       </header>
       <main className="max-w-7xl mx-auto px-4 py-8">
+      <form onSubmit={(e) => {
+        e.preventDefault(); // Prevent page refresh
+        handleFilter();
+      }}>
         <div className="bg-gradient-to-r from-orange-200 to-orange-50 rounded-2xl p-8 mb-12 text-white">
           <h1 className="text-4xl font-bold mb-4">Find Your Perfect Companion</h1>
           <p className="text-xl mb-6">Give a loving home to a pet in need</p>
@@ -86,7 +122,10 @@ function Adoption() {
             <input
               type="text"
               placeholder="Search by Breed..."
+              name="breed"
+              value={formData.breed}
               className="px-4 py-2 rounded-lg text-gray-800 min-w-[200px] flex-1"
+              onChange={handleChange}
             />
             <select
         className="px-4 py-2 rounded-lg text-gray-800 min-w-[150px] border border-gray-300"
@@ -106,7 +145,10 @@ function Adoption() {
             <span className="label-text font-medium text-gray-700">Choose breed*</span>
           </label>
           <select
+          name="breed"
+          value={formData.breed}
             className="ml-4 select select-bordered px-4 py-2 border  text-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            onChange={handleChange}
           >
             <option value="">Select a Breed</option>
             <option value="German Shepherd">German Shepherd</option>
@@ -119,16 +161,19 @@ function Adoption() {
           </select>
         </div>
       )}
-            <button className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50">
+            <button className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50"
+              onClick={handleFilter}
+            >
               Search
             </button>
           </div>
         </div>
+        </form>
 
         {/* Pet Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.isArray(pets) && pets.length > 0 ? (
-            pets.map((pet) => (
+          {Array.isArray(showAdopt) && showAdopt.length > 0 ? (
+            showAdopt.map((pet) => (
               <div key={pet._id} className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="relative">
                   <img
@@ -206,9 +251,11 @@ function Adoption() {
               />
               <div className="p-6">
                 <h2 className="text-2xl font-bold mb-4">{selectedPet.petname}</h2>
-                {/* <h2 className="text-xl font-bold mb-4">from:{selectedPet.petname}</h2> */}
                 <div className='flex flex'>
-                <h2 className="text-xl font-medium mb-4">Contact vendor:</h2><p className='mt-1 ml-2'>{selectedPet.vendorcontact}</p>
+                <h2 className="text-lg font-bold mb-4">From: </h2><p className=' text-lg mt-0.5 ml-2'>{selectedPet.organizationname}</p>
+                </div>
+                <div className='flex flex'>
+                <h2 className="text-lg font-bold mb-4">Contact vendor:</h2><p className='mt-1 ml-2'>{selectedPet.vendorcontact}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="flex items-center">

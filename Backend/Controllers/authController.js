@@ -83,16 +83,16 @@ const registerGetData = async (req, res) => {
  const vendorRegister = async (req, res) => {
     try {
         console.log(req.body)
-        const { organizationname, email ,services, username, password, number } = req.body;
+        const { organizationname, email ,services, username,location, password, number } = req.body;
 
-        if ( !organizationname ||!services || !username || !password) {
+        if ( !organizationname ||!services || !username || !location || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newVendor = new vendorregisterModel({
-            organizationname, email, services, number, username, password: hashedPassword
+            organizationname, email, services, number, username,location, password: hashedPassword
         });
         await newVendor.save();
 
@@ -119,6 +119,7 @@ const registerGetData = async (req, res) => {
             user:{
                 _id: newVendor._id,
                 username: newVendor.username,
+                location:newVendor.location,
                 email: newVendor.email,
                 services: newVendor.services,
                 number:newVendor.number
@@ -179,12 +180,14 @@ const signin = async (req, res) => {
         if (vendorData) {
             tokenPayload.organizationname = vendorData.organizationname;
             tokenPayload.services = vendorData.services;
+            tokenPayload.location = vendorData.location;
         }
 
         // If logging in as a vendor, include vendor details in the token
         if (isVendorMatch) {
             tokenPayload.organizationname = vendor.organizationname;
             tokenPayload.services = vendor.services;
+            tokenPayload.location = vendorData ? vendorData.location : vendor.location;
         }
 
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -197,7 +200,7 @@ const signin = async (req, res) => {
                 username: isUserMatch ? user.username : vendor.username,
                 email: isUserMatch ? user.email : vendor.email,
                 number: isUserMatch ? user.number : vendor.number,
-                ...(vendorData || isVendorMatch ? { organizationname: (vendorData || vendor).organizationname, services: (vendorData || vendor).services } : {})
+                ...(vendorData || isVendorMatch ? { organizationname: (vendorData || vendor).organizationname, services: (vendorData || vendor).services , location: (vendorData || vendor).location} : {})
             }
         });
 

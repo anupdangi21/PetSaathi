@@ -44,7 +44,7 @@ const AddPets = () => {
     
     // Geting user data from localStorage
     const userData = JSON.parse(localStorage.getItem('user_data'));
-    if (!userData?.user?.email && !userData?.user?.organizationname) {
+    if (!userData?.user?.email && !userData?.user?.organizationname && !userData?.user?.location) {
       Swal.fire({
         icon: "error",
         title: "Authentication Error",
@@ -59,7 +59,7 @@ const AddPets = () => {
     formData.append("Breed",Breed);
     formData.append("Description", Description);
     formData.append("Age", Age);
-    formData.append("Location", Location);
+    formData.append("Location", userData.user.location);
     formData.append("email", userData.user.email);
     formData.append("organizationname", userData.user.organizationname) 
     formData.append("vendorcontact", userData.user.number) 
@@ -142,7 +142,7 @@ const AddPets = () => {
                 type="text"
                 value={petname}
                 placeholder="Enter Pet Name"
-                className="input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="mt-4 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 onChange={(e) => setPetname(e.target.value)}
               />
             </div>
@@ -155,7 +155,7 @@ const AddPets = () => {
                   <span className="label-text font-medium text-gray-700">Category*</span>
                 </label>
                 <select
-                  className="select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="mt-4 select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={Category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
@@ -172,7 +172,7 @@ const AddPets = () => {
                   <span className="label-text font-medium text-gray-700">Choose breed*</span>
                 </label>
                 <select
-                  className="select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="mt-4 select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={Breed}
                   onChange={(e) => setBreed(e.target.value)}
                 >
@@ -194,7 +194,7 @@ const AddPets = () => {
                   <span className="label-text font-medium text-gray-700">Description*</span>
                 </label>
                 <textarea
-                  className="textarea textarea-bordered w-full h-[110px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="mt-4 textarea textarea-bordered w-full h-[110px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={Description}
                   placeholder="Add pet description here!"
                   onChange={(e) => setDescription(e.target.value)}
@@ -209,7 +209,7 @@ const AddPets = () => {
               </label>
               <select
                 value={Age}
-                className="select mt-2 select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="select mt-4 select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 onChange={(e) => setPetAge(e.target.value)}
               >
                 <option value="">Select estimated age:</option>
@@ -220,21 +220,6 @@ const AddPets = () => {
                 <option value="above2years">Above 2 years</option>
               </select>
             </div>
-
-            {/* Location */}
-            <div className="form-control mb-6 w-1/2">
-              <label className="label">
-                <span className="label-text font-medium text-gray-700">Location*</span>
-              </label>
-              <input
-                type="text"
-                value={Location}
-                placeholder="Enter Your location"
-                className="mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                onChange={(e) => setLocation(e.target.value)}
-              />
-            </div>
-
             {/* Image Upload */}
             <div className="form-control flex-1 w-1/2">
               <label className="label">
@@ -245,7 +230,7 @@ const AddPets = () => {
               <input
                 type="file"
                 ref={fileInputRef}
-                className="mt-2 ml-4 input input-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="mt-8 ml-4 input input-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 onChange={(e) => setImage(e.target.files[0])}
               />
             </div>

@@ -8,6 +8,8 @@ const Vregister = () => {
   const [organizationname, setName] = useState(''); 
   const [services, setServices] = useState('');
   const [username, setUsername] = useState('');
+  const [location, setLocation] = useState('');
+
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
@@ -28,7 +30,7 @@ const Vregister = () => {
     try {
       const result = await axios.post(
         'http://localhost:3000/registration', 
-        { organizationname, email, services, username, password,number }, 
+        { organizationname, email, services, username,location, password,number }, 
         { withCredentials: true }
       );
       console.log("Submission data:", { // Add this to verify
@@ -107,6 +109,17 @@ const Vregister = () => {
             <div className="relative">
               <input
                 type="text"
+                name="Location"
+                placeholder="Enter your organization location"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onChange={(e) => setLocation(e.target.value)}
+              />
+              <i className="fa-solid fa-user absolute right-3 top-3 text-gray-400"></i>
+            </div>
+            <div className="relative">
+              <input
+                type="text"
                 name="username"
                 placeholder="Username"
                 required
@@ -137,7 +150,7 @@ const Vregister = () => {
               </button>
               <button
                 type="submit"
-                className="ml-28 w-20 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="ml-64 w-20 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 Register
               </button>
