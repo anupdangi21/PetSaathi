@@ -25,6 +25,7 @@ import UpdateProfile from "../Pages/cProfile"
 import AdoptionNotification from "../Notifications/adoptionNotification"
 import AddService from "../admin/addService";
 import PetGroom from "../admin/petGroom"
+import Addhostel from "../admin/addHostel"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -121,6 +122,10 @@ function AppRouter() {
     {
       path:"/dashboard/addpet",
       element: <AddPet />
+    },
+    {
+      path:"/dashboard/addhostel",
+      element:<Addhostel />
     },
     {
       path:"/lostfound/lost",

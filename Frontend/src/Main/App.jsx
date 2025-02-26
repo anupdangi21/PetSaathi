@@ -96,13 +96,13 @@ function App() {
               <h2 className="text-3xl font-bold text-gray-800 mb-8 mt-16">Recently Added Pets</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.isArray(pets) && pets.length > 0 ? (
-                pets.slice(-3).map((pet) => ( // 👈 Only takes the first 3 pets
+                pets.slice(-3).map((pet) => ( // 
                   <div key={pet._id} className="bg-white rounded-xl shadow-lg overflow-hidden h-auto mb-8">
-                    <div className="relative">
+                    <div className="relative h-80">
                       <img 
                         src={`http://localhost:3000/${pet.Image}`}
                         alt={pet.petname}
-                        className="w-full h-64 object-cover"
+                        className="w-full h-80 object-cover"
                       />
                       <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
                         <Heart size={20} className="text-red-500" />

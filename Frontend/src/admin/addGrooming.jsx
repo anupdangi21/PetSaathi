@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import Aside from "../Components/aside";
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const AddPets = () => {
+const addGroom = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -258,4 +258,4 @@ const AddPets = () => {
   );
 };
 
-export default AddPets;
+export default addGroom;

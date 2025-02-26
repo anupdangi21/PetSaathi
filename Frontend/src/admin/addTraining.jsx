@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import Aside from "../Components/aside";
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const AddPets = () => {
+const addTraining = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -17,7 +17,7 @@ const AddPets = () => {
   const [Breed, setBreed]=useState("")
   const [Description, setDescription] = useState("");
   const [Age, setPetAge] = useState("");
-  const [ocation, setLocation] = useState("");
+  const [Location, setLocation] = useState("");
   const [Image, setImage] = useState(null);
   const [petId, setPetId] = useState("");
   const fileInputRef = useRef(null);
@@ -258,4 +258,4 @@ const AddPets = () => {
   );
 };
 
-export default AddPets;
+export default addTraining;

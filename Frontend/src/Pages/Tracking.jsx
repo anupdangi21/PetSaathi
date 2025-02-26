@@ -257,8 +257,8 @@ if (!result.isConfirmed) {
         <Navbar />
       </header>
       <main>
-      <div className="min-h-screen w-full bg-orange-200">
-          <div className="container ml-24 max-w-screen-xl bg-orange-200 p-6">
+      <div className="min-h-screen w-full bg-gradient-to-b from-orange-200 to-orange-100">
+          <div className="container ml-24 max-w-screen-xl p-6">
             <h1 className="font-medium text-2xl mb-6">Service Tracking</h1>
             
             {adoptionsLoading ? (
@@ -356,8 +356,8 @@ if (!result.isConfirmed) {
           <div>
 
             {/* for tracking the lost pet owner ship */}
-          <div className="min-h-screen w-full bg-orange-50 mt-4">
-          <div className="container ml-24 max-w-screen-xl bg-orange-50">
+          <div className="min-h-screen w-full bg-orange-50 mt-4 bg-gradient-to-b from-orange-100 to-orange-50">
+          <div className="container ml-24 max-w-screen-xl">
             <h1 className="font-medium text-2xl mt-4">Your lost pet found</h1>
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-40 mt-4">
       {ownerpet.length > 0 ? (

@@ -8,6 +8,7 @@ import lost from "../Controllers/lostPet.js"
 import petOwn from "../Controllers/petOwner.js"
 import petAdoption from '../Controllers/petAdoption.js';
 import addServic from "../Controllers/addService.js"
+import Hostel from "../Controllers/addHostel.js"
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet}= petController;
@@ -16,6 +17,7 @@ const {petLostData, getLostPetData}= lost;
 const {petOwner, getpetOwner}=petOwn;
 const {addService}=addServic;
 const {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}=petAdoption;
+const  {petHostel,getHostel, updateHostel,deleteHostel }= Hostel;
 
 
 //routes for posting the data and getting the data
@@ -53,6 +55,12 @@ authRouter.post("/adoption", petAdopt)
 authRouter.get("/adoption", getpetAdopt)
 authRouter.put("/adoption/:id",updateAdoptionStatus)
 authRouter.delete ("/adoption/:id",cancelAdoption)
+
+// router for posting the pet hostel and update delete
+authRouter.post("/pethostel",upload.single("Image"), petHostel)
+authRouter.get("/pethostel", getHostel)
+authRouter.put("/pethostel/:id", upload.single("Image"), updateHostel)
+authRouter.delete("/pethostel/:_id", deleteHostel)
 
 //router for posting the new services 
 authRouter.post("/addservice", addService)

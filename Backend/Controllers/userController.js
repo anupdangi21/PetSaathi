@@ -15,6 +15,8 @@ const getUserData =async ()=>{
                 name:user.name,
                 Email:user.email,
                 services:user.services,
+                location:user.location,
+                organizationname:user.organizationname
             }
         })
     } catch (error) {

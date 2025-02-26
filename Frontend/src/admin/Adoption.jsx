@@ -130,15 +130,20 @@ const Adoption = () => {
 
             <main className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-64'} transition-all duration-300 p-8`}>
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h2 className="text-2xl font-semibold text-gray-800 ">Welcome to Adoption Dashboard</h2>
-                    <h3 className=" grid ml text-2xl font-semibold text-gray-800 place-items-end mr-12">Upload a pet
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-semibold text-gray-800">Welcome to Adoption Dashboard</h2>
+
+                  <div className="flex items-center gap-4">
+                    <h3 className="text-2xl font-semibold text-gray-800">Upload a pet</h3>
                     <button
-                    onClick={handleAddPet}
-                    className=" grid bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 place-items-end m-8">
-                        <BadgePlus /> 
+                      onClick={handleAddPet}
+                      className="bg-zinc-50 text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 flex items-center"
+                    >
+                      <BadgePlus />
                     </button>
-                    </h3>
-                    <p className="mt-2 text-gray-600 ">Click on the + button to start listing your pets.</p>
+                  </div>
+                </div>
+                <p className="mt-8 text-gray-600 ">Click on the + button to start listing your pets.</p>
                 </div>
                 <div className="flex flex-col lg:flex-row gap-6">
       {/* Recent Uploads Section */}

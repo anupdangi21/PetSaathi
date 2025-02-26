@@ -97,9 +97,9 @@ const AddService = () => {
               <option value="" disabled>
                 Choose your service
               </option>
-              <option value="hostel">Hostel</option>
-              <option value="pet-training">Pet Training</option>
-              <option value="pet-grooming">Pet Grooming</option>
+              <option value="Hostel">Hostel</option>
+              <option value="Pet-training">Pet Training</option>
+              <option value="Pet-grooming">Pet Grooming</option>
             </select>
           </div>
 

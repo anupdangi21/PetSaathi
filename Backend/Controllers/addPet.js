@@ -55,7 +55,6 @@ const updatePet = async (req, res) => {
         pet.Age = Age || pet.Age;
         pet.Location = Location || pet.Location;
         
-        pet.status="Booked"
 
         if (req.file) {
             pet.Image = req.file.path.replace(/\\/g, "/");

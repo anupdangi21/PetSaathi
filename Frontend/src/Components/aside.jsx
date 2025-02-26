@@ -30,8 +30,6 @@ const Aside = () => {
   const navigate = useNavigate();
   const { userData, logout } = useContext(AppContext);
 
-  console.log(userData?.email,"HAINA K RAIXA")
-
   // Fetch services from the API endpoint
   useEffect(() => {
     const fetchServices = async () => {
@@ -86,9 +84,9 @@ const Aside = () => {
   // Icon mapping for services
   const iconMap = {
     "Adoption": Heart,
-    "hostel": Home,
+    "Hostel": Home,
     "pet-training": Target, 
-    "pet-grooming": Sparkles,
+    "Pet-grooming": Sparkles,
   };
 
   // Combine default and fetched services

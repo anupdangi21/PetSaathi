@@ -44,7 +44,7 @@ const FoundPetConfirmation = ({ pet, onClick }) => {
         formData.append("finderContact", pet.findercontact || "");
 
         if (pet.Image) {
-            formData.append("petImage", pet.Image); // Assuming backend accepts image as a file
+            formData.append("petImage", pet.Image); 
         }
 
         console.log(formData)
