@@ -22,8 +22,6 @@ const AdoptionNotification = () => {
         const petListingResponse = await fetch("http://localhost:3000/petlisting");
         if (!petListingResponse.ok) throw new Error("Failed to fetch pet listing data");
         const petListingData = await petListingResponse.json();
-        console.log("aayo dai status", petListingData)
-
         setAdoptions(adoptionData.data || []);
         setPetListings(petListingData.data || []);
       } catch (err) {

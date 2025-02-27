@@ -5,12 +5,10 @@ import {
     BadgePlus,
     TrendingUp,
 } from 'lucide-react';
-
-
+import Swal from 'sweetalert2';
 
 const petGroom = () => {
          const navigate = useNavigate()
-         
         const [isSidebarOpen, setIsSidebarOpen] = useState(true);
         const [pets, setPets] = useState([]);
         const [loading, setLoading] = useState(true);
@@ -18,7 +16,7 @@ const petGroom = () => {
     
         const handleEditPet = (pet, event) => {
           event.preventDefault();
-          navigate("/dashboard/addpet", { 
+          navigate("/dashboard/addgrooming", { 
             state: { 
               petData: pet,
               isEdit: true 
@@ -39,7 +37,7 @@ const petGroom = () => {
               }).then(async (result) => {
                   if (result.isConfirmed) {
                       try {
-                          const response = await fetch(`http://localhost:3000/petlisting/${_id}`, {
+                          const response = await fetch(`http://localhost:3000/petgrooming/${_id}`, {
                               method: "DELETE",
                               headers: {
                                   "Content-Type": "application/json"
@@ -81,7 +79,7 @@ const petGroom = () => {
                     return;
                   }
             
-                  const response = await fetch('http://localhost:3000/petlisting', {
+                  const response = await fetch('http://localhost:3000/petgrooming', {
                     headers: {
                       'Authorization': `Bearer ${userData.userToken}`
                     }
@@ -105,7 +103,7 @@ const petGroom = () => {
                   }
             
                   const userPets = petsArray.filter(pet => 
-                    pet.email === userData.user.email
+                    pet.vendoremail === userData.user.email
                   );
                   const reversedPets = [...userPets].reverse();
                   setPets(reversedPets);
@@ -120,6 +118,10 @@ const petGroom = () => {
             
               fetchPets();
             }, []);
+
+            const handleAddPet = () => {
+              navigate("/dashboard/addgrooming");
+          }
   return (
     <div className="min-h-screen bg-gray-50 flex">
             <aside>
@@ -133,7 +135,7 @@ const petGroom = () => {
                                       <div className="flex items-center gap-4">
                                         <h3 className="text-2xl font-semibold text-gray-800">Upload your service</h3>
                                         <button
-                                        //   onClick={handleAddPet}
+                                          onClick={handleAddPet}
                                           className="bg-zinc-50 text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 flex items-center"
                                         >
                                           <BadgePlus />
@@ -169,12 +171,15 @@ const petGroom = () => {
                                     alt={pet.petname}
                                     className="w-24 h-24 object-cover rounded-lg"
                                   />
-                                    <p className="font-medium text-gray-800 ml-8">Name: {pet.petname}</p>
-                                    <p className="text-medium text-gray-800 ml-8">Age: {pet.Age}</p>
-                                    <p className="text-medium text-gray-800 ml-8">Category: {pet.Category}</p>
-                                    <p className="text-medium text-gray-800 ml-8">Location: {pet.Location}</p>
+                                    <p className="font-medium text-gray-800 ml-8">Service Details: {pet.serviceoffering}</p>
+                                    <p className="text-medium text-gray-800 ml-8">Offerings: {pet.includedOfferings}</p>
+                                    <div>
+                                <p className="text-medium text-gray-800 ml-8">Price: {pet.price}</p>
                                   </div>
+                                  </div>
+                                  
                                 </div>
+                                
                                 <div className="flex gap-2">
                                   <button
                                     className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
@@ -189,7 +194,9 @@ const petGroom = () => {
                                     Delete
                                   </button>
                                 </div>
+                                
                               </div>
+                              
                             ))
                           )}
                         </div>

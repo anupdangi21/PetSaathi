@@ -12,31 +12,35 @@ const addGroom = () => {
   const petData = state?.petData;
 
   // State variables
-  const [petname, setPetname] = useState("");
-  const [Category, setCategory] = useState("");
-  const [Breed, setBreed]=useState("")
-  const [Description, setDescription] = useState("");
-  const [Age, setPetAge] = useState("");
-  const [ocation, setLocation] = useState("");
+  const [serviceoffering, setServiceoffering] = useState("");
+  const [description, setDescription]=useState("")
+  const [price, setPrice] = useState("");
   const [Image, setImage] = useState(null);
   const [petId, setPetId] = useState("");
   const fileInputRef = useRef(null);
 
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [includedOfferings, setIncludedOfferings] = useState([]);
+
+  const handleServiceChange = (service) => {
+    setSelectedServices((prev) =>
+      prev.includes(service) ? prev.filter((item) => item !== service) : [...prev, service]
+    );
+  };
+
   // Pre-fill form for edit mode
   useEffect(() => {
     if (isEdit && petData) {
-      setPetname(petData.petname || "");
-      setCategory(petData.Category || "");
-      setBreed(petData.Breed || "");
-      setDescription(petData.Description || "");
-      setPetAge(petData.Age || "");
-      setLocation(petData.Location || "");
+      setServiceoffering(petData.serviceoffering || "");
+      setSelectedServices(petData.includedOfferings || []);
+      setDescription(petData.description || "");
+      setPrice(petData.price || "");
       setPetId(petData._id || "");
     }
   }, [isEdit, petData]);
 
   const handlebackButton = () => {
-    Navigate("/dashboard/adoption");
+    Navigate("/dashboard/pet-grooming");
   };
 
   const handleSubmit = async (e) => {
@@ -54,17 +58,15 @@ const addGroom = () => {
     }
   
     const formData = new FormData();
-    formData.append("petname", petname);
-    formData.append("Category", Category);
-    formData.append("Breed",Breed);
-    formData.append("Description", Description);
-    formData.append("Age", Age);
-    formData.append("Location", userData.user.location);
-    formData.append("email", userData.user.email);
+    // const formData = { serviceoffering, includedOfferings: selectedServices };
+    formData.append("serviceoffering", serviceoffering);
+    formData.append("includedOfferings", selectedServices)
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("vendorlocation", userData.user.location);
+    formData.append("vendoremail", userData.user.email);
     formData.append("organizationname", userData.user.organizationname) 
     formData.append("vendorcontact", userData.user.number) 
-
-    
     // Only append new image if it exists
     if (Image) {
       formData.append("Image", Image);
@@ -72,8 +74,8 @@ const addGroom = () => {
   
     try {
       const url = isEdit 
-        ? `http://localhost:3000/petlisting/${petId}`
-        : 'http://localhost:3000/petlisting';
+        ? `http://localhost:3000/petgrooming/${petId}`
+        : 'http://localhost:3000/petgrooming';
   
       const result = await axios({
         method: isEdit ? 'put' : 'post',
@@ -87,27 +89,26 @@ const addGroom = () => {
       if (result.status === 200) {
         Swal.fire({
           icon: "success",
-          title: isEdit ? "Pet Updated" : "Pet Added",
+          title: isEdit ? "Pet grooming Updated" : "Pet grooming Added",
           text: isEdit 
-            ? "Pet details updated successfully" 
-            : "Pet added to listing successfully",
+            ? "Pet grooming updated successfully" 
+            : "Pet grooming added  successfully",
         });
 
         if (!isEdit) {
           // Reset form for new entries
-          setPetname("");
-          setCategory("");
-          setBreed("")
+          setSelectedServices("");
+          setServiceoffering("");
           setDescription("");
-          setPetAge("");
-          setLocation("");
+          setPrice("");
+
           setImage(null);
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
           }
         }
         
-        Navigate("/dashboard/adoption");
+        Navigate("/dashboard/pet-grooming");
       }
     } catch (error) {
       console.error(error);
@@ -128,103 +129,107 @@ const addGroom = () => {
       </aside>
       <main className="w-full md:w-[800px] mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-semibold mb-6 text-center">
-          {isEdit ? "Edit" : "Upload A New"} <span className="text-orange-600">Pet</span>
+          {isEdit ? "Edit" : "Upload A New"} <span className="text-orange-600">Pet Grooming service</span>
         </h2>
 
         <div>
-          <form onSubmit={handleSubmit}>
-            {/* Pet Name */}
-            <div className="form-control mb-6">
-              <label className="label">
-                <span className="label-text font-medium text-gray-700">Pet Name*</span>
-              </label>
+        <form onSubmit={handleSubmit}>
+      {/* Service Package Selection */}
+      <div className="flex flex-wrap gap-6">
+        <div className="form-control flex-1">
+          <label className="label">
+            <span className="label-text font-medium text-gray-700">Service Package*</span>
+          </label>
+          <select
+            className="mt-4 select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            value={serviceoffering}
+          onChange={(e) => setServiceoffering(e.target.value)}
+          >
+            <option value="">Please select package</option>
+            <option value="Basic">Basic Package</option>
+            <option value="Standard">Standard Package</option>
+          </select>
+        </div>
+      </div>
+      
+
+      {/* Checkboxes for Basic & Standard Packages */}
+      {["Bathing and Drying", "Haircut and Style", "Nail Trimming", "Ear Cleaning"].map((service) => (
+        <div key={service} className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">{service}</span>
+            <input
+              type="checkbox"
+              className="checkbox checkbox-orange-500 ml-2"
+              checked={selectedServices.includes(service)}
+              onChange={() => handleServiceChange(service)}
+            />
+          </label>
+        </div>
+      ))}
+
+
+
+        {/* Extra Checkboxes for Standard Package */}
+        {serviceoffering === "Standard" &&
+        ["Teeth Brushing", "Vaccination", "Pet Dropoff"].map((service) => (
+          <div key={service} className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">{service}</span>
               <input
-                type="text"
-                value={petname}
-                placeholder="Enter Pet Name"
-                className="mt-4 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                onChange={(e) => setPetname(e.target.value)}
+                type="checkbox"
+                className="checkbox"
+                checked={selectedServices.includes(service)}
+                onChange={() => handleServiceChange(service)}
               />
-            </div>
+            </label>
+          </div>
+        ))}
 
-            {/* Categories and Description */}
-            <div className="flex flex-wrap gap-6">
-              {/* Categories */}
-              <div className="form-control flex-1">
-                <label className="label">
-                  <span className="label-text font-medium text-gray-700">Category*</span>
-                </label>
-                <select
-                  className="mt-4 select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  value={Category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option value="">Select a category</option>
-                  <option value="Dog">Dog</option>
-                  <option value="Cat">Cat</option>
-                  <option value="Other">Other Pets</option>
-                </select>
-              </div>
-
-              {Category === "Dog" && (
-                <div className="form-control flex-1">
-                  <label className="label">
-                  <span className="label-text font-medium text-gray-700">Choose breed*</span>
-                </label>
-                <select
-                  className="mt-4 select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  value={Breed}
-                  onChange={(e) => setBreed(e.target.value)}
-                >
-                  <option value="">Select a Breed</option>
-                  <option value="German Shepherd">German Shepherd</option>
-                  <option value="Labrador">Labrador</option>
-                  <option value="Golden Retriever">Golden Retriever</option>
-                  <option value="Pug">Pug</option>
-                  <option value="Japanese Spitzz">Japanese Spitzz</option>
-                  <option value="Husky">Husky</option>
-                  <option value="Other">Other</option>
-                </select>
-                </div>
-              )}
-
-              {/* Description */}
-              <div className="form-control flex-1">
+      {/* Included Offering Section */}
+      <div className="form-control mt-4">
+        <label className="label">
+          <span className="label-text">Included Offering</span>
+        </label>
+        <div className="p-3 border rounded-lg bg-gray-100">
+          {selectedServices.length > 0 ? (
+            <ul className="list-disc pl-4">
+              {selectedServices.map((service, index) => (
+                <li key={index}>{service}</li>
+              ))}
+            </ul>
+          ) : (
+            <span>No offerings selected</span>
+          )}
+        </div>
+      </div>
+      <div className="form-control flex-1">
                 <label className="label">
                   <span className="label-text font-medium text-gray-700">Description*</span>
                 </label>
                 <textarea
-                  className="mt-4 textarea textarea-bordered w-full h-[110px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  value={Description}
+                  className="mt-4 textarea textarea-bordered w-full h-[70px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  value={description}
                   placeholder="Add pet description here!"
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-            </div>
-
-            {/* Age */}
-            <div className="form-control mb-6 w-1/2">
+              <div className="form-control mb-6 mt-4">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">Age*</span>
+                <span className="label-text font-medium text-gray-700 ">Price*</span>
               </label>
-              <select
-                value={Age}
-                className="select mt-4 select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                onChange={(e) => setPetAge(e.target.value)}
-              >
-                <option value="">Select estimated age:</option>
-                <option value="3month">1-3 Months</option>
-                <option value="6-9Months">6-9 Months</option>
-                <option value="1year">1 year</option>
-                <option value="1-2years">Between 1-2 years</option>
-                <option value="above2years">Above 2 years</option>
-              </select>
+              <input
+                type="text"
+                value={price}
+                placeholder="Enter price....."
+                className="flex flex mt-2 input input-bordered w-1/2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                onChange={(e) => setPrice(e.target.value)}
+              />
             </div>
-            {/* Image Upload */}
             <div className="form-control flex-1 w-1/2">
               <label className="label">
                 <span className="label-text font-medium text-gray-700">
-                  {isEdit ? "Update pet image" : "Upload pet image"}
+                  {isEdit ? "Update thumbnail" : "Upload new thumbnail"}
                 </span>
               </label>
               <input
@@ -234,9 +239,7 @@ const addGroom = () => {
                 onChange={(e) => setImage(e.target.files[0])}
               />
             </div>
-
-            {/* Submit Buttons */}
-            <div className="flex justify-between mt-6">
+      <div className="flex justify-between mt-6">
               <button
                 type="button"  
                 onClick={handlebackButton}
@@ -251,7 +254,7 @@ const addGroom = () => {
                 {isEdit ? "Update" : "Upload"}
               </button>
             </div>
-          </form>
+    </form>
         </div>
       </main>
     </div>

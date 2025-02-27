@@ -39,7 +39,7 @@ const getPetlist = async(req, res)=>{
 
 const updatePet = async (req, res) => {
     try {
-        const { petname, Category,Breed, Description, Age, Location } = req.body;
+        const { petname, Category, Breed, Description, Age, Location, status } = req.body;
         const petId = req.params.id;  
 
         const pet = await petListModel.findById(petId);
@@ -48,24 +48,34 @@ const updatePet = async (req, res) => {
             return res.status(404).json({ success: false, message: "Pet not found" });
         }
 
-        pet.petname = petname || pet.petname;
-        pet.Category = Category || pet.Category;
-        pet.Breed = Breed || pet.Breed
-        pet.Description = Description || pet.Description;
-        pet.Age = Age || pet.Age;
-        pet.Location = Location || pet.Location;
-        
+        if (petname || Category || Breed || Description || Age || Location || req.file) {
+            // Updating pet details except status
+            pet.petname = petname || pet.petname;
+            pet.Category = Category || pet.Category;
+            pet.Breed = Breed || pet.Breed;
+            pet.Description = Description || pet.Description;
+            pet.Age = Age || pet.Age;
+            pet.Location = Location || pet.Location;
 
-        if (req.file) {
-            pet.Image = req.file.path.replace(/\\/g, "/");
+            if (req.file) {
+                pet.Image = req.file.path.replace(/\\/g, "/");
+            }
+
+            await pet.save();
+            return res.status(200).json({ success: true, message: "Pet details updated successfully", data: pet });
+        } else if (status) {
+            pet.status = "Booked";
+            await pet.save();
+            return res.status(200).json({ success: true, message: "Pet status updated successfully", data: pet });
+        } else {
+            return res.status(400).json({ success: false, message: "No valid fields provided for update" });
         }
-        await pet.save();
-        res.status(200).json({ success: true, message: "Pet updated successfully", data: pet });
 
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
 
 const deletePet = async (req, res) => {
     try {
@@ -83,4 +93,25 @@ const deletePet = async (req, res) => {
     }
 };
 
-export default {petList, getPetlist, updatePet, deletePet};
+const changeStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const petId = req.params.id;  
+
+        const pet = await petListModel.findById(petId);
+
+        if (!pet) {
+            return res.status(404).json({ success: false, message: "Pet not found" });
+        }
+
+        pet.status="Booked"
+        
+        await pet.save();
+        res.status(200).json({ success: true, message: "Pet status updated successfully", data: pet });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export default {petList, getPetlist, updatePet, deletePet, changeStatus};

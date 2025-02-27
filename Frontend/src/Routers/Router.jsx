@@ -26,6 +26,7 @@ import AdoptionNotification from "../Notifications/adoptionNotification"
 import AddService from "../admin/addService";
 import PetGroom from "../admin/petGroom"
 import Addhostel from "../admin/addHostel"
+import Addgrooming from "../admin/addGrooming"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -126,6 +127,10 @@ function AppRouter() {
     {
       path:"/dashboard/addhostel",
       element:<Addhostel />
+    },
+    {
+      path:"/dashboard/addgrooming",
+      element: <Addgrooming />
     },
     {
       path:"/lostfound/lost",
