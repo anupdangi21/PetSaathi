@@ -18,6 +18,11 @@ const AddHostel = () => {
     "Open Space": "",
     "Private Room": "",
   });
+  const [prices, setPrices] = useState({
+    Cage: "",
+    "Open Space": "",
+    "Private Room": "",
+  });
   const [numberofdays, setNumberofdays] = useState("");
   const [pettype, setPettype] = useState("");
   const [food, setFood] = useState("");
@@ -40,9 +45,14 @@ const AddHostel = () => {
         acc[item.type] = item.count;
         return acc;
       }, {});
+      const initialPrices = accoms.reduce((acc, item) => {
+        acc[item.type] = item.price;
+        return acc;
+      }, {});
 
       setAccommodations(initialAccommodations);
       setCounts(initialCounts);
+      setPrices(initialPrices);
       setNumberofdays(petData.numberofdays || "");
       setPettype(petData.pettype || "");
       setFood(petData.food || "");
@@ -77,7 +87,8 @@ const AddHostel = () => {
     // Create structured accommodation data
     const accommodationData = accommodations.map(type => ({
       type: type,
-      count: counts[type]
+      count: counts[type],
+      price: prices[type]
     }));
 
     const formData = new FormData();
@@ -170,7 +181,11 @@ const AddHostel = () => {
   };
 
   const handleCountChange = (event, type) => {
-    setCounts({ ...counts, [type]: event.target.value });
+    setCounts(prev => ({ ...prev, [type]: event.target.value }));
+  };
+
+  const handlePriceChange = (event, type) => {
+    setPrices(prev => ({ ...prev, [type]: event.target.value }));
   };
 
   return (
@@ -209,16 +224,27 @@ const AddHostel = () => {
                       </div>
 
                       {accommodations.includes(type) && (
-                        <input
-                          type="number"
-                          placeholder={`No. of ${type}s`}
-                          value={counts[type] || ""}
-                          onChange={(event) => handleCountChange(event, type)}
-                          className="mt-2 input input-bordered border border-gray-300 rounded-md w-48 h-8"
-                          min="1"
-                          required
-                        />
-                      )}
+                    <div className="flex flex-col gap-2 mt-2">
+                      <input
+                        type="number"
+                        placeholder={`No. of ${type}s`}
+                        value={counts[type] || ""}
+                        onChange={(e) => handleCountChange(e, type)}
+                        className="input input-bordered border border-gray-300 rounded-md h-8"
+                        min="1"
+                        required
+                      />
+                      <input
+                        type="text"
+                        placeholder={`Price for ${type} (per day)`}
+                        value={prices[type] || ""}
+                        onChange={(e) => handlePriceChange(e, type)}
+                        className="input input-bordered border border-gray-300 rounded-md h-8"
+                        min="0"
+                        required
+                      />
+                    </div>
+                  )}
                     </div>
                   ))}
                 </div>

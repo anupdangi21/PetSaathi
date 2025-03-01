@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import Aside from "../Components/aside";
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const addGroom = () => {
+const AddGroom = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -60,8 +60,10 @@ const addGroom = () => {
     const formData = new FormData();
     // const formData = { serviceoffering, includedOfferings: selectedServices };
     formData.append("serviceoffering", serviceoffering);
-    formData.append("includedOfferings", selectedServices)
-    formData.append("description", description);
+    selectedServices.forEach(service => {
+      formData.append('includedOfferings', service);
+    });
+        formData.append("description", description);
     formData.append("price", price);
     formData.append("vendorlocation", userData.user.location);
     formData.append("vendoremail", userData.user.email);
@@ -85,6 +87,7 @@ const addGroom = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("id k ho herma ta",result.organizationname)
 
       if (result.status === 200) {
         Swal.fire({
@@ -261,4 +264,4 @@ const addGroom = () => {
   );
 };
 
-export default addGroom;
+export default AddGroom;

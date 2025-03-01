@@ -5,7 +5,7 @@ import {
     BadgePlus,
     TrendingUp,
 } from 'lucide-react';
-
+import Swal from 'sweetalert2';
 
 
 const TrainingAdmin = () => {
@@ -18,7 +18,7 @@ const TrainingAdmin = () => {
     
         const handleEditPet = (pet, event) => {
           event.preventDefault();
-          navigate("/dashboard/addpet", { 
+          navigate("/dashboard/addtraining", { 
             state: { 
               petData: pet,
               isEdit: true 
@@ -39,7 +39,7 @@ const TrainingAdmin = () => {
               }).then(async (result) => {
                   if (result.isConfirmed) {
                       try {
-                          const response = await fetch(`http://localhost:3000/petlisting/${_id}`, {
+                          const response = await fetch(`http://localhost:3000/training/${_id}`, {
                               method: "DELETE",
                               headers: {
                                   "Content-Type": "application/json"
@@ -81,7 +81,7 @@ const TrainingAdmin = () => {
                     return;
                   }
             
-                  const response = await fetch('http://localhost:3000/petlisting', {
+                  const response = await fetch('http://localhost:3000/training', {
                     headers: {
                       'Authorization': `Bearer ${userData.userToken}`
                     }
@@ -105,7 +105,7 @@ const TrainingAdmin = () => {
                   }
             
                   const userPets = petsArray.filter(pet => 
-                    pet.email === userData.user.email
+                    pet.email === userData.user.vendoremail
                   );
                   const reversedPets = [...userPets].reverse();
                   setPets(reversedPets);
@@ -120,6 +120,10 @@ const TrainingAdmin = () => {
             
               fetchPets();
             }, []);
+
+            const handleAddPet=()=>{
+              navigate("/dashboard/addtraining")
+            }
   return (
     <div className="min-h-screen bg-gray-50 flex">
             <aside>
@@ -133,7 +137,7 @@ const TrainingAdmin = () => {
                                       <div className="flex items-center gap-4">
                                         <h3 className="text-2xl font-semibold text-gray-800">Upload your service</h3>
                                         <button
-                                        //   onClick={handleAddPet}
+                                          onClick={handleAddPet}
                                           className="bg-zinc-50 text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 flex items-center"
                                         >
                                           <BadgePlus />
@@ -169,11 +173,10 @@ const TrainingAdmin = () => {
                                     alt={pet.petname}
                                     className="w-24 h-24 object-cover rounded-lg"
                                   />
-                                    <p className="font-medium text-gray-800 ml-8">Name: {pet.petname}</p>
-                                    <p className="text-medium text-gray-800 ml-8">Age: {pet.Age}</p>
-                                    <p className="text-medium text-gray-800 ml-8">Category: {pet.Category}</p>
-                                    <p className="text-medium text-gray-800 ml-8">Location: {pet.Location}</p>
-                                  </div>
+                                    <p className="font-medium text-gray-800 ml-8">Service Offering: {pet.serviceoffering}</p>
+                                    <p className="text-medium text-gray-800 ml-8">Offerings: {pet.includedOfferings}</p>
+                                    <p className="text-medium text-gray-800 ml-8">Price: {pet.price}</p>
+                                    <p className="text-medium text-gray-800 ml-8">Timing: {pet.timing}</p>                                  </div>
                                 </div>
                                 <div className="flex gap-2">
                                   <button

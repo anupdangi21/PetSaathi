@@ -5,12 +5,21 @@ const petTrainingschema = new mongoose.Schema({
     vendoremail: String,
     vendorcontact: String,
     vendorlocation: String,
-    trainingtype: String,
+    serviceoffering: {
+        type: String,
+        required: true,
+        enum: ["Basic", "Standard"],
+      },
+      includedOfferings: {
+        type: [String], 
+        required: true,
+      },
     timing: String,
     duration: String,
     eligibility: String,
     description: String,
     Image:String,
+    price:String,
     status: {type: String, default:"Available", required:true}
 
 })

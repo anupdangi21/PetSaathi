@@ -118,7 +118,7 @@ const AdoptPetReservation = () => {
                         <p className='mt-2'><strong>Pet Name:</strong> {selectedPet.petname}</p>
                         <p className='mt-2'><strong>Category:</strong> {selectedPet.Category}</p>
                         <p className='mt-2'><strong>Age:</strong> {selectedPet.Age}</p>
-                        <p className='mt-2'><strong>Image:</strong> {selectedPet.Image}</p>
+                        {/* <p className='mt-2'><strong>Image:</strong> {selectedPet.Image}</p> */}
                         <p className='mt-2'><strong>Organization Location:</strong> {selectedPet.Location}</p>
                     </div>
                 </div>

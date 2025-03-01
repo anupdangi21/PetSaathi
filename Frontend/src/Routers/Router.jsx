@@ -27,6 +27,7 @@ import AddService from "../admin/addService";
 import PetGroom from "../admin/petGroom"
 import Addhostel from "../admin/addHostel"
 import Addgrooming from "../admin/addGrooming"
+import AddTraining from "../admin/addTraining"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -131,6 +132,10 @@ function AppRouter() {
     {
       path:"/dashboard/addgrooming",
       element: <Addgrooming />
+    },
+    {
+      path:"/dashboard/addtraining",
+      element: <AddTraining />
     },
     {
       path:"/lostfound/lost",

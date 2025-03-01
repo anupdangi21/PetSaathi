@@ -4,10 +4,11 @@ import upload from "../multerConfig.js"
 
 const petTraining = async (req, res)=>{
     try {
-        console.log(req.body)
-        const {Image, organizationname, vendoremail, vendorcontact, vendorlocation,trainingtype,timing, duration, eligibility,description,status }=req.body
-        if(!trainingtype || !timing || !duration || !eligibility || !description){
-            return res.status(201).json({message:"Please fill all the fields"})
+        // console.log(req.body,"tya bataaako data yei ho")
+        const { organizationname, vendoremail, vendorcontact, vendorlocation,serviceoffering,includedOfferings,timing,price, duration, eligibility,description,status }=req.body
+        const Image = req.file ? req.file.path.replace(/\\/g, "/") : null;
+        if(!serviceoffering || !timing || !duration || !eligibility || !description){
+            return res.status(200).json({message:"Please fill all the fields"})
         }
         const newTraining = new petTrainingModel({
             Image,
@@ -15,7 +16,9 @@ const petTraining = async (req, res)=>{
             vendoremail,
             vendorcontact,
             vendorlocation,
-            trainingtype,
+            serviceoffering,
+            includedOfferings,
+            price,
             timing,
             duration,
             eligibility,
@@ -23,7 +26,7 @@ const petTraining = async (req, res)=>{
             status
 
         })
-        console.log(newTraining)
+        // console.log(newTraining)
         await newTraining.save()
     } catch (error) {
         res.status(400).json({success:false, message:error.message})
@@ -43,7 +46,7 @@ const getPetTraining = async (req, res) => {
 
 const updatePetTraining = async (req, res) => {
     try {
-        const {trainingtype, timing, duration, eligibility, description} = req.body
+        const {serviceoffering, timing, duration, eligibility, description, price} = req.body
         const petId = req.params.id
         const pet = await petTrainingModel.findById(petId)
 
@@ -51,11 +54,13 @@ const updatePetTraining = async (req, res) => {
             return res.status(404).json({message:"Pet not found"})
         }
 
-        pet.trainingtype = trainingtype || pet.trainingtype
+        pet.serviceoffering = serviceoffering || pet.serviceoffering
         pet.timing = timing || pet.timing
         pet.duration = duration || pet.duration
         pet.eligibility = eligibility || pet.eligibility
         pet.description = description || pet.description
+        pet.price = price || pet.price
+
         if(req.file){
             pet.Image = req.file.path.replace(/\\/g, "/");
          }

@@ -41,22 +41,21 @@ const getpetGroom = async (req,res)=>{
 
 const updatepetGroom = async (req,res)=>{
     try {
-        const {servicedetails, basicpackage, standardpackage,price} = req.body
+        const {serviceoffering, includedOfferings,price,description} = req.body
         const petId = req.params.id;
-
         const pet = await petGroomingModel.findById(petId)
 
         if(!pet){
-            return res.status(400).json({message:"Service not found"})
+            return res.status(400).json({success:false, message:error.message})
         }
-        pet.servicedetails = servicedetails || pet.servicedetails
-        pet.basicpackage = basicpackage || pet.basicpackage
-        pet.standardpackage = standardpackage || pet.standardpackage
+        
+        pet.serviceoffering = serviceoffering || pet.serviceoffering
+        pet.includedOfferings = includedOfferings || pet.includedOfferings
         pet.price = price || pet.price
+        pet.description = description || pet.description
         if(req.file){
             pet.Image = req.file.path.replace(/\\/g, "/");
          }
-
          await pet.save()
          res.status(200).json({success:true, message:"Service updated successfully"})
     } catch (error) {

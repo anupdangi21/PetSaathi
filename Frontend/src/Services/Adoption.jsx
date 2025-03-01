@@ -255,7 +255,8 @@ const handleFilter = () => {
                 <h2 className="text-lg font-bold mb-4">From: </h2><p className=' text-lg mt-0.5 ml-2'>{selectedPet.organizationname}</p>
                 </div>
                 <div className='flex flex'>
-                <h2 className="text-lg font-bold mb-4">Contact vendor:</h2><p className='mt-1 ml-2'>{selectedPet.vendorcontact}</p>
+                <h2 className="text-lg font-bold mb-4">Contact vendor:</h2><p className='mt-1 ml-2'>98*******</p>  
+                {/* //{selectedPet.vendorcontact} */}
                 </div>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="flex items-center">

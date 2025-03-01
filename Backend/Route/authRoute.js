@@ -67,15 +67,15 @@ authRouter.put("/pethostel/:id", upload.single("Image"), updateHostel)
 authRouter.delete("/pethostel/:_id", deleteHostel)
 
 //router for posting the pet training service and geting, updating, deleting the service also
-authRouter.post("/pettraining",upload.single("Image"),petTraining)
-authRouter.get("/pettraining", getPetTraining)
-authRouter.put("/pettraining/:id",updatePetTraining)
-authRouter.delete("/pettraining/:_id", deletePetTraining)
+authRouter.post("/training",upload.single("Image"),petTraining)
+authRouter.get("/training", getPetTraining)
+authRouter.put("/training/:id",upload.single("Image"), updatePetTraining)
+authRouter.delete("/training/:_id", deletePetTraining)
 
 //router for posting the pet grooming service and getting the data, updating and deleting the data also
 authRouter.post("/petgrooming",upload.single("Image"), petGroom)
 authRouter.get("/petgrooming", getpetGroom)
-authRouter.put("/petgrooming/:id",updatepetGroom)
+authRouter.put("/petgrooming/:id",upload.single("Image"), updatepetGroom)
 authRouter.delete("/petgrooming/:_id", deletepetGroom)
 
 //router for posting the new services 

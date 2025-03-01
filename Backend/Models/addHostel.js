@@ -5,8 +5,12 @@ const petHostelschema = new mongoose.Schema({
     vendorcontact: String,
     vendoremail: String,
     vendorlocation: String,
-    accomodation: { type: Array, required: true }, // Array of objects: [{ type: String, count: Number }]    pettype: String,
-    food:String,
+    accomodation: [{
+        type: String,
+        count: Number,
+        price: Number
+      }],   
+       food:String,
     playtime: String,
     medicalsupport: String,
     description: String,

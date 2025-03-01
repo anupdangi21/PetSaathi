@@ -17,7 +17,6 @@ const AddPets = () => {
   const [Breed, setBreed]=useState("")
   const [Description, setDescription] = useState("");
   const [Age, setPetAge] = useState("");
-  const [ocation, setLocation] = useState("");
   const [Image, setImage] = useState(null);
   const [petId, setPetId] = useState("");
   const fileInputRef = useRef(null);
@@ -30,7 +29,6 @@ const AddPets = () => {
       setBreed(petData.Breed || "");
       setDescription(petData.Description || "");
       setPetAge(petData.Age || "");
-      setLocation(petData.Location || "");
       setPetId(petData._id || "");
     }
   }, [isEdit, petData]);
@@ -100,7 +98,6 @@ const AddPets = () => {
           setBreed("")
           setDescription("");
           setPetAge("");
-          setLocation("");
           setImage(null);
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
