@@ -157,7 +157,7 @@ const AddGroom = () => {
       
 
       {/* Checkboxes for Basic & Standard Packages */}
-      {["Bathing and Drying", "Haircut and Style", "Nail Trimming", "Ear Cleaning"].map((service) => (
+      {["Bathing and Drying", "Haircut and Style", "Nail Trimming", "Ear Cleaning", "Vaccination"].map((service) => (
         <div key={service} className="form-control">
           <label className="label cursor-pointer">
             <span className="label-text">{service}</span>
@@ -175,7 +175,7 @@ const AddGroom = () => {
 
         {/* Extra Checkboxes for Standard Package */}
         {serviceoffering === "Standard" &&
-        ["Teeth Brushing", "Vaccination", "Pet Dropoff"].map((service) => (
+        ["Teeth Brushing", "Pet Dropoff"].map((service) => (
           <div key={service} className="form-control">
             <label className="label cursor-pointer">
               <span className="label-text">{service}</span>

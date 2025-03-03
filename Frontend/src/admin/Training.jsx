@@ -105,7 +105,7 @@ const TrainingAdmin = () => {
                   }
             
                   const userPets = petsArray.filter(pet => 
-                    pet.email === userData.user.vendoremail
+                    pet.vendoremail === userData.user.email
                   );
                   const reversedPets = [...userPets].reverse();
                   setPets(reversedPets);

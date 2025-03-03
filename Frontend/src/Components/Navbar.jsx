@@ -167,7 +167,7 @@ function Nav() {
                             </MenuItems>
                         </Menu>
                     ) : (
-                        <button className="relative mr-8 px-6 py-2 flex items-center justify-center rounded-full bg-orange-300 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200" onClick={openModal}>
+                        <button className="relative mr-8 px-6 py-2 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-400 to-orange-300 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200" onClick={openModal}>
                             Login/Sign Up
                         </button>
                     )}

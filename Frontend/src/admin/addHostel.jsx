@@ -352,6 +352,7 @@ const AddHostel = () => {
               </label>
               <input
                 type="file"
+                multiple
                 ref={fileInputRef}
                 className="mt-4 ml-4 input input-bordered w-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 onChange={(e) => setImage(e.target.files[0])}

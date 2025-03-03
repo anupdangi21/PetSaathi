@@ -83,7 +83,7 @@ const registerGetData = async (req, res) => {
  const vendorRegister = async (req, res) => {
     try {
         console.log(req.body)
-        const { organizationname, email ,services, username,location, password, number } = req.body;
+        const { organizationname, email ,services, username,location, password, number,experience } = req.body;
 
         if ( !organizationname ||!services || !username || !location || !password) {
             return res.status(400).json({ message: "All fields are required" });
@@ -92,7 +92,7 @@ const registerGetData = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newVendor = new vendorregisterModel({
-            organizationname, email, services, number, username,location, password: hashedPassword
+            organizationname, email, services,experience, number, username,location, password: hashedPassword
         });
         await newVendor.save();
 
@@ -122,7 +122,8 @@ const registerGetData = async (req, res) => {
                 location:newVendor.location,
                 email: newVendor.email,
                 services: newVendor.services,
-                number:newVendor.number
+                number:newVendor.number,
+                experience:newVendor.experience
             }
          });
     } catch (err) {
@@ -181,12 +182,14 @@ const signin = async (req, res) => {
             tokenPayload.organizationname = vendorData.organizationname;
             tokenPayload.services = vendorData.services;
             tokenPayload.location = vendorData.location;
+            tokenPayload.experience = vendorData.experience
         }
 
         // If logging in as a vendor, include vendor details in the token
         if (isVendorMatch) {
             tokenPayload.organizationname = vendor.organizationname;
             tokenPayload.services = vendor.services;
+            tokenPayload.experience = vendorData.experience
             tokenPayload.location = vendorData ? vendorData.location : vendor.location;
         }
 
@@ -200,7 +203,7 @@ const signin = async (req, res) => {
                 username: isUserMatch ? user.username : vendor.username,
                 email: isUserMatch ? user.email : vendor.email,
                 number: isUserMatch ? user.number : vendor.number,
-                ...(vendorData || isVendorMatch ? { organizationname: (vendorData || vendor).organizationname, services: (vendorData || vendor).services , location: (vendorData || vendor).location} : {})
+                ...(vendorData || isVendorMatch ? { organizationname: (vendorData || vendor).organizationname, services: (vendorData || vendor).services ,experience: (vendorData || vendor).experience, location: (vendorData || vendor).location} : {})
             }
         });
 

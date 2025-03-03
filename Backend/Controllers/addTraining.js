@@ -5,7 +5,7 @@ import upload from "../multerConfig.js"
 const petTraining = async (req, res)=>{
     try {
         // console.log(req.body,"tya bataaako data yei ho")
-        const { organizationname, vendoremail, vendorcontact, vendorlocation,serviceoffering,includedOfferings,timing,price, duration, eligibility,description,status }=req.body
+        const { organizationname, vendoremail,experience, vendorcontact, vendorlocation,serviceoffering,includedOfferings,timing,price, duration, eligibility,description,status }=req.body
         const Image = req.file ? req.file.path.replace(/\\/g, "/") : null;
         if(!serviceoffering || !timing || !duration || !eligibility || !description){
             return res.status(200).json({message:"Please fill all the fields"})
@@ -15,6 +15,7 @@ const petTraining = async (req, res)=>{
             organizationname,
             vendoremail,
             vendorcontact,
+            experience,
             vendorlocation,
             serviceoffering,
             includedOfferings,
@@ -28,6 +29,7 @@ const petTraining = async (req, res)=>{
         })
         // console.log(newTraining)
         await newTraining.save()
+        res.status(200).json({message:"Training Added Successfully"})
     } catch (error) {
         res.status(400).json({success:false, message:error.message})
     }
@@ -36,7 +38,7 @@ const petTraining = async (req, res)=>{
 const getPetTraining = async (req, res) => {
     try {
         const petTraining = await petTrainingModel.find()
-        res.status(200).json({message:"List of training services are successfully fetched", data:petTraining})
+        res.status(200).json({success:true,message:"List of training services are successfully fetched", data:petTraining})
     } catch (error) {
         res.status(400).json({success:false, message:error.message})
     }

@@ -9,7 +9,7 @@ const Vregister = () => {
   const [services, setServices] = useState('');
   const [username, setUsername] = useState('');
   const [location, setLocation] = useState('');
-
+  const [experience , setExperience] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
@@ -30,7 +30,7 @@ const Vregister = () => {
     try {
       const result = await axios.post(
         'http://localhost:3000/registration', 
-        { organizationname, email, services, username,location, password,number }, 
+        { organizationname, email, services, username,location, password,number,experience }, 
         { withCredentials: true }
       );
       console.log("Submission data:", { // Add this to verify
@@ -38,7 +38,8 @@ const Vregister = () => {
         email,
         services,
         username,
-        password
+        password,
+        experience
       });
 
       if (result.status === 200) {
@@ -106,6 +107,25 @@ const Vregister = () => {
               </select>
               <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-500"></i>
             </div>
+            {services === "Pet-training" && (
+                <div className="form-control flex-1">
+                  <label className="label">
+                  <span className="label-text font-medium text-gray-700">Select Experience*</span>
+                </label>
+                <select
+                  className="mt-4 select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  value={experience}
+                  onChange={(e) => setExperience(e.target.value)}
+                >
+                  <option value="">Select Based on your experience</option>
+                  <option value="6 Months">6 Months</option>
+                  <option value="1 Year">1 Year</option>
+                  <option value="1.5 Year">1.5 Year</option>
+                  <option value="2 Years">2 Years</option>
+                  <option value="Above 2 Years">Above 2 Years</option>
+                </select>
+                </div>
+              )}
             <div className="relative">
               <input
                 type="text"

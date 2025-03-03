@@ -54,12 +54,12 @@ function App() {
     navigate('/services/adoption')
  }
   return (
-    <div className="min-h-screen w-full bg-orange-100">
+    <div className="w-full bg-orange-100">
       <header>
         <Navbar />
       </header>
       <main>
-        <div className="min-h-screen w-full bg-orange-100">
+        <div className="w-full bg-orange-100">
           <div className="container ml-24 max-w-screen-xl">
             <div className="flex flex-col lg:flex-row items-center gap-8">
               <div className="lg:w-1/2">
@@ -78,7 +78,7 @@ function App() {
                   supportive, and focused on making perfect matches.
                 </p>
                 <button
-                  className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 px-8 rounded-full transition-colors duration-300"
+                  className="bg-gradient-to-r from-orange-500 to-orange-300 hover:bg-orange-600 text-white font-semibold py-4 px-8 rounded-full transition-colors duration-300"
                   onClick={() => navigate('/services/adoption')}
                 >
                   Explore Available Pets

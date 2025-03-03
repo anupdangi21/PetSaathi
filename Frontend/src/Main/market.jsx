@@ -1,11 +1,11 @@
 import React from 'react';
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/foot";
-import {BadgePlus } from 'lucide-react';
+import {BadgePlus,CircleUserRound } from 'lucide-react';
 
 function market(){
   return (
-    <div>
+    <div className='h-full'>
       <header>
         <Navbar />
       </header>
@@ -29,6 +29,9 @@ function market(){
             <button className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50">
               <BadgePlus /> 
             </button> 
+            <button className='bg-orange-100 rounded-full'>
+            <CircleUserRound size={40}  />
+            </button>
           </div>
         </div>
       </main>

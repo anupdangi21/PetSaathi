@@ -67,6 +67,7 @@ const AddTraining = () => {
     formData.append("timing", timing);
     formData.append("eligibility", eligibility);
     formData.append("vendorlocation", userData.user.location);
+    formData.append("experience",userData.user.experience)
     formData.append("vendoremail", userData.user.email);
     formData.append("organizationname", userData.user.organizationname) 
     formData.append("vendorcontact", userData.user.number)

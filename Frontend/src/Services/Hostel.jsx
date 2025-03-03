@@ -1,8 +1,75 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react';
+import { Heart, MapPin, Calendar, Info, BadgeAlert,Truck,Ambulance,Utensils } from 'lucide-react';
 import Navbar from '../Components/Navbar'
 import Footer from "../Components/foot"
+import useAuthGuard from "../Context/useAuthGuard.jsx";
+
 
 const Hostel = () => {
+  const withAuth = useAuthGuard();
+  const modalRef = useRef(null);
+
+  const [pets, setPets] = useState([]);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showHostel, setShowHostel] = useState([]);
+
+  const openModal = () => setShowConfirmation(true);
+  const closeModal = () => setShowConfirmation(false);
+
+  useEffect(() => {
+    if (showConfirmation) {
+      const handleClickOutside = (event) => {
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
+          closeModal();
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showConfirmation]);
+
+  useEffect(() => {
+    const fetchPets = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/pethostel');
+            const result = await response.json();
+
+            if (result.success && Array.isArray(result.data)) {
+                const userData = JSON.parse(localStorage.getItem('user_data'));
+                const userEmail = userData?.user?.email;
+
+
+                const filteredPets = result.data.filter(pet => 
+                    pet.status !== "Booked" && (!userEmail || pet.vendoremail !== userEmail)
+                );
+
+                setPets(filteredPets.reverse());
+                setShowHostel(filteredPets)
+            } else {
+                console.error("Unexpected API response format:", result);
+                setPets([]);
+            }
+        } catch (error) {
+            console.error('Error fetching pets:', error);
+            setPets([]);
+        }
+    };
+
+    fetchPets();
+}, []);
+
+  const handleHostel = (pet) => {
+    const { Description, ...petDetails } = pet;
+    localStorage.setItem('selectedPet', JSON.stringify(petDetails));
+
+    setTimeout(() => {
+      localStorage.removeItem('selectedPet');
+  }, 30000);
+    openModal();
+
+    setSelectedPet(null);
+  };
 
   return (
     <div>
@@ -10,16 +77,142 @@ const Hostel = () => {
         <Navbar />
       </header>
       <main className="max-w-7xl mx-auto px-4 py-8">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-6">List of hostel services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <div className="bg-white rounded-lg shadow-md h-80">
-              hahas
-            </div>
-
+      <div className="bg-gradient-to-r from-orange-200 to-orange-50 rounded-2xl p-8 mb-12 text-white">
+          <h1 className="text-4xl font-bold mb-4">Find Your Perfect Hostel</h1>
         </div>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.isArray(showHostel) && showHostel.length > 0 ? (
+            showHostel.map((pet) => (
+              <div key={pet._id} className="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="relative">
+                  <img
+                    src={`http://localhost:3000/${pet.Image}`}
+                    alt={pet.petname}
+                    className="w-full h-64 object-cover"
+                  />
+                  <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
+                    <Heart size={20} className="text-red-500" />
+                  </button>
+                </div>
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className='flex'>
+                    <Utensils size={20} className="mr-2" />
+                    <span className='font-bold'>Food: </span><p className='ml-2'> {pet.food}</p>
+                    </div>
+                    <div className='flex'>
+                      <Ambulance size={20} className="mr-2" />
+                      <span className='font-bold'> Medical: </span><p className='ml-2'> {pet.medicalsupport}</p>
+                    </div>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                      {/* {pet.accomodation.type.price} */}Rs:500
+                    </span>
+
+                  </div>
+
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center text-gray-600">
+                      <MapPin size={20} className="mr-2" />
+                      <span className='font-bold text-lg'>{pet.vendorlocation}</span>
+                   </div>
+                    <div className='flex flex'>
+                    <h3 className="text-xl font-semibold text-gray-800">Status:</h3>
+                      <span className="text-green-500">
+                          <p className="font-md mt-1 ml-2">{pet.status}</p>
+                      </span>                    
+                      </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => withAuth(() => handleHostel(pet))()}
+                      className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200"
+                    >
+                      Book Now
+                    </button>
+                    <button
+                      onClick={() => setSelectedPet(pet)}
+                      className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      <Info size={20} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No service available for hostel.</p>
+          )}
+        </div>
+
+        {/* Overlay */}
+        {selectedPet && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            onClick={() => setSelectedPet(null)}
+          >
+            <div
+              className="bg-white rounded-xl max-w-2xl w-full overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={`http://localhost:3000/${selectedPet.Image}`}
+                alt={selectedPet.name}
+                className="w-full h-80 object-cover"
+              />
+              <div className="p-6">
+                <div className='flex flex'>
+                <h2 className="text-lg font-bold mb-4">From: </h2><p className=' text-lg mt-0.5 ml-2'>{selectedPet.organizationname}</p>
+                </div>
+                <div className='flex flex'>
+                <h2 className="text-lg font-bold mb-4">Contact vendor:</h2><p className='mt-1 ml-2'>98*******</p>  
+                {/* //{selectedPet.vendorcontact} */}
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="flex items-center">
+                    <Utensils size={20} className="mr-2" />
+                    <span>Food time: {selectedPet.food}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Ambulance size={20} className="mr-2" />
+                    <span>Medical Support: {selectedPet.medicalsupport}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Truck size={20} className="mr-2" />
+                    <span>Pick up: {selectedPet.petpickup}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Truck size={20} className="mr-2" />
+                    <span>Drop Off: {selectedPet.petdropoff}</span>
+                  </div>
+                  <div className='flex flex'>
+                  <h3 className="text-xl font-semibold text-gray-800">Status:</h3>
+                      <span className="text-green-500">
+                          <p className="font-md mt-1 ml-2">{selectedPet.status}</p>
+                      </span>                    
+                      </div>
+                  <div className="col-span-2">
+                    <p className="text-gray-600">{selectedPet.description}</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                <button
+                  onClick={() => withAuth(() => handleHostel(selectedPet))()}
+                  className="w-full bg-orange-300 text-white px-6 py-3 rounded-lg hover:bg-orange-200"
+                >
+                  Book Now
+                </button>
+                <button
+                      onClick={() => setSelectedPet(pet)}
+                      className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 hover"
+                    >
+                      <BadgeAlert  size={20} />
+                    </button>
+                    </div>
+              </div>
+            </div>
+          </div>
+        )}
     </main>
         <footer>
             <Footer />

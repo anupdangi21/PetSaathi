@@ -48,7 +48,6 @@ const updatepetGroom = async (req,res)=>{
         if(!pet){
             return res.status(400).json({success:false, message:error.message})
         }
-        
         pet.serviceoffering = serviceoffering || pet.serviceoffering
         pet.includedOfferings = includedOfferings || pet.includedOfferings
         pet.price = price || pet.price

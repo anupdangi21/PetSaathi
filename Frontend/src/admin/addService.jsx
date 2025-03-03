@@ -6,7 +6,7 @@ const AddService = () => {
   const [services, setServices] = useState("");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [experience, setExperience]= useState("")
   useEffect(() => {
     const storedUserData = JSON.parse(localStorage.getItem("user_data"));
     if (!storedUserData?.user?.email || !storedUserData?.user?.organizationname) {
@@ -35,7 +35,7 @@ const AddService = () => {
 
     try {
       const result = await axios.post("http://localhost:3000/addservice", { email: userData?.user?.email,  // Add email to payload
-        services: [services] });
+        services: [services] , experience: experience});
 
       if (result.status === 200) {
         Swal.fire({
@@ -102,6 +102,25 @@ const AddService = () => {
               <option value="Pet-grooming">Pet Grooming</option>
             </select>
           </div>
+          {services === "Pet-training" && (
+                <div className="form-control flex-1">
+                  <label className="label">
+                  <span className="label-text font-medium text-gray-700">Select Experience*</span>
+                </label>
+                <select
+                  className="mt-4 select select-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  value={experience}
+                  onChange={(e) => setExperience(e.target.value)}
+                >
+                  <option value="">Select Based on your experience</option>
+                  <option value="6 Months">6 Months</option>
+                  <option value="1 Year">1 Year</option>
+                  <option value="1.5 Year">1.5 Year</option>
+                  <option value="2 Years">2 Years</option>
+                  <option value="Above 2 Years">Above 2 Years</option>
+                </select>
+                </div>
+              )}
 
           <div className="flex justify-end">
             <button

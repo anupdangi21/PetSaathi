@@ -20,6 +20,7 @@ const petTrainingschema = new mongoose.Schema({
     description: String,
     Image:String,
     price:String,
+    experience:String,
     status: {type: String, default:"Available", required:true}
 
 })

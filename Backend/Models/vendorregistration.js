@@ -4,6 +4,7 @@ const vendorregisterSchema = new mongoose.Schema({
     organizationname: { type: String }, 
     email: { type: String, unique: true },
     services: { type: [String]},
+    experience: { type: String, default: ""  },
     number: { type: String },
     username: { type: String, unique: true }, 
     location:{type:String},
