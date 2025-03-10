@@ -328,7 +328,7 @@ const AddHostel = () => {
                   <option value="No">No</option>
                 </select>
               </div>
-              <div className="form-control flex-1 mt-4">
+              <div className="form-control flex-1 mt-2">
                 <label className="label">
                   <span className="label-text font-medium text-gray-700">Pet dropoff*</span>
                 </label>

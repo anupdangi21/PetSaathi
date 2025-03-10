@@ -45,6 +45,20 @@ const AdoptPetReservation = () => {
                 return; 
             }
         }
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); 
+            
+                const selectedDate = new Date(date);
+                selectedDate.setHours(0, 0, 0, 0); 
+            
+                if (selectedDate < today) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Date',
+                        text: 'The selected date has already passed. Please enter a valid date.',
+                    });
+                    return;
+                }
 
         // Proceed with form submission
         const formData = new FormData(e.target);

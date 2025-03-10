@@ -3,6 +3,7 @@ import { Heart, MapPin,Timer,PackageOpen,Award, Calendar,ShieldAlert, Info, Badg
 import Navbar from '../Components/Navbar'
 import Footer from '../Components/foot'
 import useAuthGuard from "../Context/useAuthGuard.jsx";
+import TrainingReservation from '../Reservation/trainingReservation.jsx';
 
 
 const PetTraining = () => {
@@ -43,7 +44,7 @@ const PetTraining = () => {
 
 
                 const filteredPets = result.data.filter(pet => 
-                    pet.status !== "Booked" && (!userEmail || pet.email !== userEmail)
+                  pet.status !== "Booked" && (!userEmail || pet.vendoremail !== userEmail)
                 );
 
                 setPets(filteredPets.reverse());
@@ -209,7 +210,14 @@ const PetTraining = () => {
           </div>
         )}
     </main>
-        <footer>
+    {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]">
+            <TrainingReservation onClick={closeModal} />
+          </div>
+        </div>
+      )}
+        <footer >
             <Footer />
         </footer>
     </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, MapPin, Calendar, Info, BadgeAlert,Truck,Ambulance,Utensils } from 'lucide-react';
+import { Heart, MapPin,Columns4, Calendar, Info, BadgeAlert,Truck,Ambulance,Utensils } from 'lucide-react';
 import Navbar from '../Components/Navbar'
 import Footer from "../Components/foot"
 import useAuthGuard from "../Context/useAuthGuard.jsx";
+import HostelReservation from '../Reservation/hostelReservation.jsx';
 
 
 const Hostel = () => {
@@ -10,6 +11,7 @@ const Hostel = () => {
   const modalRef = useRef(null);
 
   const [pets, setPets] = useState([]);
+  const [accommodationData, setAccommodationData] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showHostel, setShowHostel] = useState([]);
@@ -31,33 +33,41 @@ const Hostel = () => {
 
   useEffect(() => {
     const fetchPets = async () => {
-        try {
-            const response = await fetch('http://localhost:3000/pethostel');
-            const result = await response.json();
-
-            if (result.success && Array.isArray(result.data)) {
-                const userData = JSON.parse(localStorage.getItem('user_data'));
-                const userEmail = userData?.user?.email;
-
-
-                const filteredPets = result.data.filter(pet => 
-                    pet.status !== "Booked" && (!userEmail || pet.vendoremail !== userEmail)
-                );
-
-                setPets(filteredPets.reverse());
-                setShowHostel(filteredPets)
-            } else {
-                console.error("Unexpected API response format:", result);
-                setPets([]);
+      try {
+        const response = await fetch('http://localhost:3000/pethostel');
+        const result = await response.json();
+  
+        if (result.success && Array.isArray(result.data)) {
+          const userData = JSON.parse(localStorage.getItem('user_data'));
+          const userEmail = userData?.user?.email;
+  
+          // Parse accommodation for EACH PET
+          const petsWithAccommodations = result.data.map(pet => {
+            try {
+              // Parse the accommodation array for THIS pet
+              const accommodationDetails = pet.accomodation?.length > 0 
+                ? JSON.parse(pet.accomodation[0]) 
+                : [];
+              return { ...pet, accommodationDetails };
+            } catch (error) {
+              console.error("Error parsing accommodation:", error);
+              return { ...pet, accommodationDetails: [] };
             }
-        } catch (error) {
-            console.error('Error fetching pets:', error);
-            setPets([]);
+          });
+  
+          const filteredPets = petsWithAccommodations.filter(pet => 
+            pet.status !== "Booked" && (!userEmail || pet.vendoremail !== userEmail)
+          );
+  
+          setPets(filteredPets.reverse());
+          setShowHostel(filteredPets);
         }
+      } catch (error) {
+        console.error('Error fetching pets:', error);
+      }
     };
-
     fetchPets();
-}, []);
+  }, []);
 
   const handleHostel = (pet) => {
     const { Description, ...petDetails } = pet;
@@ -158,7 +168,7 @@ const Hostel = () => {
               <img
                 src={`http://localhost:3000/${selectedPet.Image}`}
                 alt={selectedPet.name}
-                className="w-full h-80 object-cover"
+                className="w-full h-64 object-cover"
               />
               <div className="p-6">
                 <div className='flex flex'>
@@ -185,20 +195,37 @@ const Hostel = () => {
                     <Truck size={20} className="mr-2" />
                     <span>Drop Off: {selectedPet.petdropoff}</span>
                   </div>
-                  <div className='flex flex'>
+                  </div>
+                  <div>
+                  <div className='grid gap-1 mb-2'>
+                  {selectedPet?.accommodationDetails?.length > 0 ? (
+                      selectedPet.accommodationDetails.map((item, index) => (
+                        <li key={index}>
+                          <strong>Accommodation type:</strong> {item.type}, 
+                          <strong>Available seats:</strong> {item.count}, 
+                          <strong>Price:</strong> {item.price}
+                        </li>
+                      ))
+                    ) : (
+                      <p>No accommodation details available</p>
+                    )}
+                  </div>
+                  </div>
+                  <div className='flex mt-2'>
                   <h3 className="text-xl font-semibold text-gray-800">Status:</h3>
                       <span className="text-green-500">
                           <p className="font-md mt-1 ml-2">{selectedPet.status}</p>
                       </span>                    
                       </div>
-                  <div className="col-span-2">
+                  <div className="col-span-2 flex mt-2">
+                    <h2 className='text-lg font-semibold'>Description:</h2>
                     <p className="text-gray-600">{selectedPet.description}</p>
                   </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-3 ml-6 mb-6 mr-6">
                 <button
                   onClick={() => withAuth(() => handleHostel(selectedPet))()}
-                  className="w-full bg-orange-300 text-white px-6 py-3 rounded-lg hover:bg-orange-200"
+                  className=" w-full bg-orange-300 text-white px-6 py-3 rounded-lg hover:bg-orange-200"
                 >
                   Book Now
                 </button>
@@ -211,10 +238,16 @@ const Hostel = () => {
                     </div>
               </div>
             </div>
-          </div>
         )}
     </main>
-        <footer>
+    {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]">
+            <HostelReservation onClick={closeModal} />
+          </div>
+        </div>
+      )}
+        <footer >
             <Footer />
         </footer>
     </div>

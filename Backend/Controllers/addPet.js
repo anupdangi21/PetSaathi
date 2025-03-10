@@ -32,7 +32,7 @@ const getPetlist = async(req, res)=>{
         const getPetData= await petListModel.find()
         res.status(200).json({success: true, data: getPetData})
     } catch (error) {
-    res.json(400).json({success: false, message:"cannot find the pets in the database"})
+    return res.status(400).json({success: false, message:"cannot find the pets in the database"})
     }
 }
 
@@ -79,13 +79,11 @@ const updatePet = async (req, res) => {
 
 const deletePet = async (req, res) => {
     try {
-
         const {_id} = req.params;  
         const deletedPet = await petListModel.findByIdAndDelete(_id);
         if (!deletedPet) {
             return res.status(404).json({ success: false, message: "Pet not found" });
         }
-
         res.status(200).json({ success: true, message: "Pet deleted successfully" });
     } catch (error) {
         console.error("Error deleting pet:", error);
@@ -111,7 +109,7 @@ const changeStatus = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
-    }
+    }                                                
 };
 
 export default {petList, getPetlist, updatePet, deletePet, changeStatus};

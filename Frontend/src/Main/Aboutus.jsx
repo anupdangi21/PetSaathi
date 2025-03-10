@@ -110,7 +110,7 @@ const Aboutus = () => {
                 </div>
               </div>
           </main>
-      <footer>
+      <footer >
         <Footer />
       </footer>
     </div>

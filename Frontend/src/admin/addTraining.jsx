@@ -27,7 +27,7 @@ const AddTraining = () => {
   // Pre-fill form for edit mode
   useEffect(() => {
     if (isEdit && petData) {
-    setServiceoffering(petData.serviceoffering);
+    setServiceoffering(petData.serviceoffering || "");
     setSelectedServices(petData.includedOfferings || []);
     setDescription(petData.description);
     setPrice(petData.price);
@@ -167,7 +167,7 @@ const AddTraining = () => {
       
 
       {/* Checkboxes for Basic & Standard Packages */}
-      {["Bathing and Drying", "Haircut and Style", "Nail Trimming", "Ear Cleaning"].map((service) => (
+      {["Obedience Training ", " Clicker Training ", " Nail Trimming ", " Socialization Training "].map((service) => (
         <div key={service} className="form-control flex">
           <label className="label cursor-pointer">
             <span className="label-text">{service}</span>
@@ -181,11 +181,9 @@ const AddTraining = () => {
         </div>
       ))}
 
-
-
         {/* Extra Checkboxes for Standard Package */}
         {serviceoffering === "Standard" &&
-        ["Teeth Brushing", "Vaccination", "Pet Dropoff"].map((service) => (
+        [" Positive Reinforcement Training ", " Protection Training ", " Pet Dropoff "].map((service) => (
           <div key={service} className="form-control">
             <label className="label cursor-pointer">
               <span className="label-text">{service}</span>
@@ -208,7 +206,7 @@ const AddTraining = () => {
           {selectedServices.length > 0 ? (
             <ul className="list-disc pl-4">
               {selectedServices.map((service, index) => (
-                <li key={index}>{service}</li>
+                <li key={index}> {service}</li>
               ))}
             </ul>
           ) : (

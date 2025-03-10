@@ -204,7 +204,7 @@ const Found = () => {
           </div>
         </form>
       </main>
-      <footer>
+      <footer >
         <Footer />
       </footer>
     </div>

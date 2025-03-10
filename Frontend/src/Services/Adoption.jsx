@@ -295,7 +295,7 @@ const handleFilter = () => {
           </div>
         </div>
       )}
-      <footer>
+      <footer >
         <Footer />
       </footer>
     </div>

@@ -208,7 +208,6 @@ const Lost = () => {
             </div>
           </div>
         </form>
-
         {petsLoading ? (
           <div className="text-center py-8">
             <ClipLoader size={40} color="#F97316" />
@@ -217,7 +216,7 @@ const Lost = () => {
           <PetFilter pets={filteredPets} />
         )}
       </main>
-      <footer>
+      <footer >
       <Footer />
       </footer>
     </div>

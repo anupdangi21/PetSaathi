@@ -5,7 +5,7 @@ import {BadgePlus,CircleUserRound } from 'lucide-react';
 
 function market(){
   return (
-    <div className='h-full'>
+    <div className=''>
       <header>
         <Navbar />
       </header>
@@ -35,7 +35,7 @@ function market(){
           </div>
         </div>
       </main>
-      <footer>
+      <footer >
         <Footer />
       </footer>
     </div>

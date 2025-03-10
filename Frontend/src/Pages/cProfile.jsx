@@ -12,7 +12,7 @@ const cProfile = () => {
             this is update profile
           </main>
     
-          <footer>
+          <footer >
             <Footer />
           </footer>
         </div>

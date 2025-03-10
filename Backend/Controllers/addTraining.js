@@ -48,7 +48,7 @@ const getPetTraining = async (req, res) => {
 
 const updatePetTraining = async (req, res) => {
     try {
-        const {serviceoffering, timing, duration, eligibility, description, price} = req.body
+        const {serviceoffering, timing, duration, eligibility, description,includedOfferings, price} = req.body
         const petId = req.params.id
         const pet = await petTrainingModel.findById(petId)
 
@@ -57,6 +57,7 @@ const updatePetTraining = async (req, res) => {
         }
 
         pet.serviceoffering = serviceoffering || pet.serviceoffering
+        pet.includedOfferings = includedOfferings || pet.includedOfferings
         pet.timing = timing || pet.timing
         pet.duration = duration || pet.duration
         pet.eligibility = eligibility || pet.eligibility
