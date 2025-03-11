@@ -8,6 +8,7 @@ const NotificationAdmin = () => {
   //fetching the data from localstorage and the api that matches the vendor logged in email and appi email
 
   const [adoptions, setAdoptions] = useState([]);
+  const [grooming, setGrooming] = useState([])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -41,14 +42,59 @@ const NotificationAdmin = () => {
           setLoading(false);
           return;
         }
-  
-        // Now filter correctly
+
         const userAdoptions = data.data.filter(
           (adoption) => adoption.vendoremail === userEmail
         );
   
         // console.log("Filtered Adoptions:", userAdoptions);
         setAdoptions(userAdoptions);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setError("Error loading adoption data");
+        setLoading(false);
+      });
+  }, []);
+
+
+
+  useEffect(() => {
+    // Get user email from localStorage
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    console.log("User Data:", userData);
+  
+    if (!userData || !userData.user?.email) {
+      setError("User not logged in or email missing");
+      setLoading(false);
+      return;
+    }
+  
+    const userEmail = userData.user.email;
+  
+    fetch("http://localhost:3000/bookgroom")
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((data) => {
+        // console.log("Fetched Data k abrian ho?:", data);
+  
+        // Check if data.data exists and is an array
+        if (!data || !Array.isArray(data.data)) {
+          // console.error("Error: Expected an array but got:", data);
+          setError("Unexpected data format");
+          setLoading(false);
+          return;
+        }
+
+        const userGroomings = data.data.filter(
+          (grooming) => grooming.vendoremail === userEmail
+        );
+  
+        // console.log("Filtered Grooming:", userGroomings);
+        setGrooming(userGroomings);
         setLoading(false);
       })
       .catch((error) => {
@@ -75,6 +121,10 @@ const NotificationAdmin = () => {
 
   const viewAdoption = ()=>{
     navigate("/dashboard/notification/adoptionnotification")
+  }
+
+  const viewGrooming =()=>{
+    navigate("/dashboard/notification/groomingnotification")
   }
 
 
@@ -107,8 +157,31 @@ const NotificationAdmin = () => {
               </div>
             ))
           ) : (
+            <p className="mt-4 ml-4 text-gray-700"></p>
+          )}
+
+        {/* grooming ko notification */}
+          {grooming && grooming.length > 0 ? (
+            grooming.map((grooming, index) => (
+              <div key={grooming._id || index} className="rounded-lg bg-zinc-100 mt-4 ml-4 p-4">
+                <h2 className="font-bold">Notification for grooming</h2>
+                
+                <p className="mt-4">
+                  Hello vendor, {grooming.fullname} has just viewed your pet grooming service for package type {grooming.selectedpackage}
+                  {grooming.petname} and booked the service. The booked date to
+                  check-in is: {grooming.date}.
+                </p>
+                <button className=' bg-white justify-end w-24 h-10 mt-4 '
+                  onClick= {viewGrooming}
+                >
+                  view all
+                </button>
+              </div>
+            ))
+          ) : (
             <p className="mt-4 ml-4 text-gray-700">No new notifications</p>
           )}
+          
         </div>
       </main>
     </div>
