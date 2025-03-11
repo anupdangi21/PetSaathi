@@ -4,6 +4,8 @@ import axios from 'axios';
 
 const groomingReservation = ({pet, onClick}) => {
   const [date, setDate]=useState("")
+  const [hasFirstPet, setHasFirstPet] = useState('');
+  const [hasEnoughSpace, setHasEnoughSpace] = useState('');
   const [selectedPet, setSelectedPet] = useState(null);
 
   useEffect(() => {
@@ -39,29 +41,31 @@ const groomingReservation = ({pet, onClick}) => {
             });
             return;
         }
-        
+    
+        // Continue with form submission
         const formData = new FormData(e.target);
-        formData.append("image", pet.Image);
+        formData.append("image", selectedPet.Image);
         formData.append("date", date);
-        formData.append("selectedpackage", pet.serviceoffering);
-        formData.append("includedservice", pet.includedOfferings);
-        formData.append("price", pet.price);
-        formData.append("location", pet.vendorlocation);
+        formData.append("firstPet", hasFirstPet);
+        formData.append("enoughSpace", hasEnoughSpace);
+        formData.append("petname", selectedPet.petname);
+        formData.append("location", selectedPet.Location);
+        formData.append("Category", selectedPet.Category);
         formData.append("fullname", userData.user.username);
         formData.append("email", userData.user.email);
         formData.append("ownercontact", userData.user.number);
-        formData.append("vendorcontact", pet.vendorcontact);
-        formData.append("vendoremail", pet.vendoremail);
-        formData.append("status", pet.status);
-        // payment mode baaki xa
-
+        formData.append("vendorcontact", selectedPet.vendorcontact);
+        formData.append("vendoremail", selectedPet.email);
+        formData.append("status", selectedPet.status);
+    
         const submissionData = {
             image: formData.get("image"),
             date: formData.get('date'),
-            selectedpackage: formData.get("selectedpackage"),
-            includedservice: formData.get("includedservice"),
-            price: formData.get("price"),
+            firstPet: formData.get("firstPet"),
+            enoughSpace: formData.get("enoughSpace"),
+            petname: formData.get("petname"),
             location: formData.get("location"),
+            Category: formData.get("Category"),
             fullname: formData.get('fullname'),
             email: formData.get("email"),
             ownercontact: formData.get("ownercontact"),
@@ -74,7 +78,7 @@ const groomingReservation = ({pet, onClick}) => {
         Swal.fire('Success!', 'Your application has been submitted!', 'success');
     
         try {
-            const response = await axios.post("http://localhost:3000/bookgroom", submissionData, {
+            const response = await axios.post("http://localhost:3000/", submissionData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -83,7 +87,7 @@ const groomingReservation = ({pet, onClick}) => {
             if (response.status === 200) {
                 Swal.fire({
                     icon: 'success',
-                    title: "Pet Grooming service request",
+                    title: "Pet Adoption request",
                     text: "Your request has been submitted successfully"
                 });
             }
@@ -139,25 +143,17 @@ const groomingReservation = ({pet, onClick}) => {
           <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg p-6 w-full'>
               <div className="flex flex-col gap-6">
                   <div className="flex flex-wrap gap-2">
-                      <div className="flex-1 w-36">
+                      <div className="flex-1 w-48">
                           <label className="block text-gray-700 text-sm font-bold mb-2 w-96">
                               Book a date
                           </label>
                           <input
                               type="date"
                               name="date"
-                              className="w-64 px-3 py-2 border rounded-md"
+                              className="w-96 px-3 py-2 border rounded-md"
                               required
                               onChange={(e)=>setDate(e.target.value)}
                           />
-                      </div>
-                      <div>
-                        <label className='bold-text-gray-700 text-sm font-bold'>Proceed with online payment  </label>
-                        {/* <button className='flex w-36 h-10 font-bold text-lg bg-purple-200 hover:bg-purple-400 ml-2 mt-2'
-                            type='onclick'
-                        >
-                           <h1 className='ml-2 mt-2'>Pay with khalti</h1> 
-                        </button> */}
                       </div>
                   </div>
 

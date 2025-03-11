@@ -37,7 +37,7 @@ const petAdopt = async (req, res)=>{
                 from: process.env.SENDER_EMAIL,
                 to: vendoremail, // Finder's email
                 subject: "Request for Pet Adoption",
-                text: `Hello vendor, your pet post for a ${Category} named ${petname} on adoption has been viewed by  (${fullname}) and also he is interested on adopting it. 
+                text: `Hello organizationame, your pet post for a ${Category} named ${petname} on adoption has been viewed by  (${fullname}) and also he is interested on adopting it. 
                 
 
                 He will be at your organization's location at ${location} on ${date}

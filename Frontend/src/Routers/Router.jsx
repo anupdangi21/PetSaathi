@@ -23,7 +23,6 @@ import TrainingAdmin from "../admin/Training";
 import Tracking from "../Pages/Tracking"
 import UpdateProfile from "../Pages/cProfile"
 import AdoptionNotification from "../Notifications/adoptionNotification"
-import GroomingNotification from "../Notifications/groomingNotification"
 import AddService from "../admin/addService";
 import PetGroom from "../admin/petGroom"
 import Addhostel from "../admin/addHostel"
@@ -121,10 +120,6 @@ function AppRouter() {
     {
       path:"/dashboard/notification/adoptionnotification",
       element: <AdoptionNotification />
-    },
-    {
-      path:"/dashboard/notification/groomingnotification",
-      element:<GroomingNotification />
     },
     {
       path:"/dashboard/addpet",
