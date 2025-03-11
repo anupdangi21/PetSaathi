@@ -82,9 +82,9 @@ const Grooming = () => {
           <h1 className="text-4xl font-bold mb-4">Find Your Perfect Groom</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
           {showGroom.map((pet) => (
-            <div key={pet._id} className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div key={pet._id} className="bg-zinc-50 rounded-xl shadow-lg overflow-hidden">
               <div className="relative">
                 <img
                   src={`http://localhost:3000/${pet.Image}`}

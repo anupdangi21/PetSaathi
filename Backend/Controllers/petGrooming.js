@@ -1,28 +1,29 @@
 import express from 'express';
-import petAdoptModel from "../Models/petAdoption.js"
-import petListModel from "../Models/addPet.js";
+import PetGroomingModel from "../Models/petGrooming.js"
 import transporter from "../nodeMailer.js";
 
 
-const petAdopt = async (req, res)=>{
+const AddpetGroom = async (req, res)=>{
     try {
-        const {image, email,petname,Category,fullname, ownercontact, location,vendoremail, vendorcontact,date, firstPet,enoughSpace,status}=req.body;
+        // console.log("aako groom data", req.body)
+        const {image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status}=req.body;
         if(!date ){
             return res.status(400).json({message:"please select date for booking an appointment for getting the pet"})
         }
-        const petadopt = new petAdoptModel({
-            image, email,petname,Category,fullname, ownercontact, location,vendoremail, vendorcontact, date, firstPet, enoughSpace, status
+        const petgroom = new PetGroomingModel({
+            image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status
         })
-        await petadopt.save()
+        // console.log("save hune data",petgroom)
+        await petgroom.save()
 
 
         const mailOptionsUser = {
             from: process.env.SENDER_EMAIL,
             to: email, // Owner's email
-            subject: "Pet Adoption Request",
-            text: `Hello ${fullname}, your request on adopting a ${Category} named ${petname} has been successfully submitted.
+            subject: "Pet Grooming Service Request",
+            text: `Hello ${fullname}, your request on taking a pet grooming service with choosen package type ${selectedpackage}, with included services ${includedservice} has been successfully submitted. 
 
-            please note that your booked date is on  ${date} at your visit location is ${location}. 
+            please note that your booked date for check-in is on ${date} and your visit location is ${location}. 
             Please be there on time to avoid any inconvenience. 
 
             If there will be any delay or change in the date, please contact vendor at ${vendorcontact}.
@@ -36,8 +37,8 @@ const petAdopt = async (req, res)=>{
             const mailOptionsVendor = {
                 from: process.env.SENDER_EMAIL,
                 to: vendoremail, // Finder's email
-                subject: "Request for Pet Adoption",
-                text: `Hello vendor, your pet post for a ${Category} named ${petname} on adoption has been viewed by  (${fullname}) and also he is interested on adopting it. 
+                subject: "Request for Pet Grooming Service",
+                text: `Hello vendor, your service for grooming pet with package ${selectedpackage} with offering ${includedservice} has been  viewed by  (${fullname}) and also he is interested on taking the service for their pet. 
                 
 
                 He will be at your organization's location at ${location} on ${date}
@@ -53,27 +54,27 @@ await transporter.sendMail(mailOptionsVendor);
     }
 }
 
-const getpetAdopt = async (req, res)=>{
+const AddgetpetGroom = async (req, res)=>{
     try {
-       const getPet= await petAdoptModel.find()
+       const getPet= await PetGroomingModel.find()
        res.status(200).json({status:true, data:getPet})
     } catch (error) {
         return res.status(400).json({message:error.message})
     }
 }
 
-const updateAdoptionStatus = async (req, res) => {
+const updateGroomStatus = async (req, res) => {
     try {
         console.log(req.body)
         const petId = req.params.id;
 
-        const pet = await petAdoptModel.findById(petId);
+        const pet = await PetGroomingModel.findById(petId);
 
         if (!pet) {
             return res.status(404).json({ message: "Pet not found" });
         }
 
-        pet.status = "Confirmed";
+        pet.status = "Completed";
         await pet.save();
 
 
@@ -84,24 +85,23 @@ const updateAdoptionStatus = async (req, res) => {
     }
 };
 
-const cancelAdoption = async (req, res) => {
+const cancelGrooming = async (req, res) => {
     try {
         const CanId = req.params.id;
 
-        // Find the adoption record before deleting
-        const adoption = await petAdoptModel.findById(CanId);
+        const adoption = await PetGroomingModel.findById(CanId);
 
         if (!adoption) {
             return res.status(404).json({ message: "Adoption record not found" });
         }
-        const { email, fullname, petname, Category, vendoremail, ownercontact, vendorcontact, location, date } = adoption;
-        await petAdoptModel.findByIdAndDelete(CanId);
+        const { image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status } = adoption;
+        await PetGroomingModel.findByIdAndDelete(CanId);
 
         const mailOptionsUser = {
             from: process.env.SENDER_EMAIL,
             to: email, // Adopter's email
-            subject: "Pet Adoption Canceled",
-            text: `Hello ${fullname}, Your request to adopt a ${Category} named ${petname} has been canceled.
+            subject: "Pet Grooming Service Canceled",
+            text: `Hello ${fullname}, Your request to take grooming service has been canceled.
             If this was a mistake or if you want to adopt another pet, please contact us.${vendorcontact}
             Thank you for using our service.`
         };
@@ -111,8 +111,8 @@ const cancelAdoption = async (req, res) => {
         const mailOptionsVendor = {
             from: process.env.SENDER_EMAIL,
             to: vendoremail, 
-            subject: "Pet Adoption Request Canceled",
-            text: `Hello, The adoption request for your pet (${Category} - ${petname}) by ${fullname} has been canceled.
+            subject: "Pet Grooming Service Canceled",
+            text: `Hello vendor, The request about pet grooming by ${fullname} has been canceled.
             You can make the pet available for adoption again if needed.\n\n
             If you need further assistance, feel free to reach out.\n\n
             Thank you!`
@@ -128,4 +128,4 @@ const cancelAdoption = async (req, res) => {
     }
 };
 
-export default {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}
+export default {AddpetGroom, AddgetpetGroom,updateGroomStatus,cancelGrooming}
