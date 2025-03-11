@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/foot";
 import Swal from 'sweetalert2';
-
 const Tracking = () => {
   const [adoptions, setAdoptions] = useState([]);
   const [adoptionsLoading, setAdoptionsLoading] = useState(true);
@@ -13,12 +12,7 @@ const Tracking = () => {
   const [userEmail, setUserEmail] = useState('');
   const [ownerpet, setOwnerpet] = useState([]);
 
-  // State for dropdown visibility
-  const [showAdoptions, setShowAdoptions] = useState(false);
-  const [showFoundPets, setShowFoundPets] = useState(false);
-  const [showLostPets, setShowLostPets] = useState(false);
-
-  // Fetch adoption requests
+  // useeffcet for displaying the adoption request taken by the user
   useEffect(() => {
     const fetchAdoptions = async () => {
       try {
@@ -45,7 +39,7 @@ const Tracking = () => {
     if (userEmail) fetchAdoptions();
   }, [userEmail]);
 
-  // Handle confirm adoption
+  // Add these handler functions
   const handleConfirm = async (adoptionId) => {
     const result = await Swal.fire({
       title: "Confirm Adoption",
@@ -78,7 +72,7 @@ const Tracking = () => {
     }
   };
 
-  // Handle cancel adoption
+
   const handleCancel = async (adoptionId) => {
     const result = await Swal.fire({
       title: "Cancel Adoption",
@@ -99,6 +93,7 @@ const Tracking = () => {
   
         if (!response.ok) throw new Error('Deletion failed');
   
+        // Remove the deleted adoption from the local state
         setAdoptions(prev => prev.filter(adoption => adoption._id !== adoptionId));
   
         Swal.fire("Deleted!", "Adoption has been cancelled and deleted.", "success");
@@ -108,7 +103,7 @@ const Tracking = () => {
     }
   };
 
-  // Fetch found pets
+  // for handling the petfound history 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user_data'));
     if (userData && userData.user.email) {
@@ -136,65 +131,75 @@ const Tracking = () => {
     fetchPets();
   }, []);
 
-  // Handle approve found pet
-  const handleApprove = async (petId) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Are you sure the pet owner was genuine?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, update status!",
-      cancelButtonText: "No, cancel"
-    });
 
-    if (!result.isConfirmed) return;
+
+const handleApprove = async (petId) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Are you sure the pet owner was genuine?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, update status!",
+    cancelButtonText: "No, cancel"
+});
+
+if (!result.isConfirmed) {
+    return; 
+}
 
     try {
-      const response = await fetch(`http://localhost:3000/petfound/${petId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'Reunited' }),
-      });
+        const response = await fetch(`http://localhost:3000/petfound/${petId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'Reunited' }),
+        });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Approval failed');
+        const data = await response.json();
 
-      setPets(prevPets => prevPets.map(pet => 
-        pet._id === petId ? { ...pet, status: 'Reunited' } : pet
-      ));
+        if (!response.ok) throw new Error(data.message || 'Approval failed');
 
-      Swal.fire({
-        title: "Updated!",
-        text: "The pet status has been updated to 'Reunited'.",
-        icon: "success"
-      });
+        setPets((prevPets) =>
+            prevPets.map((pet) =>
+                pet._id === petId ? { ...pet, status: 'Reunited' } : pet
+            )
+        );
+
+        Swal.fire({
+            title: "Updated!",
+            text: "The pet status has been updated to 'Reunited'.",
+            icon: "success"
+        });
+
     } catch (err) {
-      console.error('Approval error:', err);
-      Swal.fire({
-        title: "Error!",
-        text: "Something went wrong. Please try again.",
-        icon: "error"
-      });
+        console.error('Approval error:', err);
+        Swal.fire({
+            title: "Error!",
+            text: "Something went wrong. Please try again.",
+            icon: "error"
+        });
     }
-  };
+};
 
-  // Handle delete found pet
+
   const handleDelete = async (petId) => {
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: "Are you sure you want to delete the found pet?",
+      text: "Are you sure you want to delete the found pet",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes",
       cancelButtonText: "No, cancel"
-    });
+  });
 
-    if (!result.isConfirmed) return;
-
+  if (!result.isConfirmed) {
+      return; 
+  }
     try {
       const response = await fetch(`http://localhost:3000/petfound/${petId}`, {
         method: 'DELETE',
@@ -202,13 +207,14 @@ const Tracking = () => {
 
       if (!response.ok) throw new Error('Deletion failed');
 
-      setPets(prevPets => prevPets.filter(pet => pet._id !== petId));
+      // Remove pet from state
+      setPets((prevPets) => prevPets.filter((pet) => pet._id !== petId));
     } catch (err) {
       console.error('Deletion error:', err);
     }
   };
 
-  // Fetch owner pets
+  //fetchung the pet ownership data from the db
   useEffect(() => {
     const fetchOwnerPets = async () => {
       try {
@@ -216,8 +222,13 @@ const Tracking = () => {
         if (!response.ok) throw new Error("Failed to fetch data");
         const result = await response.json();
         
+        // Extract pet data from response
         const petData = Array.isArray(result.data) ? result.data : [];
-        const filteredPets = petData.filter(pet => pet.email === userEmail);
+  
+        // Filter pets where ownerEmail matches logged-in user's email
+        const filteredPets = petData.filter(pet => 
+          pet.email === userEmail
+        );
   
         setOwnerpet(filteredPets);
       } catch (err) {
@@ -236,167 +247,145 @@ const Tracking = () => {
     }
   }, [userEmail]);
 
+
   // Filter pets by matching email
-  const filteredPets = pets.filter(pet => pet.email === userEmail);
+  const filteredPets = pets.filter((pet) => pet.email === userEmail);
 
   return (
-    <div className="flex flex-col min-h-screen bg-orange-100">
+    <div>
       <header>
         <Navbar />
       </header>
-      <main className="flex-1 overflow-y-auto p-6 bg-orange-100">
-        {/* Service Tracking Dropdown */}
-        <div className="mb-6">
-          <button 
-            onClick={() => setShowAdoptions(!showAdoptions)}
-            className="w-64 p-4 bg-orange-200 rounded-lg hover:bg-orange-300 transition-colors flex justify-between items-center"
-          >
-            <h1 className="font-medium text-l">Service Tracking</h1>
-            <span className="text-xl">{showAdoptions ? '▲' : '▼'}</span>
-          </button>
-          
-          {showAdoptions && (
-            <div className="mt-4 bg-orange-100 p-6 rounded-lg shadow-md">
-              {adoptionsLoading ? (
-                <p>Loading adoption records...</p>
-              ) : adoptionsError ? (
-                <p className="text-red-500">{adoptionsError}</p>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {adoptions.map(adoption => (
-                    <div key={adoption._id} className="bg-orange-50 p-6 rounded-lg shadow-md">
-                      <div className="mb-4">
-                        <h3 className="text-lg font-semibold">Adoption Request</h3>
-                        <img
-                          src={`http://localhost:3000/${adoption.image}`}
-                          alt={adoption.petname}
-                          className="w-full h-64 object-cover rounded-lg mt-2"
-                        />
-                        <p className="mt-2 font-medium">Booked by you </p>
-                        <p className="mt-2">Vendor Contact: {adoption.vendorcontact}</p>
-                        <p className="mt-1">Vendor Email: {adoption.vendoremail}</p>
-                        <p className="mt-1">Status: 
-                          <span className={`ml-2 px-2 py-1 rounded ${adoption.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-green-100 text-green-800'}`}>
-                            {adoption.status}
-                          </span>
-                        </p>
-                      </div>
-                      
-                      {adoption.status === 'Available' && (
-                        <div className="flex gap-3">
-                          <button
-                            onClick={() => handleConfirm(adoption._id)}
-                            className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                          >
-                            Confirm
-                          </button>
-                          <button
-                            onClick={() => handleCancel(adoption._id)}
-                            className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                  {adoptions.length === 0 && !adoptionsLoading && (
-                    <p>No adoption records found for your account.</p>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Found Pet Tracking Dropdown */}
-        <div className="mb-6">
-          <button 
-            onClick={() => setShowFoundPets(!showFoundPets)}
-            className="w-80 p-4 bg-orange-200 rounded-lg hover:bg-orange-300 transition-colors flex justify-between items-center"
-          >
-            <h1 className="font-medium text-l">Found Pet Tracking</h1>
-            <span className="text-xl">{showFoundPets ? '▲' : '▼'}</span>
-          </button>
-
-          {showFoundPets && (
-            <div className="mt-4 bg-orange-100 rounded-lg shadow-md">
-              {loading && <p>Loading pets...</p>}
-              {error && <p className="text-red-500">Error: {error}</p>}
-
-              {!loading && !error && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredPets.map(pet => (
-                    <div key={pet._id} className="border p-8 rounded-lg bg-orange-100 shadow-md">
-                      <img
-                        src={`http://localhost:3000/${pet.Image}`}
-                        alt={pet.petname}
-                        className="w-full h-64 object-cover rounded-lg"
-                      />
-                      <h3 className="text-xl font-semibold mb-2">{pet.petname}</h3>
-                      <p className="text-gray-600 mt-2">Age: {pet.Age}</p>
-                      <p className="text-gray-600 mt-2">Status: {pet.status}</p>
-                      <p className="text-gray-600 mt-2">Found Location: {pet.Location}</p>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleApprove(pet._id)}
-                          className="bg-green-500 text-white px-4 py-2 mt-4 rounded hover:bg-green-600 transition"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleDelete(pet._id)}
-                          className="bg-red-500 text-white px-4 py-2 mt-4 rounded hover:bg-red-600 transition"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  {filteredPets.length === 0 && !loading && <p className=' mt-6 mb-6 ml-6'>No pets found matching your account.</p>}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Lost Pet Ownership Dropdown */}
-        <div className="mb-6">
-          <button 
-            onClick={() => setShowLostPets(!showLostPets)}
-            className="w-96 p-4 bg-orange-200 rounded-lg hover:bg-orange-300 transition-colors flex justify-between items-center"
-          >
-            <h1 className="font-medium text-l">Your Lost Pet Found</h1>
-            <span className="text-xl">{showLostPets ? '▲' : '▼'}</span>
-          </button>
-
-          {showLostPets && (
-            <div className="mt-4 bg-orange p-6 rounded-lg shadow-md">
+      <main>
+      <div className="min-h-screen w-full bg-gradient-to-b from-orange-200 to-orange-100">
+          <div className="container ml-24 max-w-screen-xl p-6">
+            <h1 className="font-medium text-2xl mb-6">Service Tracking</h1>
+            
+            {adoptionsLoading ? (
+              <p>Loading adoption records...</p>
+            ) : adoptionsError ? (
+              <p className="text-red-500">{adoptionsError}</p>
+            ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {ownerpet.length > 0 ? (
-                  ownerpet.map(pet => (
-                    <div key={pet._id} className="border p-8 rounded-lg bg-orange shadow-md">
+                {adoptions.map(adoption => (
+                  <div key={adoption._id} className="bg-white p-6 rounded-lg shadow-md">
+                    <div className="mb-4">
+                      <h3 className="text-lg font-semibold">Adoption Request</h3>
                       <img
-                        src={`http://localhost:3000/${pet.petImage}`}
-                        alt={pet.petname}
-                        className="w-full h-64 object-cover"
-                      />
-                      <h3 className="text-xl font-semibold mb-2">
-                        Pet found by: {pet.finderUsername}
-                      </h3>
-                      <p className="text-gray-600 mt-2">Finder contact: {pet.finderContact}</p>
-                      <p className="text-gray-600 mt-2">Found Location: {pet.petLocationFound}</p>
-                      <p className="text-gray-600 mt-2">Reunite date: {pet.date}</p>
-                      <p className="text-gray-600 mt-2">Owner {pet.fullname}</p>
+                      src={`http://localhost:3000/${adoption.image}`}
+                      alt={adoption.petname}
+                      className="w-full h-64 object-cover rounded-lg mt-4"
+                    />
+                    <p className="mt-2 font-medium">Booked by you </p>
+                      <p className="mt-2">Vendor Contact: {adoption.vendorcontact}</p>
+                      <p className="mt-1">Vendor Email: {adoption.vendoremail}</p>
+                      <p className="mt-1">Status: 
+                        <span className={`ml-2 px-2 py-1 rounded ${adoption.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-green-100 text-green-800'}`}>
+                          {adoption.status}
+                        </span>
+                      </p>
                     </div>
-                  ))
-                ) : (
-                  <p>No pets were found for your ownership</p>
+                    
+                    {adoption.status === 'Available' && (
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => handleConfirm(adoption._id)}
+                          className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={() => handleCancel(adoption._id)}
+                          className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {adoptions.length === 0 && !adoptionsLoading && (
+                  <p>No adoption records found for your account.</p>
                 )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+
+        {/* for tracking the found pet post data */}
+        <div className="min-h-90 w-full bg-orange-100">
+          <div className="container ml-24 max-w-screen-xl bg-orange-100">
+            <h1 className="font-medium text-2xl">Found Pet Tracking</h1>
+
+            {loading && <p>Loading pets...</p>}
+            {error && <p className="text-red-500">Error: {error}</p>}
+
+            {!loading && !error && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-40 mt-4">
+                {filteredPets.map((pet) => (
+                  <div key={pet._id} className="border p-8 rounded-lg bg-white shadow-md">
+                    <img
+                      src={`http://localhost:3000/${pet.Image}`}
+                      alt={pet.petname}
+                      className="w-full h-64 object-cover"
+                    />
+                    <h3 className="text-xl font-semibold mb-2">{pet.petname}</h3>
+                    <p className="text-gray-600 mt-2">Age: {pet.Age}</p>
+                    <p className="text-gray-600 mt-2">Status: {pet.status}</p>
+                    <p className="text-gray-600 mt-2">Found Location: {pet.Location}</p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleApprove(pet._id)}
+                        className="bg-green-500 text-white px-4 py-2 mt-4 rounded hover:bg-green-600 transition"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => handleDelete(pet._id)}
+                        className="bg-red-500 text-white px-4 py-2 mt-4 rounded hover:bg-red-600 transition"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {filteredPets.length === 0 && !loading && <p>No pets found matching your account.</p>}
+              </div>
+            )}
+          </div>
+          <div>
+
+            {/* for tracking the lost pet owner ship */}
+          <div className="min-h-screen w-full bg-orange-50 mt-4 bg-gradient-to-b from-orange-100 to-orange-50">
+          <div className="container ml-24 max-w-screen-xl">
+            <h1 className="font-medium text-2xl mt-4">Your lost pet found</h1>
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-40 mt-4">
+      {ownerpet.length > 0 ? (
+        ownerpet.map((pet) => (
+          <div key={pet._id} className="border p-8 rounded-lg bg-white shadow-md">
+            <img
+              src={`http://localhost:3000/${pet.petImage}`}
+              alt={pet.petname}
+              className="w-full h-64 object-cover"
+            />
+            <h3 className="text-xl font-semibold mb-2">
+              Pet found by: {pet.finderUsername}
+            </h3>
+            <p className="text-gray-600 mt-2">Finder contact: {pet.finderContact}</p>
+            <p className="text-gray-600 mt-2">Found Location: {pet.petLocationFound}</p>
+            <p className="text-gray-600 mt-2">Reunite date: {pet.date}</p>
+            <p className="text-gray-600 mt-2">Owner {pet.fullname}</p>
+          </div>
+        ))
+      ) : (
+        <p>No pets were found for your ownership</p>
+      )}
+    </div>
+          </div>
+          </div>
+        </div>
+        </div>
+
       </main>
 
       <footer>

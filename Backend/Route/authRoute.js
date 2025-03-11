@@ -11,7 +11,6 @@ import addServic from "../Controllers/addService.js"
 import Hostel from "../Controllers/addHostel.js"
 import Training from "../Controllers/addTraining.js"
 import Groom from "../Controllers/addGrooming.js"
-import petGrooming from "../Controllers/petGrooming.js"
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus}= petController;
@@ -20,7 +19,6 @@ const {petLostData, getLostPetData}= lost;
 const {petOwner, getpetOwner}=petOwn;
 const {addService}=addServic;
 const {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}=petAdoption;
-const {AddpetGroom, AddgetpetGroom,updateGroomStatus,cancelGrooming}=petGrooming;
 const  {petHostel,getHostel, updateHostel,deleteHostel }= Hostel;
 const {petTraining, getPetTraining, updatePetTraining, deletePetTraining}=Training
 const {petGroom,getpetGroom, updatepetGroom,deletepetGroom}=Groom;
@@ -79,12 +77,6 @@ authRouter.post("/petgrooming",upload.single("Image"), petGroom)
 authRouter.get("/petgrooming", getpetGroom)
 authRouter.put("/petgrooming/:id",upload.single("Image"), updatepetGroom)
 authRouter.delete("/petgrooming/:_id", deletepetGroom)
-
-//router for posting the booked date for grooming service and canceling the booking
-authRouter.post("/bookgroom",upload.single("Image"), AddpetGroom)
-authRouter.get("/bookgroom",AddgetpetGroom)
-authRouter.put("/bookgroom/:id",upload.single("Image"), updateGroomStatus)
-authRouter.delete("/bookgroom/:id",cancelGrooming)
 
 //router for posting the new services 
 authRouter.post("/addservice", addService)
