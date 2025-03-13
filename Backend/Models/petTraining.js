@@ -1,11 +1,14 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-const petGroomingSchema = new mongoose.Schema({
+const petTrainingSchema = new mongoose.Schema({
     image:String,
     date: String,
     selectedpackage: String,
     includedservice:String,
     price:String,
+    Restrictions: String,
+    Duration:String,
+    SelectedTiming: String,
     location:String,
     fullname: String,
     email: String,
@@ -15,5 +18,5 @@ const petGroomingSchema = new mongoose.Schema({
     status: String,
 })
 
-const PetGroomingModel = mongoose.model('PetGroomBooks', petGroomingSchema);
-export default PetGroomingModel;
+const PetTrainingModel = mongoose.model("PetTrainingbooks", petTrainingSchema);
+export default PetTrainingModel;

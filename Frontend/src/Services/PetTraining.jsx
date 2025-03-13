@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, MapPin,Timer,PackageOpen,Award, Calendar,ShieldAlert, Info, BadgeAlert,Truck,Ambulance,Utensils,Package } from 'lucide-react';
+import { Heart, MapPin,Timer,PackageOpen,Award, Calendar,ShieldAlert, Info, BadgeAlert,Truck,Ambulance,Utensils,Package,PhoneOutgoing } from 'lucide-react';
 import Navbar from '../Components/Navbar'
 import Footer from '../Components/foot'
 import useAuthGuard from "../Context/useAuthGuard.jsx";
@@ -9,69 +9,68 @@ import TrainingReservation from '../Reservation/trainingReservation.jsx';
 const PetTraining = () => {
   const withAuth = useAuthGuard();
   const modalRef = useRef(null);
+  const infoModalRef = useRef(null);
 
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showHostel, setShowHostel] = useState([]);
+  const [showTraining, setShowTraining] = useState([]);
+  const [bookingPet, setBookingPet] = useState(null);
 
   const openModal = () => setShowConfirmation(true);
-  const closeModal = () => setShowConfirmation(false);
 
   useEffect(() => {
-    if (showConfirmation) {
-      const handleClickOutside = (event) => {
-        if (modalRef.current && !modalRef.current.contains(event.target)) {
-          closeModal();
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [showConfirmation]);
+    const handleClickOutside = (event) => {
+      // Handle booking modal
+      if (showConfirmation && modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+      // Handle info modal
+      if (selectedPet && infoModalRef.current && !infoModalRef.current.contains(event.target)) {
+        setSelectedPet(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showConfirmation, selectedPet]);
 
   useEffect(() => {
     const fetchPets = async () => {
-        try {
-            const response = await fetch('http://localhost:3000/training');
-            
-            const result = await response.json();
-            console.log("heram hai ta", result.data)
+      try {
+        const response = await fetch('http://localhost:3000/training');
+        const result = await response.json();
 
-            if (result.success && Array.isArray(result.data)) {
-                const userData = JSON.parse(localStorage.getItem('user_data'));
-                const userEmail = userData?.user?.email;
+        if (result.success && Array.isArray(result.data)) {
+          const userData = JSON.parse(localStorage.getItem('user_data'));
+          const userEmail = userData?.user?.email;
 
+          const filteredPets = result.data.filter(pet => 
+            pet.status !== "Booked" && (!userEmail || pet.vendoremail !== userEmail)
+          );
 
-                const filteredPets = result.data.filter(pet => 
-                  pet.status !== "Booked" && (!userEmail || pet.vendoremail !== userEmail)
-                );
-
-                setPets(filteredPets.reverse());
-                setShowHostel(filteredPets)
-            } else {
-                console.error("Unexpected API response format:", result);
-                setPets([]);
-            }
-        } catch (error) {
-            console.error('Error fetching pets:', error);
-            setPets([]);
+          setPets(filteredPets.reverse());
+          setShowTraining(filteredPets)
         }
+      } catch (error) {
+        console.error('Error fetching pets:', error);
+      }
     };
 
     fetchPets();
-}, []);
+  }, []);
 
-  const handleHostel = (pet) => {
-    const { Description, ...petDetails } = pet;
-    localStorage.setItem('selectedPet', JSON.stringify(petDetails));
+  const handleTraining = (pet) => {
+    setBookingPet(pet);
+    setShowConfirmation(true);
+    setSelectedPet(null); // Close info modal if open
+  };
 
-    setTimeout(() => {
-      localStorage.removeItem('selectedPet');
-  }, 30000);
-    openModal();
-
-    setSelectedPet(null);
+  const closeModal = () => {
+    setShowConfirmation(false);
+    setBookingPet(null);
   };
 
   return (
@@ -84,8 +83,8 @@ const PetTraining = () => {
           <h1 className="text-4xl font-bold mb-4">Find Your Perfect trainer</h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.isArray(showHostel) && showHostel.length > 0 ? (
-            showHostel.map((pet) => (
+          {Array.isArray(showTraining) && showTraining.length > 0 ? (
+            showTraining.map((pet) => (
               <div key={pet._id} className="bg-zinc-50 rounded-xl shadow-lg overflow-hidden">
                 <div className="relative">
                   <img
@@ -130,7 +129,7 @@ const PetTraining = () => {
 
                   <div className="flex gap-3">
                     <button
-                      onClick={() => withAuth(() => handleHostel(pet))()}
+                      onClick={() => withAuth(() => handleTraining(pet))()}
                       className="flex-1 bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-200"
                     >
                       Book Now
@@ -168,13 +167,19 @@ const PetTraining = () => {
               <div className="p-6">
                 <div className='flex flex'>
                     <h2 className="text-lg font-bold mb-4">From: </h2><p className=' text-lg mt-0.5 ml-2'>{selectedPet.organizationname}</p>
-                    <h2 className="text-lg font-bold mb-4 ml-48">Contact vendor:</h2><p className='mt-1 ml-2'>98*******</p>  
+                    <h2 className="text-lg font-bold mb-4 ml-32">Contact vendor:</h2><p className='mt-1 ml-2'>98*******</p>  
                 {/* //{selectedPet.vendorcontact} */}
                 </div>
-                  <div className="flex items-center">
+                <div className='flex flex'>
+                  <div className="flex flex items-center">
                     <Award size={20} className="mr-2" />
                     <span className='font-bold text-lg flex'> Vendor Experience:</span>
                     <p className="flex flex-1 ml-1 mt-0.5 text-lg"> {selectedPet.experience}</p>
+                  </div>
+                  <div className="flex items-center ml-20">
+                    <span className='font-bold text-lg flex'> Available Shifts:</span>
+                    <p className="flex flex-1 ml-1 text-lg"> {selectedPet.timing}</p>
+                  </div>
                   </div>
                   <div className="mb-2 flex mt-2">
                     <PackageOpen size={24} className="" />
@@ -193,7 +198,7 @@ const PetTraining = () => {
                   
                 <div className="flex gap-3">
                 <button
-                  onClick={() => withAuth(() => handleHostel(selectedPet))()}
+                  onClick={() => withAuth(() => handleTraining(selectedPet))()}
                   className="w-full bg-orange-300 text-white px-6 py-3 rounded-lg hover:bg-orange-200"
                 >
                   Book Now
@@ -209,17 +214,17 @@ const PetTraining = () => {
             </div>
           </div>
         )}
-    </main>
-    {showConfirmation && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]">
-            <TrainingReservation onClick={closeModal} />
+{showConfirmation && bookingPet && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div ref={modalRef} className="bg-white shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]">
+              <TrainingReservation pet={bookingPet} onClose={closeModal} />
+            </div>
           </div>
-        </div>
-      )}
-        <footer >
-            <Footer />
-        </footer>
+        )}
+    </main>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   )
 }
