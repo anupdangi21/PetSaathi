@@ -6,16 +6,24 @@ export const AppContextProvider = (props) => {
     const [token, setToken] = useState(null);
     const [isAuthenticated, setisAuthenticated] = useState(false);
     const [userData, setUserData] = useState(null);
-    const storedData = JSON.parse(localStorage.getItem("user_data"));
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (storedData) {
+        const storedData = JSON.parse(localStorage.getItem("user_data"));
+        console.log("Stored Data:", storedData);
+    
+        if (storedData && storedData.userToken && storedData.user) {
             const { userToken, user } = storedData;
             setToken(userToken);
             setUserData(user);
             setisAuthenticated(true);
+        } else {
+            console.error("Invalid or missing user data in localStorage");
+            localStorage.removeItem("user_data"); // Clear invalid data
+            setisAuthenticated(false); // Ensure user is marked as unauthenticated
         }
-    }, []); 
+        setLoading(false); // Ensure loading is set to false
+    }, []);
 
     const login = (newToken, newData) => {
         localStorage.setItem(
@@ -38,6 +46,7 @@ export const AppContextProvider = (props) => {
         token,
         isAuthenticated,
         userData,
+        loading,
         login,
         logout,
     };

@@ -125,15 +125,15 @@ const hostelReservation = () => {
   return (
       <div className='w-full max-w-[800px] mx-auto'>
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
-              Get your pet now!!!
+              Get your hostel now!!!
           </h1>
 
           {/* Display the selected pet details */}
           {selectedPet ? (
               <div className="flex items-center bg-white p-6 rounded-lg shadow-md mb-6">
                   <div className="flex-1">
-                      <h3 className="text-xl font-bold">Selected Pet Details:</h3>
-                      <p className='mt-2'><strong>Pet Name:</strong> {selectedPet.petname}</p>
+                      <h3 className="text-xl font-bold">Selected Service Details:</h3>
+                      <p className='mt-2'><strong>Pet Name:</strong> {selectedPet.medicalsupport}</p>
                       <p className='mt-2'><strong>Category:</strong> {selectedPet.Category}</p>
                       <p className='mt-2'><strong>Age:</strong> {selectedPet.Age}</p>
                       {/* <p className='mt-2'><strong>Image:</strong> {selectedPet.Image}</p> */}
@@ -161,42 +161,6 @@ const hostelReservation = () => {
                           />
                       </div>
                   </div>
-
-                  {/* First Pet Question */}
-                  <div>
-                      <label className="block text-gray-700 text-sm font-bold mb-2 pr-20">
-                          Is this your first pet?
-                      </label>
-                      <select 
-                          value={hasFirstPet}
-                          onChange={(e) => setHasFirstPet(e.target.value)}
-                          className='w-16 h-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-100 border border-gray-300'
-                          required
-                      >
-                          <option value="">Select</option>
-                          <option value="Yes">Yes</option>
-                          <option value="No">No</option>
-                      </select>
-                  </div>
-
-                  {hasFirstPet === 'Yes' && (
-                      <div>
-                          <label className="block text-gray-700 text-sm font-bold mb-2">
-                              Do you have enough space for the pet?
-                          </label>
-                          <select
-                              value={hasEnoughSpace}
-                              onChange={(e) => setHasEnoughSpace(e.target.value)}
-                              className='w-16 h-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-100 border border-gray-300'
-                              required
-                          >
-                              <option value="">Select</option>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                          </select>
-                      </div>
-                  )}
-
                   {/* Submit Button */}
                   <button
                       type="submit"

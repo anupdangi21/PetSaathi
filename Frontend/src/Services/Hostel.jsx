@@ -77,7 +77,6 @@ const Hostel = () => {
       localStorage.removeItem('selectedPet');
   }, 30000);
     openModal();
-
     setSelectedPet(null);
   };
 

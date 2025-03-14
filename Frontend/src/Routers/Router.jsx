@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import ProtectedRoute from "./ProtectedRoute ";
-// import  {AuthProvider}  from "./AuthContext ";
+// import PrivateRoute from "./ProtectedRoute ";
+import PrivateRouter from "./ProtectedRoute"
+// import { AppContext } from "../Context/AppContext";
 import Home from "../Main/App";
 import Signin from "../Components/signin";
 import Register from "../Components/register";
@@ -54,11 +55,10 @@ function AppRouter() {
     },
     {
       path: "/dashboard",
-      element: (
-        // <ProtectedRoute>
+      element: 
+        <PrivateRouter>
           <Dashboard />
-        // {/* </ProtectedRoute> */}
-      ),
+         </PrivateRouter>
     },
     {
       path: "/services/adoption",
@@ -96,51 +96,102 @@ function AppRouter() {
     },
     {
       path:"/dashboard/adoption",
-      element: <AdminAdoption />
+      
+      element:(<PrivateRouter>
+        <AdminAdoption />
+      </PrivateRouter>) 
+      
     },
     {
       path: "/dashboard/hostel",
-      element: <HostelAdmin />
+      element: (
+        <PrivateRouter>
+        <HostelAdmin />
+      </PrivateRouter>
+      )
     },
     {
       path: "/dashboard/pet-training",
-      element: <TrainingAdmin />
+      element: (
+      <PrivateRouter>
+      <TrainingAdmin />
+      </PrivateRouter>
+      )
     },
     {
       path:"/dashboard/pet-grooming",
-      element: < PetGroom/>
+      element: (
+        <PrivateRouter>
+      < PetGroom/>
+      </PrivateRouter>
+    )
     },
     {
       path:"/dashboard/notification",
-      element: <NotificationAdmin />
+      element:(
+        <PrivateRouter>
+          <NotificationAdmin />
+        </PrivateRouter>
+
+      ) 
     },
     {
       path:"/dashboard/addservice",
-      element: <AddService />
+      element: (
+      <PrivateRouter>
+      <AddService />
+      </PrivateRouter>
+      )
     },
     {
       path:"/dashboard/notification/adoptionnotification",
-      element: <AdoptionNotification />
+      element:(
+        <PrivateRouter>
+          <AdoptionNotification />
+        </PrivateRouter>
+
+      ) 
     },
     {
       path:"/dashboard/notification/groomingnotification",
-      element:<GroomingNotification />
+      element:(
+        <PrivateRouter>
+           <GroomingNotification />
+        </PrivateRouter>
+      )
     },
     {
       path:"/dashboard/addpet",
-      element: <AddPet />
+      element:(
+        <PrivateRouter>
+          <AddPet />
+        </PrivateRouter>
+      ) 
     },
     {
       path:"/dashboard/addhostel",
-      element:<Addhostel />
+      element:(
+        <PrivateRouter>
+          <Addhostel />
+        </PrivateRouter>
+
+      ) 
     },
     {
       path:"/dashboard/addgrooming",
-      element: <Addgrooming />
+      element:(
+        <PrivateRouter>
+          <Addgrooming />
+        </PrivateRouter>
+      ) 
     },
     {
       path:"/dashboard/addtraining",
-      element: <AddTraining />
+      element:(
+        <PrivateRouter>
+          <AddTraining />
+        </PrivateRouter>
+      ) 
     },
     {
       path:"/lostfound/lost",
