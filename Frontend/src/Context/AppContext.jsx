@@ -18,11 +18,11 @@ export const AppContextProvider = (props) => {
             setUserData(user);
             setisAuthenticated(true);
         } else {
-            console.error("Invalid or missing user data in localStorage");
-            localStorage.removeItem("user_data"); // Clear invalid data
-            setisAuthenticated(false); // Ensure user is marked as unauthenticated
+            console.log("Invalid or missing user data in localStorage");
+            localStorage.removeItem("user_data"); 
+            setisAuthenticated(false); 
         }
-        setLoading(false); // Ensure loading is set to false
+        setLoading(false); 
     }, []);
 
     const login = (newToken, newData) => {

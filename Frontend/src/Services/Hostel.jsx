@@ -114,7 +114,7 @@ const Hostel = () => {
                       <span className='font-bold'> Medical: </span><p className='ml-2'> {pet.medicalsupport}</p>
                     </div>
                     <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
-                      {/* {pet.accomodation.type.price} */}Rs:500
+                      {/* {pet.accomodation.type.price} */}i 
                     </span>
 
                   </div>

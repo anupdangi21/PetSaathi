@@ -25,6 +25,8 @@ import Tracking from "../Pages/Tracking"
 import UpdateProfile from "../Pages/cProfile"
 import AdoptionNotification from "../Notifications/adoptionNotification"
 import GroomingNotification from "../Notifications/groomingNotification"
+import TrainingNotification from "../Notifications/trainingNotification"
+import HostelNotification from "../Notifications/hostelNotification"
 import AddService from "../admin/addService";
 import PetGroom from "../admin/petGroom"
 import Addhostel from "../admin/addHostel"
@@ -157,6 +159,22 @@ function AppRouter() {
       element:(
         <PrivateRouter>
            <GroomingNotification />
+        </PrivateRouter>
+      )
+    },
+    {
+      path:"/dashboard/notification/trainingnotification",
+      element:(
+        <PrivateRouter>
+           <TrainingNotification />
+        </PrivateRouter>
+      )
+    },
+    {
+      path:"/dashboard/notification/hostelnotification",
+      element:(
+        <PrivateRouter>
+           <HostelNotification />
         </PrivateRouter>
       )
     },

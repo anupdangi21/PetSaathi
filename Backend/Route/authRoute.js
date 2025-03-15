@@ -13,7 +13,7 @@ import Training from "../Controllers/addTraining.js"
 import Groom from "../Controllers/addGrooming.js"
 import petGrooming from "../Controllers/petGrooming.js"
 import petTrain from "../Controllers/petTraining.js"
-
+import petHosteling from "../Controllers/petHostel.js"
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus}= petController;
@@ -27,7 +27,7 @@ const {petTraining, getPetTraining, updatePetTraining, deletePetTraining}=Traini
 const {petGroom,getpetGroom, updatepetGroom,deletepetGroom}=Groom;
 const {AddpetGroom, AddgetpetGroom,updateGroomStatus,cancelGrooming}=petGrooming;
 const {AddpetTrain, AddgetpetTrain,updateTrainStatus,cancelTraining} = petTrain
-
+const {bookHostel, getHostelBook,updateHostelStatus,cancelHostelBook}= petHosteling;
 //routes for posting the data and getting the data
 const authRouter = express.Router();
 authRouter.post("/register", register);
@@ -94,6 +94,12 @@ authRouter.post("/booktrain",upload.single("Image"), AddpetTrain)
 authRouter.get("/booktrain",AddgetpetTrain)
 authRouter.put("booktrain/:id", upload.single("Image"),updateTrainStatus)
 authRouter.delete("booktrain/:id", cancelTraining)
+
+//router for posting the booked date for hostel and cancelling the booking
+authRouter.post("/bookhostel",upload.single("Image"), bookHostel)
+authRouter.get("/bookhostel", getHostelBook)
+authRouter.put("/bookhostel/:id",upload.single("Image"), updateHostelStatus)
+authRouter.delete("/bookhostel/:id", cancelHostelBook)
 
 //router for posting the new services 
 authRouter.post("/addservice", addService)
