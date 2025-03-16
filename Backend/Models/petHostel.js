@@ -17,7 +17,8 @@ const petHostelSchema = new mongoose.Schema({
     medicalsupport:String,
     petpickup:String,
     petdropoff:String,
-    status:{type:String, default:"Booked", required:true}
+    status:{type:String, default:"Booked", required:true},
+    rating:{type:String, default:"Not rated", required:true}
 })
 
 const petHostelModel = mongoose.model("PetHostelBooks", petHostelSchema)

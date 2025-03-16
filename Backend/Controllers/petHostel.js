@@ -5,7 +5,7 @@ import transporter from "../nodeMailer.js";
 const bookHostel = async(req, res)=>{
     try {
         // console.log("aako hostel data", req.body)
-        const {fullname,ownercontact,email,image,date,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status}=req.body
+        const {fullname,ownercontact,email,image,date,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating}=req.body
         const petHostel = new petHostelModel({
             fullname,
             ownercontact,
@@ -22,7 +22,8 @@ const bookHostel = async(req, res)=>{
             medicalsupport,
             petpickup,
             petdropoff,
-            status
+            status,
+            rating
         })
         // console.log("Save hune hostel data", petHostel)
         await petHostel.save()
@@ -76,6 +77,14 @@ const getHostelBook = async (req, res)=>{
     }
 }
 
+const getHostelBookUser = async (req, res)=>{
+    try {
+        const getHostel = await petHostelModel.find()
+        res.status(200).json({status:true, data:getHostel})
+    } catch (error) {
+        return res.status(400).json({status:false, message:error.message})
+    }
+}
 const updateHostelStatus = async (req, res) => {
     try {
         console.log(req.body)
@@ -90,6 +99,27 @@ const updateHostelStatus = async (req, res) => {
         pet.status = "Completed";
         await pet.save();
 
+
+        return res.status(200).json({ success: true, message: "Pet status updated", pet });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const updateRateStatus = async (req, res) => {
+    try {
+        console.log(req.body)
+        const petId = req.params.id;
+
+        const pet = await petHostelModel.findById(petId);
+
+        if (!pet) {
+            return res.status(404).json({ message: "Pet not found" });
+        }
+
+        pet.rating = "Rated";
+        await pet.save();
 
         return res.status(200).json({ success: true, message: "Pet status updated", pet });
 
@@ -139,4 +169,4 @@ const cancelHostelBook = async (req,res)=>{
     }
 }
 
-export default {bookHostel, getHostelBook,updateHostelStatus,cancelHostelBook}
+export default {bookHostel, getHostelBook,getHostelBookUser,updateHostelStatus,updateRateStatus,cancelHostelBook}

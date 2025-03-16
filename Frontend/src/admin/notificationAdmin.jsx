@@ -120,7 +120,7 @@ const NotificationAdmin = () => {
   
     const userEmail = userData.user.email;
   
-    fetch("http://localhost:3000/bookgroom")
+    fetch("http://localhost:3000/booktrain")
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
@@ -279,10 +279,10 @@ const NotificationAdmin = () => {
           {training && training.length > 0 ? (
             training.map((training, index) => (
               <div key={training._id || index} className="rounded-lg bg-zinc-100 mt-4 ml-4 p-4">
-                <h2 className="font-bold">Notification for Hostel</h2>
+                <h2 className="font-bold">Notification for Training</h2>
                 
                 <p className="mt-4">
-                  Hello vendor, {training.fullname} has just viewed your pet hostel service for package type {training.selectedpackage}
+                  Hello vendor, {training.fullname} has just viewed your pet traning service for package type {training.selectedpackage}
                   {training.petname} and booked the service. The booked date to
                   check-in is: {training.date}.
                 </p>

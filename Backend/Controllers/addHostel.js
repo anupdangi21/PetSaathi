@@ -11,6 +11,7 @@ const petHostel = async(req,res)=>{
         if(!accomodation || !food || !playtime || !medicalsupport ){
             return res.status(201).json({message: "please fill all empty feilds"})
         }
+        
         const hostel = new petHostelModel({
                 Image,
                 organizationname,

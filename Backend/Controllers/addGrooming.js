@@ -10,6 +10,9 @@ const petGroom = async(req,res)=>{
             return res.status(400).json({success:false, message:"please fill all the forms"})
 
         }
+        if(price<=0){
+            return res.status(400).json({message:"Please enter price above 0"})
+        }
         const newGroom = new petGroomingModel({
             organizationname,
             vendorcontact, 
@@ -48,6 +51,9 @@ const updatepetGroom = async (req,res)=>{
         if(!pet){
             return res.status(400).json({success:false, message:error.message})
         }
+        if(price<=0){
+                    return res.status(400).json({message:"Please enter price above 0"})
+                }
         pet.serviceoffering = serviceoffering || pet.serviceoffering
         pet.includedOfferings = includedOfferings || pet.includedOfferings
         pet.price = price || pet.price

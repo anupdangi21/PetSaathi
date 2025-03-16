@@ -56,7 +56,7 @@ const trainingReservation = ({pet, onClick}) => {
           formData.append("ownercontact", userData.user.number);
           formData.append("vendorcontact", pet.vendorcontact);
           formData.append("vendoremail", pet.vendoremail);
-          formData.append("status", pet.status);
+        //   formData.append("status", pet.status);
           // payment mode baaki xa
   
           const submissionData = {
@@ -74,7 +74,7 @@ const trainingReservation = ({pet, onClick}) => {
               ownercontact: formData.get("ownercontact"),
               vendorcontact: formData.get("vendorcontact"),
               vendoremail: formData.get("vendoremail"),
-              status: formData.get("status"),
+            //   status: formData.get("status"),
           };
       
           console.log('Submission data:', submissionData);

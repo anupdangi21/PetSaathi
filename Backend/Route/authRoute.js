@@ -25,9 +25,9 @@ const {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}=petAdoption;
 const  {petHostel,getHostel, updateHostel,deleteHostel }= Hostel;
 const {petTraining, getPetTraining, updatePetTraining, deletePetTraining}=Training
 const {petGroom,getpetGroom, updatepetGroom,deletepetGroom}=Groom;
-const {AddpetGroom, AddgetpetGroom,updateGroomStatus,cancelGrooming}=petGrooming;
-const {AddpetTrain, AddgetpetTrain,updateTrainStatus,cancelTraining} = petTrain
-const {bookHostel, getHostelBook,updateHostelStatus,cancelHostelBook}= petHosteling;
+const {AddpetGroom, AddgetpetGroom,AddgetpetGroomUser,updateGroomStatus,cancelGrooming,updateGroomingRateStatus}=petGrooming;
+const {AddpetTrain, AddgetpetTrain,AddgetpetTrainUser,updateTrainStatus,updateTrainingRateStatus,cancelTraining} = petTrain
+const {bookHostel, getHostelBook,getHostelBookUser,updateHostelStatus,updateRateStatus,cancelHostelBook}= petHosteling;
 //routes for posting the data and getting the data
 const authRouter = express.Router();
 authRouter.post("/register", register);
@@ -86,20 +86,26 @@ authRouter.delete("/petgrooming/:_id", deletepetGroom)
 //router for posting the booked date for grooming service and canceling the booking
 authRouter.post("/bookgroom",upload.single("Image"), AddpetGroom)
 authRouter.get("/bookgroom",AddgetpetGroom)
+authRouter.get("/bookgroom/user",AddgetpetGroomUser)
 authRouter.put("/bookgroom/:id",upload.single("Image"), updateGroomStatus)
+authRouter.put("/bookgroom/user/:id",upload.single("Image"), updateGroomingRateStatus)
 authRouter.delete("/bookgroom/:id",cancelGrooming)
 
 //router for posting the booked date for training and cancelling the booking
 authRouter.post("/booktrain",upload.single("Image"), AddpetTrain)
 authRouter.get("/booktrain",AddgetpetTrain)
-authRouter.put("booktrain/:id", upload.single("Image"),updateTrainStatus)
-authRouter.delete("booktrain/:id", cancelTraining)
+authRouter.get("/booktrain/user", AddgetpetTrainUser)
+authRouter.put("/booktrain/user/:id", upload.single("Image"),updateTrainingRateStatus)
+authRouter.put("/booktrain/:id", upload.single("Image"),updateTrainStatus)
+authRouter.delete("/booktrain/:id", cancelTraining)
 
 //router for posting the booked date for hostel and cancelling the booking
 authRouter.post("/bookhostel",upload.single("Image"), bookHostel)
 authRouter.get("/bookhostel", getHostelBook)
+authRouter.get("/bookhostel/user", getHostelBookUser)
+authRouter.put("/bookhostel/user/:id",upload.single("Image"), updateRateStatus)
 authRouter.put("/bookhostel/:id",upload.single("Image"), updateHostelStatus)
-authRouter.delete("/bookhostel/:id", cancelHostelBook)
+authRouter.delete("/bookhostel/:id", cancelHostelBook) 
 
 //router for posting the new services 
 authRouter.post("/addservice", addService)

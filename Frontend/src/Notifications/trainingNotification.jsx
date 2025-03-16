@@ -47,12 +47,12 @@ import React, { useEffect, useState } from "react";
      const handleApprove = async (petId) => {
        const result = await Swal.fire({
          title: "Are you sure?",
-         text: "Do you want to approve this grooming service?",
+         text: "Do you want to complete this training service?",
          icon: "warning",
          showCancelButton: true,
          confirmButtonColor: "#3085d6",
          cancelButtonColor: "#d33",
-         confirmButtonText: "Yes, approve!",
+         confirmButtonText: "Yes, complete!",
          cancelButtonText: "No, cancel",
        });
    
@@ -132,12 +132,12 @@ import React, { useEffect, useState } from "react";
                      Status: {adoption ? adoption.status : "Loading..."}
                    </p>
    
-                   {adoption?.status === "Available" ? (
+                   {adoption?.status === "Booked" ? (
                      <button
                        onClick={() => handleApprove(adoption._id)}
                        className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
                      >
-                       Approve
+                       Complete training
                      </button>
                    ) : (
                      <></>

@@ -62,6 +62,15 @@
          return res.status(400).json({message:error.message})
      }
  }
+
+ const AddgetpetGroomUser = async (req, res)=>{
+    try {
+       const getPet= await PetGroomingModel.find()
+       res.status(200).json({status:true, data:getPet})
+    } catch (error) {
+        return res.status(400).json({message:error.message})
+    }
+}
  
  const updateGroomStatus = async (req, res) => {
      try {
@@ -85,6 +94,26 @@
      }
  };
  
+ const updateGroomingRateStatus = async (req, res) => {
+     try {
+         console.log(req.body)
+         const petId = req.params.id;
+ 
+         const pet = await PetGroomingModel.findById(petId);
+ 
+         if (!pet) {
+             return res.status(404).json({ message: "Pet not found" });
+         }
+ 
+         pet.rating = "Rated";
+         await pet.save();
+ 
+         return res.status(200).json({ success: true, message: "Pet status updated", pet });
+ 
+     } catch (error) {
+         return res.status(500).json({ success: false, message: error.message });
+     }
+ };
  const cancelGrooming = async (req, res) => {
      try {
          const CanId = req.params.id;
@@ -128,4 +157,4 @@
      }
  };
  
- export default {AddpetGroom, AddgetpetGroom,updateGroomStatus,cancelGrooming}
+ export default {AddpetGroom, AddgetpetGroom,AddgetpetGroomUser,updateGroomStatus,updateGroomingRateStatus,cancelGrooming}

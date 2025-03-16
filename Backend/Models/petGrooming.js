@@ -12,7 +12,8 @@ const petGroomingSchema = new mongoose.Schema({
     ownercontact: String,
     vendoremail:String,
     vendorcontact:String,
-    status: String,
+    status:{type:String, default:"Booked", required:true},
+    rating:{type:String, default:"Not rated", required:true}
 })
 
 const PetGroomingModel = mongoose.model('PetGroomBooks', petGroomingSchema);

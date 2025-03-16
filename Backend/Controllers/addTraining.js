@@ -10,6 +10,9 @@ const petTraining = async (req, res)=>{
         if(!serviceoffering || !timing || !duration || !eligibility || !description){
             return res.status(200).json({message:"Please fill all the fields"})
         }
+        if(price<=0){
+                    return res.status(400).json({message:"Please enter price above 0"})
+                }
         const newTraining = new petTrainingModel({
             Image,
             organizationname,
@@ -56,6 +59,9 @@ const updatePetTraining = async (req, res) => {
             return res.status(404).json({message:"Pet not found"})
         }
 
+        if(price<=0){
+                    return res.status(400).json({message:"Please enter price above 0"})
+                }
         pet.serviceoffering = serviceoffering || pet.serviceoffering
         pet.includedOfferings = includedOfferings || pet.includedOfferings
         pet.timing = timing || pet.timing

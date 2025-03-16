@@ -10,6 +10,7 @@ const AddpetTrain = async (req, res)=>{
         if(!date ){
             return res.status(400).json({message:"please select date for booking an appointment for getting the pet"})
         }
+        
         const petgroom = new PetTrainingModel({
             image,date, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming,location,fullname,email,ownercontact,vendorcontact,vendoremail,status
         })
@@ -63,6 +64,15 @@ const AddgetpetTrain = async (req, res)=>{
     }
 }
 
+const AddgetpetTrainUser = async (req, res)=>{
+    try {
+       const getPet= await PetTrainingModel.find()
+       res.status(200).json({status:true, data:getPet})
+    } catch (error) {
+        return res.status(400).json({message:error.message})
+    }
+}
+
 const updateTrainStatus = async (req, res) => {
     try {
         console.log(req.body)
@@ -77,6 +87,27 @@ const updateTrainStatus = async (req, res) => {
         pet.status = "Completed";
         await pet.save();
 
+
+        return res.status(200).json({ success: true, message: "Pet status updated", pet });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const updateTrainingRateStatus = async (req, res) => {
+    try {
+        console.log(req.body)
+        const petId = req.params.id;
+
+        const pet = await PetTrainingModel.findById(petId);
+
+        if (!pet) {
+            return res.status(404).json({ message: "Pet not found" });
+        }
+
+        pet.rating = "Rated";
+        await pet.save();
 
         return res.status(200).json({ success: true, message: "Pet status updated", pet });
 
@@ -128,4 +159,4 @@ const cancelTraining = async (req, res) => {
     }
 };
 
-export default {AddpetTrain, AddgetpetTrain,updateTrainStatus,cancelTraining}
+export default {AddpetTrain, AddgetpetTrain,AddgetpetTrainUser,updateTrainStatus,updateTrainingRateStatus,cancelTraining}
