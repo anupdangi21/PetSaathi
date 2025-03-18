@@ -5,24 +5,24 @@ import transporter from '../nodeMailer.js';
 
 const AddpetTrain = async (req, res)=>{
     try {
-        // console.log("aako train data", req.body)
-        const {image,date, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,vendoremail,status}=req.body;
+        console.log("aako train data", req.body)
+        const {image,date,days, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,vendoremail,status}=req.body;
         if(!date ){
             return res.status(400).json({message:"please select date for booking an appointment for getting the pet"})
         }
         
-        const petgroom = new PetTrainingModel({
-            image,date, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming,location,fullname,email,ownercontact,vendorcontact,vendoremail,status
+        const pethostel = new PetTrainingModel({
+            image,date,days, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming,location,fullname,email,ownercontact,vendorcontact,vendoremail,status
         })
-        // console.log("save hune data",petgroom)
-        await petgroom.save()
+        console.log("save hune data",pethostel)
+        // await pethostel.save()
 
 
         const mailOptionsUser = {
             from: process.env.SENDER_EMAIL,
             to: email, // Owner's email
             subject: "Pet Training Service Request",
-            text: `Hello ${fullname}, your request on taking a pet training service with choosen package type ${selectedpackage}, with included services ${includedservice} has been successfully submitted. 
+            text: `Hello ${fullname}, your request on taking a pet training service with choosen package type ${selectedpackage}, with included services ${includedservice} for ${days} has been successfully submitted. 
 
             please note that you have selected your shift on ${SelectedTiming} and your booked date for check-in is on ${date} also note that your visit location is ${location}. 
             Please be there on time to avoid any inconvenience. 
@@ -39,7 +39,7 @@ const AddpetTrain = async (req, res)=>{
                 from: process.env.SENDER_EMAIL,
                 to: vendoremail, // vendor's email
                 subject: "Request for Pet Training Service",
-                text: `Hello vendor, your service for training pet with package ${selectedpackage} with offering ${includedservice} has been  viewed by  (${fullname}) and also he is interested on taking the service for their pet on shift ${SelectedTiming}. 
+                text: `Hello vendor, your service for training pet with package ${selectedpackage} with offering ${includedservice} for ${days} has been  viewed by  (${fullname}) and also he is interested on taking the service for their pet on shift ${SelectedTiming}. 
         
 
                 He will be at your organization's location at ${location} on ${date}

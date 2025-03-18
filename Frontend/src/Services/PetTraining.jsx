@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, MapPin,Timer,PackageOpen,Award, Calendar,ShieldAlert, Info, BadgeAlert,Truck,Ambulance,Utensils,Package,PhoneOutgoing } from 'lucide-react';
+import { Heart, MapPin,Timer,PackageOpen,Award, CalendarDays,ShieldAlert, Info, BadgeAlert,Truck,Ambulance,Utensils,Package,PhoneOutgoing } from 'lucide-react';
 import Navbar from '../Components/Navbar'
 import Footer from '../Components/foot'
 import useAuthGuard from "../Context/useAuthGuard.jsx";
@@ -110,9 +110,15 @@ const PetTraining = () => {
                       <ShieldAlert  size={20} className="mr-2" />
                       <span className='font-bold'> Restrictions: </span><p className='ml-2'> {pet.eligibility}</p>
                     </div>
+                    <div className='flex flex'>
                   <div className='flex mt-2'>
                       <Timer  size={20} className="mr-2" />
                       <span className='font-bold'> Duration: </span><p className='ml-2'> {pet.duration}</p>
+                    </div>
+                    <div className='flex mt-2 ml-12'>
+                      <CalendarDays  size={20} className="mr-2" />
+                      <span className='font-bold'> Days: </span><p className='ml-2'> {pet.days}</p>
+                    </div>
                     </div>
                   <div className="space-y-3 mb-6 mt-2">
                     <div className="flex items-center text-gray-600">

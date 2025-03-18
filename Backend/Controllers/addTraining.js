@@ -5,7 +5,7 @@ import upload from "../multerConfig.js"
 const petTraining = async (req, res)=>{
     try {
         // console.log(req.body,"tya bataaako data yei ho")
-        const { organizationname, vendoremail,experience, vendorcontact, vendorlocation,serviceoffering,includedOfferings,timing,price, duration, eligibility,description,status }=req.body
+        const { organizationname, vendoremail,experience, vendorcontact, vendorlocation,serviceoffering,includedOfferings,days,timing,price, duration, eligibility,description,status }=req.body
         const Image = req.file ? req.file.path.replace(/\\/g, "/") : null;
         if(!serviceoffering || !timing || !duration || !eligibility || !description){
             return res.status(200).json({message:"Please fill all the fields"})
@@ -26,6 +26,7 @@ const petTraining = async (req, res)=>{
             timing,
             duration,
             eligibility,
+            days,
             description,
             status
 
@@ -51,7 +52,7 @@ const getPetTraining = async (req, res) => {
 
 const updatePetTraining = async (req, res) => {
     try {
-        const {serviceoffering, timing, duration, eligibility, description,includedOfferings, price} = req.body
+        const {serviceoffering, timing, duration, eligibility, description,includedOfferings, price,days} = req.body
         const petId = req.params.id
         const pet = await petTrainingModel.findById(petId)
 
@@ -69,6 +70,7 @@ const updatePetTraining = async (req, res) => {
         pet.eligibility = eligibility || pet.eligibility
         pet.description = description || pet.description
         pet.price = price || pet.price
+        pet.days = days || pet.days
 
         if(req.file){
             pet.Image = req.file.path.replace(/\\/g, "/");

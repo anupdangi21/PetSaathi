@@ -6,6 +6,7 @@ import {Truck,Ambulance,Utensils,MapPin } from 'lucide-react';
 
 const hostelReservation = () => {
   const [date, setDate]=useState("")
+  const [days, setDays]=useState("")
   const [selectedPet, setSelectedPet] = useState(null);
   const [selectedAccommodation, setSelectedAccommodation] = useState(null);
   const [price, setPrice] = useState(0);
@@ -52,6 +53,7 @@ const hostelReservation = () => {
       const formData = new FormData(e.target);
       formData.append("image",selectedPet.Image)
       formData.append("date", date);
+      formData.append("days", days);
       formData.append("food", selectedPet.food)
       formData.append("medicalsupport", selectedPet.medicalsupport)
       formData.append("petpickup", selectedPet.petpickup)
@@ -69,6 +71,7 @@ const hostelReservation = () => {
       const submissionData = {
           image:formData.get("image"),
           date: formData.get('date'),
+          days:formData.get('days'),
           food: formData.get('food'),
           medicalsupport: formData.get('medicalsupport'),
           petpickup: formData.get('petpickup'),
@@ -157,15 +160,16 @@ const hostelReservation = () => {
                     <span>Drop Off: {selectedPet.petdropoff}</span>
                   </div>
                   </div>  
-                    <div className='flex flex'>                   
-                      </div>
                   </div>
                   {selectedPet?.accommodationDetails?.length > 0 ? (
                       selectedPet.accommodationDetails.map((item, index) => (
                         <li key={index}>
                           <strong>Accommodation type:</strong> {item.type}, 
-                          <strong> Available seats:</strong> {item.count}, 
-                          <strong>     Price:</strong> {item.price}
+                          <span className='ml-6 mr-4'>
+                          <strong> Available seats:</strong> {item.count}</span> 
+                          <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                          <strong>   Price:</strong> {item.price}</span> per day
+                          
                         </li>
                       ))
                     ) : (
@@ -182,24 +186,42 @@ const hostelReservation = () => {
 
           {/* Reservation Form */}
           <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg p-2 min-h-[20vh] w-full'>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap">
           <div className="flex flex-wrap gap-2">
-            <div className="flex-1 w-48">
-              <label className="block text-gray-700 text-sm font-bold mb-2 w-96">
-                Book a date
-              </label>
-              <input
-                type="date"
-                name="date"
-                className="w-96 px-3 py-2 border rounded-md"
-                required
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
-          </div>
+          <div className="flex-1 w-1/2">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Book a date
+          </label>
+          <input
+            type="date"
+            name="date"
+            className="w-full px-4 py-2 border rounded-md"
+            required
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
+
+        <div className="flex-1 w-1/2">
+          <label className="font-medium text-gray-700">No of training days*</label>
+          <select
+            name="eligibility"
+            required
+            className="w-full mt-.5 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            value={days}
+            onChange={(e) => setDays(e.target.value)}
+          >
+            <option value="" disabled>Select the hostel days</option>
+            <option value="7 Days">7 Days</option>
+            <option value="14 Days">14 Days</option>
+            <option value="30 Days">30 Days</option>
+            <option value="45 Days">45 Days</option>
+            <option value="60 Days">60 Days</option>
+          </select>
+        </div>
+        </div>
           {selectedPet?.accommodationDetails && selectedPet.accommodationDetails.length > 0 && (
             <div className='flex flex'>
-              <div className="flex-1 w-36 mt-6">
+              <div className="flex-1 w-36 mt-8">
                 <label className="bold-text-gray-700 text-sm font-bold">Select Accommodation Type</label>
                 <select
                   className="border p-1 rounded"
@@ -214,10 +236,10 @@ const hostelReservation = () => {
                   ))}
                 </select>
               </div>
-              <div className="flex-1 w-36">
+              <div className="flex-1 w-36 mt-4">
                 <label className="bold-text-gray-700 text-sm font-bold">Price</label>
                 <div className="border p-1 rounded">
-                  {price ? `$${price.toFixed(2)}` : "Price are autofilled based on selected accomodation"} {/* Format price as a number */}
+                  {price ? `Rs${(price * parseInt(days)).toFixed(0)}` : "Price is autofilled based on selected accommodation"}
                 </div>
               </div>
             </div>
@@ -230,6 +252,7 @@ const hostelReservation = () => {
             Submit
           </button>
         </div>
+        
       </form>
       </div>
   );

@@ -17,6 +17,7 @@ const AddTraining = () => {
     const [duration, setDuration] = useState("");
     const [timing, setTiming]=useState("")
     const [eligibility , setEligibility] = useState("");
+    const [days, setDays]=useState("")
   const [Image, setImage] = useState(null);
   const [petId, setPetId] = useState("");
   const fileInputRef = useRef(null);
@@ -34,6 +35,7 @@ const AddTraining = () => {
     setDuration(petData.duration);
     setTiming(petData.timing);
     setEligibility(petData.eligibility);
+    setDays(petData.days);
     setPetId(petData._id || "");
     }
   }, [isEdit, petData]);
@@ -66,6 +68,7 @@ const AddTraining = () => {
     formData.append("duration", duration);
     formData.append("timing", timing);
     formData.append("eligibility", eligibility);
+    formData.append("days", days);
     formData.append("vendorlocation", userData.user.location);
     formData.append("experience",userData.user.experience)
     formData.append("vendoremail", userData.user.email);
@@ -109,6 +112,7 @@ const AddTraining = () => {
           setDuration("")
           setTiming("")
           setEligibility("");
+          setDays("");
           setImage(null);
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
@@ -269,11 +273,33 @@ const AddTraining = () => {
               <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-500 w-full"></i>
             </div>
             </div>
-            <div className="relative">
+            <div className="flex felx">
+            <div className="form-control mb-6 mt-4">
+              <label className="font-medium text-gray-700">No of training days*</label>
+            <select
+                name="eligibility"
+                required
+                className="flex flex mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                value={days}
+                onChange={(e) => setDays(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select the training days
+                </option>
+                <option value="15 Days">15 Days</option>
+                <option value="30 Days">30 Days</option>
+                <option value="45 Days">45 Days</option>
+                <option value="60 Days">60 Days</option>
+              </select>
+              <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-500 w-full"></i>
+            </div>
+            
+            <div className="form-control mb-6 mt-4 ml-16">
+            <label className="font-medium text-gray-700">Select eligibility*</label>
               <select
                 name="eligibility"
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="flex flex mt-2 input input-bordered w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 value={eligibility}
                 onChange={(e) => setEligibility(e.target.value)}
               >
@@ -285,6 +311,7 @@ const AddTraining = () => {
                 <option value="Any pet">Any pet</option>
               </select>
               <i className="fa-solid fa-envelope absolute right-3 top-3 text-gray-500"></i>
+            </div>
             </div>
             <div className="form-control flex-1 w-1/2">
               <label className="label">

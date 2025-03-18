@@ -5,13 +5,14 @@ import transporter from "../nodeMailer.js";
 const bookHostel = async(req, res)=>{
     try {
         // console.log("aako hostel data", req.body)
-        const {fullname,ownercontact,email,image,date,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating}=req.body
+        const {fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating}=req.body
         const petHostel = new petHostelModel({
             fullname,
             ownercontact,
             email,
             image,
             date,
+            days,
             price,
             accommodationType,
             vendorcontact,
@@ -33,7 +34,7 @@ const bookHostel = async(req, res)=>{
                      from: process.env.SENDER_EMAIL,
                      to: email, // Owner's email
                      subject: "Pet Hostel Service Request",
-                     text: `Hello ${fullname}, your request on taking a pet hostel from ${organizationname} has been submitted successfully.
+                     text: `Hello ${fullname}, your request on taking a pet hostel from ${organizationname} for total ${days} has been submitted successfully.
                      
                     Your booking services are: accomodation${accommodationType} , food will be ${food} , medical support ${medicalsupport} , pet pickup ${petpickup} , and oet dropoff${petdropoff}.
          
@@ -52,7 +53,7 @@ const bookHostel = async(req, res)=>{
                          from: process.env.SENDER_EMAIL,
                          to: vendoremail, // Finder's email
                          subject: "Request for Pet hostel Service",
-                         text: `Hello ${organizationname}, your service for hosteling pet with package has been  viewed by  (${fullname}) and also he is interested on taking the service for their pet. 
+                         text: `Hello ${organizationname}, your service for hosteling pet with package has been  viewed by  (${fullname}) for ${days}and also he is interested on taking the service for their pet. 
                          
                          He will be at your organization's location at ${vendorlocation} on ${date}
          

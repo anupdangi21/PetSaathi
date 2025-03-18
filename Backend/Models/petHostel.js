@@ -6,6 +6,7 @@ const petHostelSchema = new mongoose.Schema({
     email: String,
     image: String,
     date:String,
+    days:String,
     price:String,
     accommodationType:String,
     vendorcontact:String,

@@ -17,6 +17,7 @@ const petTrainingschema = new mongoose.Schema({
     timing: String,
     duration: String,
     eligibility: String,
+    days:String,
     description: String,
     Image:String,
     price:String,
