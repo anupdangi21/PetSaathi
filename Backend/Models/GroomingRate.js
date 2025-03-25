@@ -2,25 +2,27 @@ import mongoose from 'mongoose';
 import moment from 'moment-timezone';
 
 const groomingRateSchema= new mongoose.Schema({
-    Image:String,
+    image:String,
     rating:String,
     stars:Number,
     areaImprovement:String,
     userComment:String,
-    fullname: String,
-    email: String,
-    ownercontact: String,
+    organizationname:String,
+    bookedAt:String,
     vendoremail:String,
     vendorcontact:String,
-    organizationname:String,
-    vendorlocation:String,
-
-
+    selectedpackage:String,
+    price:String,
+    location:String,
+    username:String,
+    email:String,
+    ownercontact:String,
      ratedAt: {
         type: Date,
         default: () => moment().tz("Asia/Kathmandu").toDate(), 
         required: true
-    }
+    },
+    status:{type:String, default:"Rated", required:true},
 })
 const GroomingRatingModel = mongoose.model("GroomingRating",groomingRateSchema)
 export default GroomingRatingModel;

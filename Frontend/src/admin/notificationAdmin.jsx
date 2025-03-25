@@ -12,6 +12,9 @@ const NotificationAdmin = () => {
   const [grooming, setGrooming] = useState([]);
   const [training, setTraining]=useState([])
   const [hostel, setHostel]= useState([])
+  const [groomingrating, setGroomingrating]=useState([])
+  const [trainingrating, setTrainingrating]=useState([])
+  const [hostelrating, setHostelrating]=useState([])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -199,6 +202,142 @@ const NotificationAdmin = () => {
   }, []);
 
 
+  useEffect(() => {
+    // Get user email from localStorage
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    console.log("User Data:", userData);
+  
+    if (!userData || !userData.user?.email) {
+      setError("User not logged in or email missing");
+      setLoading(false);
+      return;
+    }
+  
+    const userEmail = userData.user.email;
+  
+    fetch("http://localhost:3000/groomingreview")
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((data) => {
+        // console.log("Fetched Data k abrian ho?:", data);
+  
+        // Check if data.data exists and is an array
+        if (!data || !Array.isArray(data.data)) {
+          // console.error("Error: Expected an array but got:", data);
+          setError("Unexpected data format");
+          setLoading(false);
+          return;
+        }
+
+        const userGroomingsRating = data.data.filter(
+          (groomingrating) => groomingrating.vendoremail === userEmail
+        );
+  
+        // console.log("Filtered Grooming:", userGroomings);
+        setGroomingrating(userGroomingsRating);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setError("Error loading adoption data");
+        setLoading(false);
+      });
+  }, []);
+
+  //yo trainingrating ko
+  useEffect(() => {
+    // Get user email from localStorage
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    console.log("User Data:", userData);
+  
+    if (!userData || !userData.user?.email) {
+      setError("User not logged in or email missing");
+      setLoading(false);
+      return;
+    }
+  
+    const userEmail = userData.user.email;
+  
+    fetch("http://localhost:3000/trainingreview")
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((data) => {
+        // console.log("Fetched Data k abrian ho?:", data);
+  
+        // Check if data.data exists and is an array
+        if (!data || !Array.isArray(data.data)) {
+          // console.error("Error: Expected an array but got:", data);
+          setError("Unexpected data format");
+          setLoading(false);
+          return;
+        }
+
+        const userTrainingRating = data.data.filter(
+          (trainingrating) => trainingrating.vendoremail === userEmail
+        );
+  
+        // console.log("Filtered Grooming:", userGroomings);
+        setTrainingrating(userTrainingRating);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setError("Error loading adoption data");
+        setLoading(false);
+      });
+  }, []);
+
+  // yo chai hostel ko
+  useEffect(() => {
+    // Get user email from localStorage
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    console.log("User Data:", userData);
+  
+    if (!userData || !userData.user?.email) {
+      setError("User not logged in or email missing");
+      setLoading(false);
+      return;
+    }
+  
+    const userEmail = userData.user.email;
+  
+    fetch("http://localhost:3000/hostelreview")
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((data) => {
+        // console.log("Fetched Data k abrian ho?:", data);
+  
+        // Check if data.data exists and is an array
+        if (!data || !Array.isArray(data.data)) {
+          // console.error("Error: Expected an array but got:", data);
+          setError("Unexpected data format");
+          setLoading(false);
+          return;
+        }
+
+        const userHostelRating = data.data.filter(
+          (hostelrating) => hostelrating.vendoremail === userEmail
+        );
+  
+        // console.log("Filtered Grooming:", userGroomings);
+        setHostelrating(userHostelRating);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setError("Error loading adoption data");
+        setLoading(false);
+      });
+  }, []);
+
+
+
 
 
   if (adoptions.length === 0) {
@@ -220,6 +359,19 @@ const NotificationAdmin = () => {
   const viewHostel =()=>{
     navigate("/dashboard/notification/hostelnotification")
   }
+
+  const viewGroomingRating =()=>{
+    navigate("/dashboard/notification/groomingratingnotification")
+  }
+
+  const viewTrainingRating =()=>{
+    navigate("/dashboard/notification/trainingratingnotification")
+  }
+
+  const viewHostelRating =()=>{
+    navigate("/dashboard/notification/hostelratingnotification")
+  }
+
 
 
   return (
@@ -328,6 +480,81 @@ const NotificationAdmin = () => {
                 </p>
                 <button className=' bg-white justify-end w-24 h-10 mt-2 '
                   onClick= {viewHostel}
+                >
+                  View Details
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="mt-4 ml-4 text-gray-700"></p>
+          )}
+
+          {/* grooming rating ko notification */}
+          {groomingrating && groomingrating.length > 0 ? (
+            groomingrating.map((groomingrating, index) => (
+              <div key={groomingrating._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+              <div className='flex justify-between items-center'>
+                <h2 className="font-bold">Notification for grooming rating</h2>
+                <p className='text-sm'>
+                    {moment(groomingrating.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+                  </p>
+              </div>                
+                <p className="mt-2.5">
+                  Hello vendor, {groomingrating.fullname} has just reviewed your pet grooming service for package type {groomingrating.selectedpackage}.
+                  He/Her has given {groomingrating.stars} stars and also has suggestions.
+                </p>
+                <button className=' bg-white justify-end w-24 h-10 mt-2 '
+                  onClick= {viewGroomingRating}
+                >
+                  View Details
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="mt-4 ml-4 text-gray-700"></p>
+          )}
+
+          {/* training rating ko notification */}
+          {trainingrating && trainingrating.length > 0 ? (
+            trainingrating.map((trainingrating, index) => (
+              <div key={trainingrating._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+              <div className='flex justify-between items-center'>
+                <h2 className="font-bold">Notification for training rating</h2>
+                <p className='text-sm'>
+                    {moment(trainingrating.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+                  </p>
+              </div>                
+                <p className="mt-2.5">
+                  Hello vendor, {trainingrating.fullname} has just reviewed your pet grooming service for package type {trainingrating.selectedpackage}.
+                  He/Her has given {trainingrating.stars} stars and also has suggestions.
+                </p>
+                <button className=' bg-white justify-end w-24 h-10 mt-2 '
+                  onClick= {viewTrainingRating}
+                >
+                  View Details
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="mt-4 ml-4 text-gray-700"></p>
+          )}
+
+          {/* grooming rating ko notification */}
+          {hostelrating && hostelrating.length > 0 ? (
+            hostelrating.map((hostelrating, index) => (
+              <div key={hostelrating._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+              <div className='flex justify-between items-center'>
+                <h2 className="font-bold">Notification for grooming rating</h2>
+                <p className='text-sm'>
+                    {moment(hostelrating.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+                  </p>
+              </div>                
+                <p className="mt-2.5">
+                  Hello vendor, {hostelrating.fullname} has just reviewed your pet grooming service for package type {hostelrating.selectedpackage}.
+                  He/Her has given {hostelrating.stars} stars and also has suggestions.
+                </p>
+                <button className=' bg-white justify-end w-24 h-10 mt-2 '
+                  onClick= {viewHostelRating}
                 >
                   View Details
                 </button>

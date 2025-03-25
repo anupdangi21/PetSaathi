@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import HostelRating from "../Rating/hostelRating"
+import axios from "axios"
 
 const trackingHostel = ({userEmail}) => {
     const [hostel, setHostel] = useState([]);
@@ -36,35 +37,6 @@ const trackingHostel = ({userEmail}) => {
           if (userEmail) fetchHostel();
         }, [userEmail]);
 
-      const handleRatingSubmit = async (ratingData) => {
-          try {
-            const response = await fetch(`http://localhost:3000/bookhostel/user/${selectedHostelId}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                rating: 'Rated',
-                stars: ratingData.rating,
-                areaImprovement: ratingData.area,
-                userComment: ratingData.comment
-              })
-            });
-      
-            if (!response.ok) throw new Error('Failed to submit rating');
-      
-            setHostel(prev => prev.map(hostel => 
-              hostel._id === selectedHostelId 
-                ? { ...hostel, rating: 'Rated' } 
-                : hostel
-            ));
-      
-            setShowRatingModal(false);
-            Swal.fire("Success!", "Rating submitted successfully.", "success");
-          } catch (err) {
-            Swal.fire("Error!", err.message, "error");
-          }
-        };
-        
-      
         // Handle cancel adoption
         const handleHostelCancel = async (hostelId) => {
           const result = await Swal.fire({
@@ -94,6 +66,80 @@ const trackingHostel = ({userEmail}) => {
             }
           }
         };
+
+      const handleRatingSubmit = async (ratingData) => {
+          try {
+            const response = await fetch(`http://localhost:3000/bookhostel/user/${selectedHostelId._id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                rating: 'Rated',
+              })
+            });
+      
+            if (!response.ok) throw new Error('Failed to submit rating');
+            
+            const submissionData = {
+              stars: ratingData.rating,
+              areaImprovement: ratingData.area,
+              userComment: ratingData.comment,
+              image: ratingData.image,
+              organizationname: ratingData.organizationname,
+              date:ratingData.date,
+              days:ratingData.days,
+              bookedAt: ratingData.bookedAt,
+              vendoremail: ratingData.vendoremail,
+              vendorcontact: ratingData.vendorcontact,
+              accommodationType: ratingData.accommodationType,
+              price: ratingData.price,
+              vendorlocation:ratingData.vendorlocation,
+              fullname: ratingData.fullname,
+              email: ratingData.email,
+              ownercontact:ratingData.ownercontact,
+              food:ratingData.food,
+              medicalsupport:ratingData.medicalsupport,
+              petpickup:ratingData.petpickup,
+              petdropoff:ratingData.petdropoff
+            };
+            console.log("aaba tha hunxa balla",submissionData)
+      
+            //for posting the user review and rating in the db
+            try {
+              const responsesave = await axios.post("http://localhost:3000/hostelreview", submissionData, {
+                headers: { "Content-Type": "application/json" },
+              });
+              console.log(submissionData)
+              if (responsesave.status === 200) {
+                Swal.fire({
+                  icon: 'success',
+                  title: "Booking Successful!",
+                  text: "Your appointment has been scheduled"
+                });
+              }
+            } catch (error) {
+              console.error(error);
+              Swal.fire({
+                icon: 'error',
+                title: "Booking Failed",
+                text: "Error processing your request"
+              });
+            }
+
+            setHostel(prev => prev.map(hostel => 
+              hostel._id === selectedHostelId 
+                ? { ...hostel, rating: 'Rated' } 
+                : hostel
+            ));
+      
+            setShowRatingModal(false);
+            Swal.fire("Success!", "Rating submitted successfully.", "success");
+          } catch (err) {
+            Swal.fire("Error!", err.message, "error");
+          }
+        };
+        
+      
+        
       
   return (
     <div className="bg-orange-100 p-6 rounded-lg shadow-md flex-1">
@@ -131,10 +177,10 @@ const trackingHostel = ({userEmail}) => {
                 <div className="flex gap-3 mt-3">
                   <button
                     onClick={() => {
-                      setselectedHostelId(hostel._id);
+                      setselectedHostelId(hostel);
                       setShowRatingModal(true);
                     }}
-                    className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className="flex-1 bg-orange-300 text-white px-4 py-2 rounded hover:bg-orange-400"
                   >
                     Rate
                   </button>
@@ -154,10 +200,11 @@ const trackingHostel = ({userEmail}) => {
 
       {showRatingModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+          <div className="bg-white p-6 rounded-lg w-full max-w-[600px]">
             <HostelRating
               onClose={() => setShowRatingModal(false)}
               onSubmit={handleRatingSubmit}
+              hostelData={selectedHostelId}
             />
           </div>
         </div>

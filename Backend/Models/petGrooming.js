@@ -5,6 +5,7 @@ import moment from "moment-timezone";
 const petGroomingSchema = new mongoose.Schema({
     image:String,
     date: String,
+    organizationname:String,
     selectedpackage: String,
     includedservice:String,
     price:String,

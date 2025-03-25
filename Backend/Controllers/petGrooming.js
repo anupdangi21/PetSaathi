@@ -6,12 +6,12 @@
  const AddpetGroom = async (req, res)=>{
      try {
         //  console.log("aako groom data", req.body)
-         const {image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt,paymentStatus}=req.body;
+         const {image,date,organizationname, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt,paymentStatus}=req.body;
          if(!date ){
              return res.status(400).json({message:"please select date for booking an appointment for getting the pet"})
          }
          const petgroom = new PetGroomingModel({
-             image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt,paymentStatus
+             image,date,organizationname, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt,paymentStatus
          })
         //  console.log("save hune data",petgroom)
          await petgroom.save()

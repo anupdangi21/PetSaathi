@@ -1,113 +1,137 @@
-import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+import React, { useState } from 'react';
 import { Star } from "lucide-react";
+import moment from 'moment-timezone';
 
-const GroomingRating = ({onClose, onSubmit,userEmail}) => {
-  const [grooming, setGrooming] = useState([]);
-  const [groomingError, setGroomingError] = useState(null);
-        const [groomingLoading, setGroomingLoading] = useState(true);
+const GroomingRating = ({ onClose, onSubmit, groomingData }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [area, setArea] = useState("");
   const [comment, setComment] = useState("");
+
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    if (!userData?.user?.email) {
+      Swal.fire({
+        icon: 'error',
+        title: "Authentication error",
+        text: "Email not found"
+      });
+      // console.log("anup",userData.user.username)
+      return;
+    }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
       rating,
       area,
-      comment
+      comment,
+      image:groomingData.image,
+      organizationname: groomingData.organizationname,
+      bookedAt: groomingData.bookedAt,
+      vendoremail: groomingData.vendoremail,
+      vendorcontact:groomingData.vendorcontact,
+      selectedpackage: groomingData.selectedpackage,
+      price:groomingData.price,
+      location:groomingData.location,
+      fullname: groomingData.fullname,
+      email:groomingData.email,
+      ownercontact:groomingData.ownercontact
     });
   };
-  useEffect(() => {
-            const fetchGroom = async () => {
-              try {
-                setGroomingLoading(true);
-                const response = await fetch('http://localhost:3000/bookgroom');
-                if (!response.ok) throw new Error('Failed to fetch adoptions');
-                
-                const result = await response.json();
-                const data = Array.isArray(result.data) ? result.data : [];
-                const filteredGrooming = data.filter(grooming => 
-                  grooming.email === userEmail
-                );
-                
-                setGrooming(filteredGrooming.reverse());
-                setGroomingError(null);
-              } catch (err) {
-                setGroomingError(err.message);
-                setGrooming([]);
-              } finally {
-                setGroomingLoading(false);
-              }
-            };
-        
-            if (userEmail) fetchGroom();
-          }, [userEmail]);
-    
+
   return (
-    <div className="max-w-md mx-auto p-6 space-y-4 shadow-md">
-        <form onSubmit={handleSubmit}>
-          <h2 className="text-xl font-semibold">Rate Your Experience</h2>
-          <div className="flex space-x-1 my-3">
-          <img
-                src={`http://localhost:3000/${grooming.Image}`}
-                alt={grooming.petname}
-                className="w-full h-64 object-cover rounded-lg mt-2"
-              />
-            {[...Array(5)].map((_, index) => {
-              const starValue = index + 1;
-              return (
-                <Star
-                  key={index}
-                  className={`w-8 h-8 cursor-pointer ${
-                    (hover || rating) >= starValue ? "text-yellow-500" : "text-gray-300"
-                  }`}
-                  onMouseEnter={() => setHover(starValue)}
-                  onMouseLeave={() => setHover(0)}
-                  onClick={() => setRating(starValue)}
-                  fill={(hover || rating) >= starValue ? "#FACC15" : "none"}
-                />
-              );
-            })}
+    <div className="max-w-[600px] mx-auto p-6 space-y-4 shadow-md">
+      <form onSubmit={handleSubmit}>
+        <h2 className="text-xl font-semibold mb-4">Rate Your Experience</h2>
+        
+        {/* Service Details Section */}
+        {groomingData && (
+          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+            <h3 className="font-medium text-lg mb-2">Service Details:</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="font-medium">Vendor:</p>
+                <p>{groomingData.organizationname}</p>
+              </div>
+              <div>
+                <p className="font-medium">Booked Date:</p>
+                <p>{moment(groomingData.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p>
+              </div>
+              <div>
+                <p className="font-medium">Vendor E-mail:</p>
+                <p>{groomingData.vendoremail}</p>
+              </div>
+              <div>
+                <p className="font-medium">Package Type:</p>
+                <p>{groomingData.selectedpackage}</p>
+              </div>
+            </div>
           </div>
-          <label className="block font-medium">Area for Improvement</label>
-          <img
-                src={`http://localhost:3000/${grooming.Image}`}
-                alt={grooming.petname}
-                className="w-full h-64 object-cover rounded-lg mt-2"
-              />
-          <input
-            value={area}
-            onChange={(e) => setArea(e.target.value)}
-            placeholder="Enter area for improvement"
-            className="mb-3 input input-bordered border border-gray-300 rounded-md h-10 w-80"
-            required
-          />
-          <label className="block font-medium">User Comment</label>
-          <textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Enter your comment"
-            className='mb-3 input input-bordered border border-gray-300 rounded-md h-20 w-64'
-            required
-          />
-          <div className="flex gap-2 mt-4">
-            <button type="submit" className="flex-1 bg-blue-500 hover:bg-blue-600">
-              Submit
-            </button>
-            <button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
+        )}
+
+        <div className="flex flex-col space-y-4">
+          <div>
+            <label className="block font-medium mb-2">Your Rating</label>
+            <div className="flex space-x-1">
+              {[...Array(5)].map((_, index) => {
+                const starValue = index + 1;
+                return (
+                  <Star
+                    key={index}
+                    className={`w-8 h-8 cursor-pointer ${
+                      (hover || rating) >= starValue ? "text-yellow-500" : "text-gray-300"
+                    }`}
+                    onMouseEnter={() => setHover(starValue)}
+                    onMouseLeave={() => setHover(0)}
+                    onClick={() => setRating(starValue)}
+                    fill={(hover || rating) >= starValue ? "#FACC15" : "none"}
+                  />
+                );
+              })}
+            </div>
           </div>
-        </form>
-    </div> 
+
+          <div>
+            <label className="block font-medium mb-1">Area for Improvement</label>
+            <input
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
+              placeholder="What could we improve?"
+              className="input input-bordered border border-gray-300 rounded-md h-10 w-full p-2"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1">Your Comment</label>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Share your experience..."
+              className='input input-bordered border border-gray-300 rounded-md h-20 w-full p-2'
+              required
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-2 mt-6">
+          <button
+            type="submit"
+            className="flex-1 bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-300 h-12"
+          >
+            Submit Rating
+          </button>
+          <button
+            type="button"
+            className="flex-1 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
-export default GroomingRating
+export default GroomingRating;

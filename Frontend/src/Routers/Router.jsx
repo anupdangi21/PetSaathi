@@ -27,6 +27,9 @@ import AdoptionNotification from "../Notifications/adoptionNotification"
 import GroomingNotification from "../Notifications/groomingNotification"
 import TrainingNotification from "../Notifications/trainingNotification"
 import HostelNotification from "../Notifications/hostelNotification"
+import GroomingRatingNotification from "../Notifications/groomingRatingNotification"
+import HostelRatingNotification from "../Notifications/hostelRatingNotification"
+import TrainingRatingNotification from "../Notifications/trainingRatingNotification"
 import AddService from "../admin/addService";
 import PetGroom from "../admin/petGroom"
 import Addhostel from "../admin/addHostel"
@@ -175,6 +178,30 @@ function AppRouter() {
       element:(
         <PrivateRouter>
            <HostelNotification />
+        </PrivateRouter>
+      )
+    },
+    {
+      path:"/dashboard/notification/groomingratingnotification",
+      element:(
+        <PrivateRouter>
+           <GroomingRatingNotification />
+        </PrivateRouter>
+      )
+    },
+    {
+      path:"/dashboard/notification/hostelratingnotification",
+      element:(
+        <PrivateRouter>
+           <HostelRatingNotification />
+        </PrivateRouter>
+      )
+    },
+    {
+      path:"/dashboard/notification/trainingratingnotification",
+      element:(
+        <PrivateRouter>
+           <TrainingRatingNotification />
         </PrivateRouter>
       )
     },

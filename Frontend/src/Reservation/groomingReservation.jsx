@@ -47,7 +47,7 @@ const GroomingReservation = ({ pet, onClick }) => {
       product_code: productCode,
       product_service_charge: 0,
       product_delivery_charge: 0,
-      success_url: "http://localhost:5173/services/grooming:",
+      success_url: "http://localhost:5173/services/grooming",
       failure_url: "http://localhost:5173/services/grooming",
       signed_field_names: signedFieldNames,
       signature: signature,
@@ -91,6 +91,7 @@ const GroomingReservation = ({ pet, onClick }) => {
     const formData = new FormData(e.target);
     formData.append("image", pet.Image);
     formData.append("date", date);
+    formData.append("organizationname",pet.organizationname)
     formData.append("selectedpackage", pet.serviceoffering);
     formData.append("includedservice", pet.includedOfferings);
     formData.append("price", pet.price);
@@ -105,6 +106,7 @@ const GroomingReservation = ({ pet, onClick }) => {
     const submissionData = {
         image: formData.get("image"),
         date: formData.get('date'),
+        organizationname: formData.get('organizationname'),
         selectedpackage: formData.get("selectedpackage"),
         includedservice: formData.get("includedservice"),
         price: formData.get("price"),
@@ -144,9 +146,6 @@ const GroomingReservation = ({ pet, onClick }) => {
       <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
         Get Your Service Now
       </h1>
-
-    
-
       {/* Service Details */}
       {pet && (
         <div className="bg-white shadow-lg rounded-lg p-6 mb-6">

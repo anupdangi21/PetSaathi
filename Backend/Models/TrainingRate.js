@@ -6,11 +6,27 @@ const trainingRateSchema= new mongoose.Schema({
     stars:Number,
     areaImprovement:String,
     userComment:String,
+    image:String,
+    date: String,
+    organizationname:String,
+    selectedpackage: String,
+    includedservice:String,
+    price:String,
+    Restrictions: String,
+    Duration:String,
+    SelectedTiming: String,
+    location:String,
+    fullname: String,
+    email: String,
+    ownercontact: String,
+    vendoremail:String,
+    vendorcontact:String,
     ratedAt: {
-            type: Date,
-            default: () => moment().tz("Asia/Kathmandu").toDate(), 
-            required: true
-        }
+        type: Date,
+        default: () => moment().tz("Asia/Kathmandu").toDate(), 
+        required: true
+    },
+    status:{type:String, default:"Rated", required:true},
 })
 
 const TrainingRatingModel= mongoose.model("TrainingRating", trainingRateSchema)

@@ -4,6 +4,7 @@ import moment from "moment-timezone";
 const petTrainingSchema = new mongoose.Schema({
     image:String,
     date: String,
+    organizationname:String,
     selectedpackage: String,
     includedservice:String,
     price:String,
@@ -16,6 +17,7 @@ const petTrainingSchema = new mongoose.Schema({
     ownercontact: String,
     vendoremail:String,
     vendorcontact:String,
+    days:String,
     status:{type:String, default:"Booked", required:true},
     rating:{type:String, default:"Not rated", required:true},
     bookedAt: {

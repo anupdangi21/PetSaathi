@@ -44,6 +44,7 @@ const trainingReservation = ({pet, onClick}) => {
           const formData = new FormData(e.target);
           formData.append("image", pet.Image);
           formData.append("date", date);
+          formData.append("organizationname",pet.organizationname)
           formData.append("selectedpackage", pet.serviceoffering);
           formData.append("includedservice", pet.includedOfferings);
           formData.append("price", pet.price);
@@ -56,12 +57,14 @@ const trainingReservation = ({pet, onClick}) => {
           formData.append("ownercontact", userData.user.number);
           formData.append("vendorcontact", pet.vendorcontact);
           formData.append("vendoremail", pet.vendoremail);
+          formData.append("days",pet.days)
         //   formData.append("status", pet.status);
           // payment mode baaki xa
   
           const submissionData = {
               image: formData.get("image"),
               date: formData.get('date'),
+              organizationname: formData.get('organizationname'),
               selectedpackage: formData.get("selectedpackage"),
               includedservice: formData.get("includedservice"),
               price: formData.get("price"),
@@ -74,6 +77,7 @@ const trainingReservation = ({pet, onClick}) => {
               ownercontact: formData.get("ownercontact"),
               vendorcontact: formData.get("vendorcontact"),
               vendoremail: formData.get("vendoremail"),
+              days: formData.get("days")
             //   status: formData.get("status"),
           };
       
