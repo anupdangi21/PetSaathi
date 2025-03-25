@@ -132,7 +132,7 @@ import React, { useEffect, useState } from "react";
                      Status: {adoption ? adoption.status : "Loading..."}
                    </p>
    
-                   {adoption?.status === "Available" ? (
+                   {adoption?.status === "Booked" ? (
                      <button
                        onClick={() => handleApprove(adoption._id)}
                        className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"

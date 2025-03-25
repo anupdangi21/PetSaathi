@@ -19,7 +19,7 @@ const AdoptionNotification = () => {
         const adoptionData = await adoptionResponse.json();
 
         // Fetch pet listing data
-        const petListingResponse = await fetch("http://localhost:3000/petlisting");
+        const petListingResponse = await fetch("http://localhost:3000/petlisting/status");
         if (!petListingResponse.ok) throw new Error("Failed to fetch pet listing data");
         const petListingData = await petListingResponse.json();
         setAdoptions(adoptionData.data || []);
@@ -59,24 +59,23 @@ const AdoptionNotification = () => {
 
     try {
       // Update pet status in petlisting API
-      const response = await fetch(`http://localhost:3000/petlisting/${petId}`, {
+      const response = await fetch(`http://localhost:3000/petlisting/status/${petId}`, {  // Correct endpoint
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Booked" }),
+        body: JSON.stringify({ status: "Confirmed" }),
       });
-
+  
       if (!response.ok) throw new Error("Failed to update pet status");
-
-      // Update pet status in UI
+      
       setPetListings((prevPets) =>
         prevPets.map((pet) =>
-          pet._id === petId ? { ...pet, status: "Booked" } : pet
+          pet._id === petId ? { ...pet, status: "Confirmed" } : pet
         )
       );
 
       Swal.fire({
         title: "Updated!",
-        text: "The pet status has been updated to 'Booked'.",
+        text: "The pet status has been updated to 'Confirmed'.",
         icon: "success",
       });
     } catch (err) {
@@ -110,12 +109,11 @@ const AdoptionNotification = () => {
           </h2>
           <div className="flex">
           {filteredAdoptions.map((adoption) => {
-            console.log("petListings Data:", petListings);
-
-            const petFromListing = petListings.find(
-              (pet) => pet.email === userData.user.email
-            );
-                        return (
+        const petFromListing = petListings.find(
+          (pet) => pet._id === adoption.petId || pet.email === userData.user.email
+        );
+        console.log("petFromListing for adoption:sambhavi", adoption.petId, petFromListing);
+              return (
               <div key={adoption._id} className="bg-white shadow-md rounded-lg p-4 w-80 mt-4 ml-4">
                 <img
                   src={`http://localhost:3000/${adoption.image}`}
@@ -128,13 +126,13 @@ const AdoptionNotification = () => {
                 <p className="text-gray-600 mt-2">Contact: {adoption.ownercontact}</p>
 
                 <p className="text-gray-600 mt-2">
-                  Status: {petFromListing ? petFromListing.status : "Loading..."}
+                Status: {petFromListing ? petFromListing.status : "Loading..."}
                 </p>
-
                 {petFromListing?.status === "Available" ? (
                   <button
-                    onClick={() => handleApprove(petFromListing._id)}
-                    className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+                  onClick={() => handleApprove(petFromListing._id)}
+                  className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+
                   >
                     Approve
                   </button>

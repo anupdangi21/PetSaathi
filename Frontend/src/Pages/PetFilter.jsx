@@ -71,7 +71,7 @@ const PetFilter = ({ pets }) => {
                 <img 
                   src={`http://localhost:3000/${pet.Image}`} 
                   alt={pet.Category} 
-                  className="w-full h-48 object-cover mb-4 rounded-lg"
+                  className="w-full h-64 object-cover mb-4 rounded-lg"
                 />
               )}
               <h3 className="text-xl font-semibold mb-2 capitalize">Category: {pet.Category}</h3>

@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+import moment from "moment-timezone";
+
 
 const petHostelSchema = new mongoose.Schema({
     fullname: String,
@@ -19,7 +21,12 @@ const petHostelSchema = new mongoose.Schema({
     petpickup:String,
     petdropoff:String,
     status:{type:String, default:"Booked", required:true},
-    rating:{type:String, default:"Not rated", required:true}
+    rating:{type:String, default:"Not rated", required:true},
+    bookedAt: {
+            type: Date,
+            default: () => moment().tz("Asia/Kathmandu").toDate(), 
+            required: true
+        }
 })
 
 const petHostelModel = mongoose.model("PetHostelBooks", petHostelSchema)

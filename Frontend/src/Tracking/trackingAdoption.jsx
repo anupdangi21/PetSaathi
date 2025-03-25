@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import moment from 'moment-timezone';
 
 const TrackingAdoption = ({ userEmail }) => {
   const [adoptions, setAdoptions] = useState([]);
@@ -19,7 +20,7 @@ const TrackingAdoption = ({ userEmail }) => {
           adoption.email === userEmail
         );
         
-        setAdoptions(filteredAdoptions);
+        setAdoptions(filteredAdoptions.reverse());
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -104,7 +105,6 @@ const TrackingAdoption = ({ userEmail }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
           {adoptions.map(adoption => (
             <div key={adoption._id} className="bg-orange-50 p-6 rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold">Adoption Request</h3>
               <img
                 src={`http://localhost:3000/${adoption.image}`}
                 alt={adoption.petname}
@@ -115,11 +115,12 @@ const TrackingAdoption = ({ userEmail }) => {
               <p className="mt-1">Vendor Email: {adoption.vendoremail}</p>
               <p className="mt-1">
                 Status:
-                <span className={`ml-2 px-2 py-1 rounded ${adoption.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                <span className={`ml-2 px-2 py-1 rounded ${adoption.status === 'Booked' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                   {adoption.status}
                 </span>
               </p>
-              {adoption.status === 'Available' && (
+              <p className="mt-1">Booked Date: {moment(adoption.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p>
+              {adoption.status === 'Booked' && (
                 <div className="flex gap-3 mt-3">
                   <button
                     onClick={() => handleConfirm(adoption._id)}

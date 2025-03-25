@@ -89,7 +89,7 @@ const RegisterForm = () => {
 
           <div className="relative mt-2">
           <label className="block text-gray-700 text-sm font-bold mb-2">
-            Enter your username
+            Set your password
             </label>
             <input
               type="password"

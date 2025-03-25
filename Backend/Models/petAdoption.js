@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import moment from "moment-timezone";
 
 const petAdoptSchema = new mongoose.Schema({
     image: String,
@@ -13,7 +14,12 @@ const petAdoptSchema = new mongoose.Schema({
     date: String,
     firstPet:String,
     enoughSpace:String,
-    status:String
+    status:{type:String, default:"Booked", required:true},
+    bookedAt: {
+            type: Date,
+            default: () => moment().tz("Asia/Kathmandu").toDate(), 
+            required: true
+        }
 
 
 })

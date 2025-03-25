@@ -5,15 +5,15 @@
  
  const AddpetGroom = async (req, res)=>{
      try {
-         // console.log("aako groom data", req.body)
-         const {image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status}=req.body;
+        //  console.log("aako groom data", req.body)
+         const {image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt,paymentStatus}=req.body;
          if(!date ){
              return res.status(400).json({message:"please select date for booking an appointment for getting the pet"})
          }
          const petgroom = new PetGroomingModel({
-             image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status
+             image,date, selectedpackage , includedservice,price,location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt,paymentStatus
          })
-         // console.log("save hune data",petgroom)
+        //  console.log("save hune data",petgroom)
          await petgroom.save()
  
  
@@ -47,6 +47,7 @@
                  
                  Thank you for choosing our services.`
              };
+             res.status(200).json({ success: true, message: "Service Booked successfully"});
  
  await transporter.sendMail(mailOptionsVendor);
      } catch (error) {
@@ -85,7 +86,7 @@
  
          pet.status = "Completed";
          await pet.save();
- 
+         
  
          return res.status(200).json({ success: true, message: "Pet status updated", pet });
  

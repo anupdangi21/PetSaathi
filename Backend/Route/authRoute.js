@@ -14,9 +14,12 @@ import Groom from "../Controllers/addGrooming.js"
 import petGrooming from "../Controllers/petGrooming.js"
 import petTrain from "../Controllers/petTraining.js"
 import petHosteling from "../Controllers/petHostel.js"
+import groomRating from "../Controllers/groomingRating.js"
+import trainRating from "../Controllers/trainingRating.js"
+import hostelRating from "../Controllers/hostelRating.js"
 
 const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
-const {petList, getPetlist, updatePet, deletePet,changeStatus}= petController;
+const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
 const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
 const {petOwner, getpetOwner}=petOwn;
@@ -28,6 +31,10 @@ const {petGroom,getpetGroom, updatepetGroom,deletepetGroom}=Groom;
 const {AddpetGroom, AddgetpetGroom,AddgetpetGroomUser,updateGroomStatus,cancelGrooming,updateGroomingRateStatus}=petGrooming;
 const {AddpetTrain, AddgetpetTrain,AddgetpetTrainUser,updateTrainStatus,updateTrainingRateStatus,cancelTraining} = petTrain
 const {bookHostel, getHostelBook,getHostelBookUser,updateHostelStatus,updateRateStatus,cancelHostelBook}= petHosteling;
+const {groomRate, getgroomRating}=groomRating
+const {trainingRate, getrainingRate}=trainRating
+const {hostelRate, gethostelRate}=hostelRating
+
 //routes for posting the data and getting the data
 const authRouter = express.Router();
 authRouter.post("/register", register);
@@ -45,8 +52,9 @@ authRouter.post("/reset-password", resetPassword);
 // authRouter.post("/logout", logout);
 authRouter.post("/petlisting",upload.single("Image"), petList)
 authRouter.get("/petlisting", getPetlist)
+authRouter.get("/petlisting/status", getPetliststatus)
 authRouter.put("/petlisting/:id", upload.single("Image"), updatePet);
-authRouter.put("/petlisting/:id/status",changeStatus)
+authRouter.put("/petlisting/status/:id", changeStatus)
 authRouter.delete("/petlisting/:_id", deletePet);
 
 //router for posting the found pet
@@ -62,7 +70,7 @@ authRouter.get("/lostpet", getLostPetData)
 //router for posting the data of the pet adoption and getting the data
 authRouter.post("/adoption", petAdopt)
 authRouter.get("/adoption", getpetAdopt)
-authRouter.put("/adoption/:id",updateAdoptionStatus)
+authRouter.put("/adoption/:id",upload.single("Image"),updateAdoptionStatus)
 authRouter.delete ("/adoption/:id",cancelAdoption)
 
 // router for posting the pet hostel and update delete
@@ -106,6 +114,15 @@ authRouter.get("/bookhostel/user", getHostelBookUser)
 authRouter.put("/bookhostel/user/:id",upload.single("Image"), updateRateStatus)
 authRouter.put("/bookhostel/:id",upload.single("Image"), updateHostelStatus)
 authRouter.delete("/bookhostel/:id", cancelHostelBook) 
+
+//router for saving the services review
+authRouter.post("/groomingreview",upload.single("Image"),groomRate)
+authRouter.post("/trainingreview",upload.single("Image"),trainingRate)
+authRouter.post("/hostelreview",upload.single("Image"),hostelRate)
+//router for getting the services review
+authRouter.get("/groomingreview",getgroomRating)
+authRouter.get("/trainingreview",getrainingRate)
+authRouter.get("/hostelreview",gethostelRate)
 
 //router for posting the new services 
 authRouter.post("/addservice", addService)

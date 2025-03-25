@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import GroomingRating from "../Rating/groomingRating"
 
 const trackingGrooming = ({userEmail}) => {
       const [grooming, setGrooming] = useState([]);
       const [groomingLoading, setGroomingLoading] = useState(true);
       const [groomingError, setGroomingError] = useState(null);
+        const [showRatingModal, setShowRatingModal] = useState(false);
+        const [selectedGroomingId, setSelectedGroomingId] = useState(null);
 
       useEffect(() => {
           const fetchGroom = async () => {
@@ -19,7 +22,7 @@ const trackingGrooming = ({userEmail}) => {
                 grooming.email === userEmail
               );
               
-              setGrooming(filteredGrooming);
+              setGrooming(filteredGrooming.reverse());
               setGroomingError(null);
             } catch (err) {
               setGroomingError(err.message);
@@ -31,39 +34,6 @@ const trackingGrooming = ({userEmail}) => {
       
           if (userEmail) fetchGroom();
         }, [userEmail]);
-      
-        // Handle confirm adoption
-        const handleGroomingConfirm = async (groomingId) => {
-          const result = await Swal.fire({
-            title: "Confirm Adoption",
-            text: "Are you sure you want to confirm this service?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, Confirm"
-          });
-      
-          if (result.isConfirmed) {
-            try {
-              const response = await fetch(`http://localhost:3000/bookgroom/user/${groomingId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ rating: 'Rated' })
-              });
-      
-              if (!response.ok) throw new Error('Confirmation failed');
-      
-              setGrooming(prev => prev.map(grooming => 
-                grooming._id === grooming ? { ...grooming, rating: 'Rated' } : grooming
-              ));
-      
-              Swal.fire("Confirmed!", "Grooming service has been confirmed.", "success");
-            } catch (err) {
-              Swal.fire("Error!", err.message, "error");
-            }
-          }
-        };
       
         // Handle cancel adoption
         const handleGroomingCancel = async (groomingId) => {
@@ -94,9 +64,38 @@ const trackingGrooming = ({userEmail}) => {
             }
           }
         };
+
+         const handleRatingSubmit = async (ratingData) => {
+            try {
+              const response = await fetch(`http://localhost:3000/bookgroom/user/${selectedGroomingId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  rating: 'Rated',
+                  stars: ratingData.rating,
+                  areaImprovement: ratingData.area,
+                  userComment: ratingData.comment
+                })
+              });
+        
+              if (!response.ok) throw new Error('Failed to submit rating');
+        
+              setGrooming(prev => prev.map(grooming => 
+                grooming._id === selectedGroomingId 
+                  ? { ...grooming, rating: 'Rated' } 
+                  : grooming
+              ));
+        
+              setShowRatingModal(false);
+              Swal.fire("Success!", "Rating submitted successfully.", "success");
+            } catch (err) {
+              Swal.fire("Error!", err.message, "error");
+            }
+          };
+
   return (
     <div className="bg-orange-100 p-6 rounded-lg shadow-md flex-1">
-    <h2 className="text-xl font-semibold mb-4">Adoption Requests</h2>
+    <h2 className="text-xl font-semibold mb-4">Grooming Requests</h2>
     {groomingLoading ? (
       <p>Loading grooming records...</p>
     ) : groomingError ? (
@@ -105,7 +104,6 @@ const trackingGrooming = ({userEmail}) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
         {grooming.map(grooming => (
             <div key={grooming._id} className="bg-orange-50 p-6 rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold">Grooming Request</h3>
               <img
                 src={`http://localhost:3000/${grooming.image}`}
                 alt={grooming.petname}
@@ -129,7 +127,10 @@ const trackingGrooming = ({userEmail}) => {
               {grooming.rating === 'Not rated' && (
                 <div className="flex gap-3 mt-3">
                   <button
-                    onClick={() => handleGroomingConfirm(grooming._id)}
+                    onClick={() => {
+                      setSelectedGroomingId(grooming._id);
+                      setShowRatingModal(true);
+                    }}
                     className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
                     Rate
@@ -147,6 +148,18 @@ const trackingGrooming = ({userEmail}) => {
         {grooming.length === 0 && !groomingLoading && <p>Service records not found.</p>}
       </div>
     )}
+
+    {/* Rating Modal */}
+    {showRatingModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <GroomingRating
+              onClose={() => setShowRatingModal(false)}
+              onSubmit={handleRatingSubmit}
+            />
+          </div>
+        </div>
+      )}
   </div>
 );
 };

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import HostelRating from "../Rating/hostelRating"
 
 const trackingHostel = ({userEmail}) => {
     const [hostel, setHostel] = useState([]);
       const [hostelLoading, setHostelLoading] = useState(true);
       const [hostelError, setHostelError] = useState(null);
+        const [showRatingModal, setShowRatingModal] = useState(false);
+        const [selectedHostelId, setselectedHostelId] = useState(null);
 
        // fetch hostel booked data
         useEffect(() => {
@@ -20,7 +23,7 @@ const trackingHostel = ({userEmail}) => {
                 hostel.email === userEmail
               );
               
-              setHostel(filteredHostel);
+              setHostel(filteredHostel.reverse());
               setHostelError(null);
             } catch (err) {
               setHostelError(err.message);
@@ -32,39 +35,35 @@ const trackingHostel = ({userEmail}) => {
       
           if (userEmail) fetchHostel();
         }, [userEmail]);
+
+      const handleRatingSubmit = async (ratingData) => {
+          try {
+            const response = await fetch(`http://localhost:3000/bookhostel/user/${selectedHostelId}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                rating: 'Rated',
+                stars: ratingData.rating,
+                areaImprovement: ratingData.area,
+                userComment: ratingData.comment
+              })
+            });
       
-        // Handle confirm adoption
-        const handleHostelConfirm = async (hostelId) => {
-          const result = await Swal.fire({
-            title: "Confirm Adoption",
-            text: "Are you sure you want to confirm this adoption?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, Confirm"
-          });
+            if (!response.ok) throw new Error('Failed to submit rating');
       
-          if (result.isConfirmed) {
-            try {
-              const response = await fetch(`http://localhost:3000/bookhostel/user/${hostelId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ rating: 'Rated' })
-              });
+            setHostel(prev => prev.map(hostel => 
+              hostel._id === selectedHostelId 
+                ? { ...hostel, rating: 'Rated' } 
+                : hostel
+            ));
       
-              if (!response.ok) throw new Error('Confirmation failed');
-      
-              setHostel(prev => prev.map(hostel => 
-                hostel._id === hostel ? { ...hostel, rating: 'Rated' } : hostel
-              ));
-      
-              Swal.fire("Confirmed!", "Hostel Service has been rated.", "success");
-            } catch (err) {
-              Swal.fire("Error!", err.message, "error");
-            }
+            setShowRatingModal(false);
+            Swal.fire("Success!", "Rating submitted successfully.", "success");
+          } catch (err) {
+            Swal.fire("Error!", err.message, "error");
           }
         };
+        
       
         // Handle cancel adoption
         const handleHostelCancel = async (hostelId) => {
@@ -131,7 +130,10 @@ const trackingHostel = ({userEmail}) => {
               {hostel.rating === 'Not rated' && (
                 <div className="flex gap-3 mt-3">
                   <button
-                    onClick={() => handleHostelConfirm(hostel._id)}
+                    onClick={() => {
+                      setselectedHostelId(hostel._id);
+                      setShowRatingModal(true);
+                    }}
                     className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
                     Rate
@@ -147,6 +149,17 @@ const trackingHostel = ({userEmail}) => {
             </div>
           ))}
           {hostel.length === 0 && !hostelLoading && <p>Service records not found.</p>}
+        </div>
+      )}
+
+      {showRatingModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <HostelRating
+              onClose={() => setShowRatingModal(false)}
+              onSubmit={handleRatingSubmit}
+            />
+          </div>
         </div>
       )}
     </div>

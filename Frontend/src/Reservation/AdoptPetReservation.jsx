@@ -74,7 +74,7 @@ const AdoptPetReservation = () => {
         formData.append("ownercontact", userData.user.number);
         formData.append("vendorcontact", selectedPet.vendorcontact);
         formData.append("vendoremail", selectedPet.email);
-        formData.append("status", selectedPet.status);
+        // formData.append("status", selectedPet.status);
         const submissionData = {
             image:formData.get("image"),
             date: formData.get('date'),
@@ -88,7 +88,7 @@ const AdoptPetReservation = () => {
             ownercontact: formData.get("ownercontact"),
             vendorcontact: formData.get("vendorcontact"),
             vendoremail: formData.get("vendoremail"),
-            status: formData.get("status"),
+            // status: formData.get("status"),
         };
 
         console.log('Submission data:', submissionData);

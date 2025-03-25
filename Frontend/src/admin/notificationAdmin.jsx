@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Aside from "../Components/aside.jsx"
 import { Navigate, useNavigate } from 'react-router-dom';
+import moment from 'moment-timezone';
 
 const NotificationAdmin = () => {
   const navigate = useNavigate()
@@ -227,25 +228,29 @@ const NotificationAdmin = () => {
         <Aside />
       </aside>
       <main className="ml-60">
-        <div className="w-full md:w-[1200px] mx-auto bg-white rounded-lg shadow-lg min-h-screen">
+        <div className="w-full md:w-[1250px] mx-auto bg-white rounded-lg shadow-lg min-h-screen">
           <h2 className="text-2xl font-semibold text-gray-800 pt-10 pl-4">
             Your All Notifications are displayed below
           </h2>
 
           {adoptions && adoptions.length > 0 ? (
             adoptions.map((adoption, index) => (
-              <div key={adoption._id || index} className="rounded-lg bg-zinc-100 mt-4 ml-4 p-4">
-                <h2 className="font-bold">Notification for {adoption.petname}</h2>
-                
-                <p className="mt-4">
+              <div key={adoption._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+              <div className='flex justify-between items-center'>
+                <h2 className="font-bold">Notification for {adoption.petname} adoption</h2>
+                <p className='text-sm'>
+                    {moment(adoption.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+                  </p>
+              </div>               
+                <p className="mt-2.5">
                   Hello vendor, {adoption.fullname} has just viewed your adoption post for{" "}
                   {adoption.petname} and is interested in adopting your pet. The booked date to
                   visit your store is {adoption.date}.
                 </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-4 '
+                <button className=' bg-white justify-end w-24 h-8 mt-2 '
                   onClick= {viewAdoption}
                 >
-                  view all
+                  View Details
                 </button>
               </div>
             ))
@@ -256,18 +261,22 @@ const NotificationAdmin = () => {
         {/* grooming ko notification */}
           {grooming && grooming.length > 0 ? (
             grooming.map((grooming, index) => (
-              <div key={grooming._id || index} className="rounded-lg bg-zinc-100 mt-4 ml-4 p-4">
-                <h2 className="font-bold">Notification for grooming</h2>
-                
-                <p className="mt-4">
+              <div key={grooming._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+              <div className='flex justify-between items-center'>
+                <h2 className="font-bold">Notification for grooming request</h2>
+                <p className='text-sm'>
+                    {moment(grooming.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+                  </p>
+              </div>
+                <p className="mt-2.5">
                   Hello vendor, {grooming.fullname} has just viewed your pet grooming service for package type {grooming.selectedpackage}
                   {grooming.petname} and booked the service. The booked date to
                   check-in is: {grooming.date}.
                 </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-4 '
+                <button className=' bg-white justify-end w-24 h-10 mt-2 '
                   onClick= {viewGrooming}
                 >
-                  view all
+                  View Details
                 </button>
               </div>
             ))
@@ -278,18 +287,23 @@ const NotificationAdmin = () => {
           {/* training ko notification */}
           {training && training.length > 0 ? (
             training.map((training, index) => (
-              <div key={training._id || index} className="rounded-lg bg-zinc-100 mt-4 ml-4 p-4">
-                <h2 className="font-bold">Notification for Training</h2>
+              <div key={training._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+                <div className='flex justify-between items-center'>
+                  <h2 className="font-bold">Notification for training request</h2>
+                  <p className='text-sm'>
+                    {moment(training.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+                  </p>
+                </div>
                 
-                <p className="mt-4">
+                <p className="mt-2.5">
                   Hello vendor, {training.fullname} has just viewed your pet traning service for package type {training.selectedpackage}
                   {training.petname} and booked the service. The booked date to
                   check-in is: {training.date}.
                 </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-4 '
+                <button className=' bg-white justify-end w-24 h-10 mt-2 '
                   onClick= {viewTraining}
                 >
-                  view all
+                  View Details
                 </button>
               </div>
             ))
@@ -300,18 +314,22 @@ const NotificationAdmin = () => {
           {/* hostel ko notification */}
           {hostel && hostel.length > 0 ? (
             hostel.map((hostel, index) => (
-              <div key={hostel._id || index} className="rounded-lg bg-zinc-100 mt-4 ml-4 p-4">
-                <h2 className="font-bold">Notification for Hostel</h2>
-                
-                <p className="mt-4">
+              <div key={hostel._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+              <div className='flex justify-between items-center'>
+                <h2 className="font-bold">Notification for hostel request</h2>
+                <p className='text-sm'>
+                    {moment(hostel.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+                  </p>
+              </div>                
+                <p className="mt-2.5">
                   Hello vendor, {hostel.fullname} has just viewed your pet hostel service for package type {hostel.selectedpackage}
                   {hostel.petname} and booked the service. The booked date to
                   check-in is: {hostel.date}.
                 </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-4 '
+                <button className=' bg-white justify-end w-24 h-10 mt-2 '
                   onClick= {viewHostel}
                 >
-                  view all
+                  View Details
                 </button>
               </div>
             ))

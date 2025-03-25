@@ -48,7 +48,7 @@ function Adoption() {
 
 
                 const filteredPets = result.data.filter(pet => 
-                    pet.status !== "Booked" && (!userEmail || pet.email !== userEmail)
+                    pet.status !== "Confirmed" && (!userEmail || pet.email !== userEmail)
                 );
 
                 setPets(filteredPets.reverse());

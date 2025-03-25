@@ -1,45 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { Star } from "lucide-react";
 
-const hostelRating = () => {
-    const [hostel, setHostel] = useState([]);
+const hostelRating = ({onClose, onSubmit}) => {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [area, setArea] = useState("");
+  const [comment, setComment] = useState("");
 
-    const handleHostelConfirm = async (hostelId) => {
-              const result = await Swal.fire({
-                title: "Confirm Adoption",
-                text: "Are you sure you want to confirm this adoption?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, Confirm"
-              });
-          
-              if (result.isConfirmed) {
-                try {
-                  const response = await fetch(`http://localhost:3000/bookhostel/user/${hostelId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ rating: 'Rated' })
-                  });
-          
-                  if (!response.ok) throw new Error('Confirmation failed');
-          
-                  setHostel(prev => prev.map(hostel => 
-                    hostel._id === hostel ? { ...hostel, rating: 'Rated' } : hostel
-                  ));
-          
-                  Swal.fire("Confirmed!", "Hostel Service has been rated.", "success");
-                } catch (err) {
-                  Swal.fire("Error!", err.message, "error");
-                }
-              }
-            };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({
+      rating,
+      area,
+      comment
+    });
+  };
+
   return (
-    <div>
-      
-    </div>
-  )
-}
+ <div className="max-w-md mx-auto p-6 space-y-4 shadow-md">
+        <form onSubmit={handleSubmit}>
+          <h2 className="text-xl font-semibold">Rate Your Experience</h2>
+          <div className="flex space-x-1 my-3">
+            {[...Array(5)].map((_, index) => {
+              const starValue = index + 1;
+              return (
+                <Star
+                  key={index}
+                  className={`w-8 h-8 cursor-pointer ${
+                    (hover || rating) >= starValue ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                  onMouseEnter={() => setHover(starValue)}
+                  onMouseLeave={() => setHover(0)}
+                  onClick={() => setRating(starValue)}
+                  fill={(hover || rating) >= starValue ? "#FACC15" : "none"}
+                />
+              );
+            })}
+          </div>
+          <label className="block font-medium">Area for Improvement</label>
+          <input
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
+            placeholder="Enter area for improvement"
+            className="mb-3 input input-bordered border border-gray-300 rounded-md h-10 w-80"
+            required
+          />
+          <label className="block font-medium">User Comment</label>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Enter your comment"
+            className='mb-3 input input-bordered border border-gray-300 rounded-md h-20 w-64'
+            required
+          />
+          <div className="flex gap-2 mt-4">
+            <button type="submit" className="flex-1 bg-blue-500 hover:bg-blue-600">
+              Submit
+            </button>
+            <button
+              type="button"
+              variant="outline"
+              className="flex-1"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+    </div> 
+  );
+};
 
 export default hostelRating

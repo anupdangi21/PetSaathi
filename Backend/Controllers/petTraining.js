@@ -5,17 +5,17 @@ import transporter from '../nodeMailer.js';
 
 const AddpetTrain = async (req, res)=>{
     try {
-        console.log("aako train data", req.body)
-        const {image,date,days, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,vendoremail,status}=req.body;
+        // console.log("aako train data", req.body)
+        const {image,date,days, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt}=req.body;
         if(!date ){
             return res.status(400).json({message:"please select date for booking an appointment for getting the pet"})
         }
         
         const pethostel = new PetTrainingModel({
-            image,date,days, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming,location,fullname,email,ownercontact,vendorcontact,vendoremail,status
+            image,date,days, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming,location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt
         })
-        console.log("save hune data",pethostel)
-        // await pethostel.save()
+        // console.log("save hune data",pethostel)
+        await pethostel.save()
 
 
         const mailOptionsUser = {

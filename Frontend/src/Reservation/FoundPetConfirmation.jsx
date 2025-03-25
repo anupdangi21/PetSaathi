@@ -113,7 +113,7 @@ const FoundPetConfirmation = ({ pet, onClick }) => {
                   <ul className="mt-2 space-y-2">
                     <li><span className="font-medium">Username:</span> {pet.username}</li>
                     <li><span className="font-medium">Email:</span> {pet.email}</li>
-                    <li><span className="font-medium">Contact Number:</span> {pet.findercontact}</li>
+                    {/* //<li><span className="font-medium">Contact Number:</span> {pet.findercontact}</li> */}
                   </ul>
                 </div>
         <h2 className="text-xl font-bold text-gray-800 mt-2">{pet.Category}</h2>
