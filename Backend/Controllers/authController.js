@@ -78,6 +78,101 @@ const registerGetData = async (req, res) => {
     }
 }
 
+//updating the registered user data
+
+const updateRegisterData = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { username, number, password } = req.body;
+  
+      // Input validation
+      if (!username && !number && !password) {
+        return res.status(400).json({
+          success: false,
+          message: "No fields provided for update"
+        });
+      }
+  
+      const user = await registerModel.findById(id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found"
+        });
+      }
+  
+      // Update fields
+      if (username) {
+        if (username.length < 3) {
+          return res.status(400).json({
+            success: false,
+            message: "Username must be at least 3 characters"
+          });
+        }
+        user.username = username;
+      }
+  
+      if (number) {
+        if(number.length<9){
+            return res.status(400).json({
+                success:false,
+                message:"number must be 10 digits"
+            })
+        }
+        user.number = number;
+    }
+  
+      if (password) {
+        if (password.length < 4) {
+          return res.status(400).json({
+            success: false,
+            message: "Password must be at least 4 characters"
+          });
+        }
+        user.password = await bcrypt.hash(password, 10);
+      }
+  
+      const updatedUser = await user.save();
+  
+      // Generate new token
+      const newToken = jwt.sign(
+        {
+          id: updatedUser._id,
+          username: updatedUser.username,
+          email: updatedUser.email,
+          number: updatedUser.number
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+      );
+  
+      // Set cookie and response
+      res.cookie("token", newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000
+      });
+  
+      res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
+        token: newToken,
+        user: {
+          _id: updatedUser._id,
+          username: updatedUser.username,
+          email: updatedUser.email,
+          number: updatedUser.number
+        }
+      });
+  
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message
+      });
+    }
+  };
 
 // Vendor registration
  const vendorRegister = async (req, res) => {
@@ -227,82 +322,6 @@ const signin = async (req, res) => {
         
     }
 }
-// sending the verification otp
-const sendVerifyOtp = async (req, res) => {
-    try {
-        console.log("Request Body:", req.body); // Log request body for debugging
-
-        const { userId } = req.body;
-
-        if (!userId) {
-            return res.status(400).json({ success: false, message: "UserId is required" });
-        }
-
-        // Find user by ID
-        const user = await vendorregisterModel.findById( userId);
-        if (!user) {
-            return res.status(404).json({ success: false, message: "User not found" });
-        }
-
-        // Check if account is already verified
-        if (user.isAccountVerified) {
-            return res.json({ success: false, message: "Account is already verified" });
-        }
-
-        // Generate OTP
-        const otp = String(Math.floor(100000 + Math.random() * 900000));
-        user.verifyOtp = otp;
-        user.verifyOtpExpireAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 1 hour expiry
-        await user.save();
-
-        // Send OTP email
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL,
-            to: user.email,
-            subject: "Account verification OTP",
-            text: `Dear vendor, your OTP is ${otp}. Please verify your account within 1 hour.`,
-        };
-        await transporter.sendMail(mailOptions);
-
-        return res.json({ success: true, message: "OTP sent to your email" });
-    } catch (error) {
-        console.error("Error:", error.message); // Log error for debugging
-        return res.status(500).json({ message: error.message });
-    }
-};
-
-
-const verifyEmail = async (req, res)=>{
-    const { userId, otp } = req.body;
-
-    if(!userId || !otp){
-        return res.json({success: false, message: "Missing email and OTP"})
-    }
-    try {
-        const user = await vendorregisterModel.findById(userId);
-        if(!user){
-            return res.json({success: false, message: "Missing email and OTP"})
-
-        }
-        if(user.verifyOtp === '' || user.verifyOtp!==otp){
-            return res.json({success: false, message: "invalid OTP"})
-
-        }
-        if(user.verifyOtpExipreAt < Date.now()){
-            return res.json({success: false, message: "OTP expired"})
-
-        }
-        user.isAccountVerified = true;
-        user.verifyOtp = '';
-        user.verifyOtpExipreAt = 0;
-        await user.save()
-        return res.json({success: true, message: "Email verified successfully"})
-
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
-}
-
 const isAuthenticated = async(req, res)=>{
     try {
         return res.json({success: true})
@@ -373,4 +392,4 @@ const resetPassword = async (req, res)=>{
         return res.status(500).json({ message: error.message });
     }
 }
-export default { register,registerGetData, vendorRegister, VendorregisterGetData, signin, logout ,sendVerifyOtp , verifyEmail, isAuthenticated, sendResetOtp, resetPassword };
+export default { register,registerGetData,updateRegisterData, vendorRegister, VendorregisterGetData, signin, logout, isAuthenticated, sendResetOtp, resetPassword };

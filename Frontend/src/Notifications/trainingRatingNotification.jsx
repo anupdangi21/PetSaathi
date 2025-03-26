@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment-timezone"
 import Aside from "../Components/aside.jsx"
+import Swal from "sweetalert2";
 
 const trainingRatingNotification = () => {
            const [adoptions, setAdoptions] = useState([]);
@@ -42,40 +43,45 @@ const trainingRatingNotification = () => {
                    (adoption) => adoption.vendoremail === userData.user.email
                  );
                
-                 const handleApprove = async (petId) => {
-                   const result = await Swal.fire({
-                     title: "Are you sure?",
-                     text: "Do you want to approve this grooming service?",
-                     icon: "warning",
-                     showCancelButton: true,
-                     confirmButtonColor: "#3085d6",
-                     cancelButtonColor: "#d33",
-                     confirmButtonText: "Yes, approve!",
-                     cancelButtonText: "No, cancel",
-                   });
-               
-                   if (!result.isConfirmed) return;
-               
-                   try {
-                     // Update pet status in petlisting API
-                     const response = await fetch(`http://localhost:3000/bookgroom/${petId}`, {
-                       method: "PUT",
-                       headers: { "Content-Type": "application/json" },
-                       body: JSON.stringify({ status: "Completed" }),
-                     });
+                 const handleApprove = async (petId, fullname, email, vendoremail, organizationname) => {
+                  const result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "Do you want to approve this grooming service?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, approve!",
+                    cancelButtonText: "No, cancel",
+                  });
+                
+                  if (!result.isConfirmed) return;
+                
+                  try {
+                    // Update pet status in petlisting API
+                    const response = await fetch(`http://localhost:3000/trainingreview/${petId}`, {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ 
+                        status: "Rated, read by vendor",
+                        fullname,
+                        email,
+                        vendoremail,
+                        organizationname 
+                      }),
+                    });
                
                      if (!response.ok) throw new Error("Failed to update pet status");
-               
                      // Update pet status in UI
                      setPetListings((prevPets) =>
                        prevPets.map((pet) =>
-                         pet._id === petId ? { ...pet, status: "Completed" } : pet
+                         pet._id === petId ? { ...pet, status: "Rated, read by vendor" } : pet
                        )
                      );
                
                      Swal.fire({
                        title: "Updated!",
-                       text: "The pet status has been updated to 'Completed'.",
+                       text: "The pet rating status has been updated to 'Rated, read by vendor'.",
                        icon: "success",
                      });
                    } catch (err) {
@@ -126,14 +132,13 @@ const trainingRatingNotification = () => {
               <p className="text-gray-600 mt-2">Stars: {adoption.stars}</p>
               <p className="text-gray-600 mt-2">AreaImprovement: {adoption.areaImprovement}</p>
               <p className="text-gray-600 mt-2">Suggestions: {adoption.userComment}</p>        
+              <p className="text-gray-600 mt-2">Rated On: {moment(adoption.ratedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p> 
               <p className="text-gray-600 mt-2">
                 Status: {adoption ? adoption.status : "Loading..."}
               </p>
-              <p className="text-gray-600 mt-2">Rated On: {moment(adoption.ratedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p> 
-
               {adoption?.status === "Rated" ? (
                 <button
-                  onClick={() => handleApprove(adoption._id)}
+                  onClick={() => handleApprove(adoption._id, adoption.fullname, adoption.email,adoption.vendoremail, adoption.organizationname)}
                   className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
                 >
                   Mark as read

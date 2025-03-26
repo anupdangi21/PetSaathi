@@ -1,5 +1,5 @@
 import express from 'express'
-import transporter from "../nodeMailer.js";
+import transporter from "../nodeMailer.js"
 import TrainingRating from "../Models/TrainingRate.js"
 
 const trainingRate = async(req,res)=>{
@@ -21,8 +21,8 @@ const trainingRate = async(req,res)=>{
          const mailOptionsUser = {
             from: process.env.SENDER_EMAIL,
             to: email, // Owner's email
-            subject: "Pet Grooming Service Rating",
-            text: `Hello ${fullname}, your rating request for grooming service from ${organizationname} has been successfully submitted. 
+            subject: "Pet Training Service Rating",
+            text: `Hello ${fullname}, your rating request for pet training service from ${organizationname} has been successfully submitted. 
 
             You have rated: ${stars} for ${areaImprovement} with comment ${userComment}
 
@@ -58,4 +58,46 @@ const getrainingRate = async(req,res)=>{
     }
 }
 
-export default {trainingRate, getrainingRate}
+const updateTrainingRating = async(req,res)=>{
+    try {
+        // console.log(req.body)
+        const { email, fullname, vendoremail, organizationname } = req.body;
+        const petId = req.params.id;
+        const pet = await TrainingRating.findById(petId)
+
+        if (!pet) {
+            return res.status(404).json({ message: "Pet not found" });
+        }
+        pet.status="Rated, read by vendor"
+        await pet.save()
+
+        
+        const mailOptionsUser = {
+             from: process.env.SENDER_EMAIL,
+             to: email, // Owner's email
+             subject: "Pet Training Service Rating Response",
+             text: `Hello ${fullname}, your rating request for grooming service from ${organizationname} has been successfully read by vendor. 
+
+            Thank you for your response.`
+         };
+
+         await transporter.sendMail(mailOptionsUser);
+
+         const mailOptionsVendor = {
+            from: process.env.SENDER_EMAIL,
+            to: vendoremail, // vendor's email
+            subject: "Pet Training Service Rating Response",
+            text: `Hello ${organizationname}, you have marked the rating response from ${fullname} to read. 
+
+            Thank you for choosing PetSaathi.`
+        };
+    await transporter.sendMail(mailOptionsVendor);
+
+         return res.status(200).json({ success: true, message: "Pet status updated", pet });
+
+    } catch (error) {
+        return res.status(400).json({status:false, message:error.message})
+    }
+}
+
+export default {trainingRate, getrainingRate,updateTrainingRating}

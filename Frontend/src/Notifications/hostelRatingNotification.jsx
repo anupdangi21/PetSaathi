@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment-timezone"
 import Aside from "../Components/aside.jsx"
+import Swal from "sweetalert2";
 
 const hostelRatingNotification = () => {
           const [adoptions, setAdoptions] = useState([]);
@@ -42,7 +43,7 @@ const hostelRatingNotification = () => {
                  (adoption) => adoption.vendoremail === userData.user.email
                );
              
-               const handleApprove = async (petId) => {
+               const handleApprove = async (petId,fullname, email, vendoremail, organizationname) => {
                  const result = await Swal.fire({
                    title: "Are you sure?",
                    text: "Do you want to approve this grooming service?",
@@ -58,10 +59,16 @@ const hostelRatingNotification = () => {
              
                  try {
                    // Update pet status in petlisting API
-                   const response = await fetch(`http://localhost:3000/bookgroom/${petId}`, {
+                   const response = await fetch(`http://localhost:3000/hostelreview/${petId}`, {
                      method: "PUT",
                      headers: { "Content-Type": "application/json" },
-                     body: JSON.stringify({ status: "Completed" }),
+                     body: JSON.stringify({
+                       status: "Rated, read by vendor",
+                       fullname,
+                       email,
+                       vendoremail,
+                       organizationname 
+                      }),
                    });
              
                    if (!response.ok) throw new Error("Failed to update pet status");
@@ -69,13 +76,13 @@ const hostelRatingNotification = () => {
                    // Update pet status in UI
                    setPetListings((prevPets) =>
                      prevPets.map((pet) =>
-                       pet._id === petId ? { ...pet, status: "Completed" } : pet
+                       pet._id === petId ? { ...pet, status: "Rated, read by vendor" } : pet
                      )
                    );
              
                    Swal.fire({
                      title: "Updated!",
-                     text: "The pet status has been updated to 'Completed'.",
+                     text: "The pet rating status has been updated to 'Rated, read by vendor'.",
                      icon: "success",
                    });
                  } catch (err) {
@@ -103,7 +110,7 @@ const hostelRatingNotification = () => {
     <main className="ml-60">
       <div className="w-full md:w-[1200px] mx-auto bg-white rounded-lg shadow-lg min-h-screen">
         <h2 className="text-2xl font-semibold text-gray-800 pt-10 pl-4">
-          Your Recent Service raters:
+          Your Recent Hostel Service raters:
         </h2>
         <div className="flex">
         {filteredAdoptions.map((adoption) => {
@@ -120,20 +127,19 @@ const hostelRatingNotification = () => {
                 className="w-96 h-64 object-cover rounded-md"
               />
               <h3 className="text-lg font-semibold mt-3">{adoption.petname}</h3>
-              <p className="text-gray-600 mt-2">Rated by: {adoption.username}</p>
+              <p className="text-gray-600 mt-2">Rated by: {adoption.fullname}</p>
               <p className="text-gray-600 mt-2">Email: {adoption.email}</p>
               <p className="text-gray-600 mt-2">Contact: {adoption.ownercontact}</p>
               <p className="text-gray-600 mt-2">Stars: {adoption.stars}</p>
               <p className="text-gray-600 mt-2">AreaImprovement: {adoption.areaImprovement}</p>
               <p className="text-gray-600 mt-2">Suggestions: {adoption.userComment}</p>        
+              <p className="text-gray-600 mt-2">Rated On: {moment(adoption.ratedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p> 
               <p className="text-gray-600 mt-2">
                 Status: {adoption ? adoption.status : "Loading..."}
               </p>
-              <p className="text-gray-600 mt-2">Rated On: {moment(adoption.ratedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p> 
-
               {adoption?.status === "Rated" ? (
                 <button
-                  onClick={() => handleApprove(adoption._id)}
+                  onClick={() => handleApprove(adoption._id,adoption.fullname, adoption.email,adoption.vendoremail, adoption.organizationname)}
                   className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
                 >
                   Mark as read

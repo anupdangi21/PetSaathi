@@ -18,7 +18,7 @@ import groomRating from "../Controllers/groomingRating.js"
 import trainRating from "../Controllers/trainingRating.js"
 import hostelRating from "../Controllers/hostelRating.js"
 
-const { register,registerGetData,VendorregisterGetData, vendorRegister, signin, sendVerifyOtp, verifyEmail,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
+const { register,registerGetData,updateRegisterData,VendorregisterGetData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
 const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
@@ -31,20 +31,19 @@ const {petGroom,getpetGroom, updatepetGroom,deletepetGroom}=Groom;
 const {AddpetGroom, AddgetpetGroom,AddgetpetGroomUser,updateGroomStatus,cancelGrooming,updateGroomingRateStatus}=petGrooming;
 const {AddpetTrain, AddgetpetTrain,AddgetpetTrainUser,updateTrainStatus,updateTrainingRateStatus,cancelTraining} = petTrain
 const {bookHostel, getHostelBook,getHostelBookUser,updateHostelStatus,updateRateStatus,cancelHostelBook}= petHosteling;
-const {groomRate, getgroomRating}=groomRating
-const {trainingRate, getrainingRate}=trainRating
-const {hostelRate, gethostelRate}=hostelRating
+const {groomRate, getgroomRating,updateGroomingRating}=groomRating
+const {trainingRate, getrainingRate,updateTrainingRating}=trainRating
+const {hostelRate, gethostelRate,updateHostelRating}=hostelRating
 
 //routes for posting the data and getting the data
 const authRouter = express.Router();
 authRouter.post("/register", register);
-authRouter.get("/register", registerGetData)
+authRouter.get("/register", registerGetData);
+authRouter.put("/register/:id", updateRegisterData);
 authRouter.post("/registration", vendorRegister);
 authRouter.get("/registration", VendorregisterGetData)
 authRouter.post("/signin", signin);
 authRouter.post("/logout", logout);
-authRouter.post("/send-verify-otp", userAuth, sendVerifyOtp);
-authRouter.post("/verify-account",userAuth, verifyEmail);
 authRouter.get("/is-auth",userAuth, isAuthenticated);
 authRouter.post("/sendresetotp", sendResetOtp);
 authRouter.post("/reset-password", resetPassword);
@@ -107,6 +106,7 @@ authRouter.put("/booktrain/user/:id", upload.single("Image"),updateTrainingRateS
 authRouter.put("/booktrain/:id", upload.single("Image"),updateTrainStatus)
 authRouter.delete("/booktrain/:id", cancelTraining)
 
+
 //router for posting the booked date for hostel and cancelling the booking
 authRouter.post("/bookhostel",upload.single("Image"), bookHostel)
 authRouter.get("/bookhostel", getHostelBook)
@@ -124,6 +124,10 @@ authRouter.get("/groomingreview",getgroomRating)
 authRouter.get("/trainingreview",getrainingRate)
 authRouter.get("/hostelreview",gethostelRate)
 
+//router for updating the status of rating
+authRouter.put("/trainingreview/:id",upload.single("Image"), updateTrainingRating)
+authRouter.put("/hostelreview/:id",upload.single("Image"), updateHostelRating)
+authRouter.put("/groomingreview/:id",upload.single("Image"), updateGroomingRating)
 //router for posting the new services 
 authRouter.post("/addservice", addService)
 

@@ -1,11 +1,10 @@
 import exporess from "express"
-
-import transporter from "../nodeMailer.js";
+import transporter from "../nodeMailer.js"
 import HostelRating from "../Models/HostelRate.js"
 
 const hostelRate = async(req,res)=>{
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const {stars, areaImprovement, userComment,fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,bookedAt}=req.body
          if(!stars || !areaImprovement || !userComment){
             return res.status(400).json({message:"Please fill all fields"})
@@ -14,7 +13,7 @@ const hostelRate = async(req,res)=>{
          const ratehostel= new HostelRating({
             stars, areaImprovement, userComment,fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,bookedAt
          })
-         console.log("rating hunxa ki nai heram hai ta",ratehostel)
+        //  console.log("rating hunxa ki nai heram hai ta",ratehostel)
          await ratehostel.save()
          res.status(200).json({status:true, message:"Service rated successfully"})
           //mailing
@@ -57,4 +56,46 @@ const gethostelRate = async(req,res)=>{
     }
 }
 
-export default {hostelRate, gethostelRate}
+    const updateHostelRating = async(req,res)=>{
+        try {
+            // console.log(req.body)
+            const { email, fullname, vendoremail, organizationname } = req.body;
+            const petId = req.params.id;
+            const pet = await HostelRating.findById(petId)
+    
+            if (!pet) {
+                return res.status(404).json({ message: "Pet not found" });
+            }
+            pet.status="Rated, read by vendor"
+            await pet.save()
+    
+            
+            const mailOptionsUser = {
+                 from: process.env.SENDER_EMAIL,
+                 to: email, // Owner's email
+                 subject: "Pet Hostel Service Rating Response",
+                 text: `Hello ${fullname}, your rating request for grooming service from ${organizationname} has been successfully read by vendor. 
+    
+                Thank you for your response.`
+             };
+    
+             await transporter.sendMail(mailOptionsUser);
+    
+             const mailOptionsVendor = {
+                from: process.env.SENDER_EMAIL,
+                to: vendoremail, // vendor's email
+                subject: "Pet Hostel Service Rating Response",
+                text: `Hello ${organizationname}, you have marked the rating response from ${fullname} to read. 
+    
+                Thank you for choosing PetSaathi.`
+            };
+        await transporter.sendMail(mailOptionsVendor);
+    
+             return res.status(200).json({ success: true, message: "Pet status updated", pet });
+    
+        } catch (error) {
+            return res.status(400).json({status:false, message:error.message})
+        }
+    }
+
+export default {hostelRate, gethostelRate,updateHostelRating}

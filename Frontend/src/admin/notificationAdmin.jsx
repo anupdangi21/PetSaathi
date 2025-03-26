@@ -544,13 +544,13 @@ const NotificationAdmin = () => {
             hostelrating.map((hostelrating, index) => (
               <div key={hostelrating._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
               <div className='flex justify-between items-center'>
-                <h2 className="font-bold">Notification for grooming rating</h2>
+                <h2 className="font-bold">Notification for Hostel rating</h2>
                 <p className='text-sm'>
                     {moment(hostelrating.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
                   </p>
               </div>                
                 <p className="mt-2.5">
-                  Hello vendor, {hostelrating.fullname} has just reviewed your pet grooming service for package type {hostelrating.selectedpackage}.
+                  Hello vendor, {hostelrating.fullname} has just reviewed your pet hostel service for package type {hostelrating.selectedpackage}.
                   He/Her has given {hostelrating.stars} stars and also has suggestions.
                 </p>
                 <button className=' bg-white justify-end w-24 h-10 mt-2 '
