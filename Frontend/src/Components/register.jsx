@@ -27,7 +27,13 @@ const RegisterForm = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Please check your db connection');
+      if(error.response && error.response.status === 400){
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: error.response.data.message,
+        }); 
+      }
     }
   };
 

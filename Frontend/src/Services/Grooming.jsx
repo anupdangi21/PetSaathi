@@ -4,8 +4,10 @@ import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
 import useAuthGuard from "../Context/useAuthGuard.jsx";
 import GroomingReservation from '../Reservation/groomingReservation.jsx';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Grooming = () => {
+  const navigate = useNavigate()
   const withAuth = useAuthGuard();
   const modalRef = useRef(null);
   const infoModalRef = useRef(null);
@@ -72,6 +74,10 @@ const Grooming = () => {
     setBookingPet(null);
   };
 
+  const InfoData =()=>{
+    navigate("/services/grooming/petgroominginfo")
+  }
+
   return (
     <div>
       <header>
@@ -79,7 +85,12 @@ const Grooming = () => {
       </header>
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-gradient-to-r from-orange-200 to-orange-50 rounded-2xl p-8 mb-12 text-white">
-          <h1 className="text-4xl font-bold mb-4">Find Your Perfect Groom</h1>
+        <h1 className="text-4xl font-bold mb-4 flex items-center justify-between">
+          <span>Find Your Perfect Grooming Service</span>
+          <button onClick={InfoData} className="bg-orange-100 hover:bg-orange-200 px-4 py-2 rounded-m">
+            <Info />
+          </button>
+        </h1>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">

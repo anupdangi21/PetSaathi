@@ -17,6 +17,7 @@ import petHosteling from "../Controllers/petHostel.js"
 import groomRating from "../Controllers/groomingRating.js"
 import trainRating from "../Controllers/trainingRating.js"
 import hostelRating from "../Controllers/hostelRating.js"
+import GroomingVerifyPayment from "../Controllers/groomingPayment.js"
 
 const { register,registerGetData,updateRegisterData,VendorregisterGetData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
@@ -34,6 +35,7 @@ const {bookHostel, getHostelBook,getHostelBookUser,updateHostelStatus,updateRate
 const {groomRate, getgroomRating,updateGroomingRating}=groomRating
 const {trainingRate, getrainingRate,updateTrainingRating}=trainRating
 const {hostelRate, gethostelRate,updateHostelRating}=hostelRating
+const {verifyPayment}=GroomingVerifyPayment
 
 //routes for posting the data and getting the data
 const authRouter = express.Router();
@@ -134,4 +136,6 @@ authRouter.post("/addservice", addService)
 //router for posting the details of lost petowner and getting its data
 authRouter.post("/petreunite", petOwner)
 authRouter.get("/petreunite", getpetOwner)
+//router for verifying payment
+authRouter.post("/verifypayment", verifyPayment)
 export default authRouter;

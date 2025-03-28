@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import CryptoJS from 'crypto-js';
+import EsewaIntegration from "../Payment/EsewaIntegration"
 
 const GroomingReservation = ({ pet, onClick }) => {
   const [date, setDate] = useState("");
   const [selectedPet, setSelectedPet] = useState(null);
   const [paymentMode, setPaymentMode] = useState('cash');
+  const [initiateEsewa, setInitiateEsewa] = useState(false);
 
   useEffect(() => {
     const petDetails = JSON.parse(localStorage.getItem('selectedPet'));
@@ -22,48 +23,6 @@ const GroomingReservation = ({ pet, onClick }) => {
     });
     return;
   }
-
-  const handleEsewaPayment = (amount) => {
-    const secretKey = "8gBm/:&EnhH.1/q";
-    const transactionUUID = `txn_${Date.now()}`;
-    const productCode = "EPAYTEST";
-    const totalAmount = amount;
-    const signedFieldNames = "total_amount,transaction_uuid,product_code";
-
-    const signature = CryptoJS.HmacSHA256(
-      `total_amount=${totalAmount},transaction_uuid=${transactionUUID},product_code=${productCode}`,
-      secretKey
-    ).toString(CryptoJS.enc.Base64);
-
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
-
-    const formData = {
-      amount: amount,
-      tax_amount: 0,
-      total_amount: totalAmount,
-      transaction_uuid: transactionUUID,
-      product_code: productCode,
-      product_service_charge: 0,
-      product_delivery_charge: 0,
-      success_url: "http://localhost:5173/services/grooming",
-      failure_url: "http://localhost:5173/services/grooming",
-      signed_field_names: signedFieldNames,
-      signature: signature,
-    };
-
-    Object.entries(formData).forEach(([key, value]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = String(value);
-      form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,7 +42,7 @@ const GroomingReservation = ({ pet, onClick }) => {
     }
 
     if (paymentMode === 'online') {
-      handleEsewaPayment(pet.price);
+      setInitiateEsewa(true);
       return;
     }
 
@@ -91,7 +50,7 @@ const GroomingReservation = ({ pet, onClick }) => {
     const formData = new FormData(e.target);
     formData.append("image", pet.Image);
     formData.append("date", date);
-    formData.append("organizationname",pet.organizationname)
+    formData.append("organizationname", pet.organizationname);
     formData.append("selectedpackage", pet.serviceoffering);
     formData.append("includedservice", pet.includedOfferings);
     formData.append("price", pet.price);
@@ -101,22 +60,21 @@ const GroomingReservation = ({ pet, onClick }) => {
     formData.append("ownercontact", userData.user.number);
     formData.append("vendorcontact", pet.vendorcontact);
     formData.append("vendoremail", pet.vendoremail);
-    // payment mode baaki xa
 
     const submissionData = {
-        image: formData.get("image"),
-        date: formData.get('date'),
-        organizationname: formData.get('organizationname'),
-        selectedpackage: formData.get("selectedpackage"),
-        includedservice: formData.get("includedservice"),
-        price: formData.get("price"),
-        location: formData.get("location"),
-        fullname: formData.get('fullname'),
-        email: formData.get("email"),
-        ownercontact: formData.get("ownercontact"),
-        vendorcontact: formData.get("vendorcontact"),
-        vendoremail: formData.get("vendoremail"),
-        paymentStatus: paymentMode === 'online' ? 'paid' : 'pending'
+      image: formData.get("image"),
+      date: formData.get('date'),
+      organizationname: formData.get('organizationname'),
+      selectedpackage: formData.get("selectedpackage"),
+      includedservice: formData.get("includedservice"),
+      price: formData.get("price"),
+      location: formData.get("location"),
+      fullname: formData.get('fullname'),
+      email: formData.get("email"),
+      ownercontact: formData.get("ownercontact"),
+      vendorcontact: formData.get("vendorcontact"),
+      vendoremail: formData.get("vendoremail"),
+      paymentStatus: 'cash'
     };
 
     try {
@@ -143,10 +101,12 @@ const GroomingReservation = ({ pet, onClick }) => {
 
   return (
     <div className='w-full max-w-[800px] mx-auto mb-6'>
+      {initiateEsewa && <EsewaIntegration amount={pet.price} />}
+
       <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
         Get Your Service Now
       </h1>
-      {/* Service Details */}
+
       {pet && (
         <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
           <div className="flex gap-6">
@@ -182,7 +142,6 @@ const GroomingReservation = ({ pet, onClick }) => {
         </div>
       )}
 
-      {/* Booking Form */}
       <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -196,39 +155,39 @@ const GroomingReservation = ({ pet, onClick }) => {
             required
           />
         </div>
-        {/* Payment Toggle */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <div className="flex items-center gap-4">
-          <span className="text-gray-700 font-medium">Payment Method:</span>
-          <button
-            type="button"
-            onClick={() => setPaymentMode('cash')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              paymentMode === 'cash' 
-                ? 'bg-orange-300 text-white' 
-                : 'bg-white text-gray-600 border border-gray-300'
-            }`}
-          >
-            Cash on Service
-          </button>
-          <button
-            type="button"
-            onClick={() => setPaymentMode('online')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              paymentMode === 'online' 
-                ? 'bg-green-600 text-white' 
-                : 'bg-white text-gray-600 border border-gray-300'
-            }`}
-          >
-            Online Payment
-          </button>
+
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-4">
+            <span className="text-gray-700 font-medium">Payment Method:</span>
+            <button
+              type="button"
+              onClick={() => setPaymentMode('cash')}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                paymentMode === 'cash' 
+                  ? 'bg-orange-300 text-white' 
+                  : 'bg-white text-gray-600 border border-gray-300'
+              }`}
+            >
+              Cash on Service
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMode('online')}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                paymentMode === 'online' 
+                  ? 'bg-green-600 text-white' 
+                  : 'bg-white text-gray-600 border border-gray-300'
+              }`}
+            >
+              Online Payment
+            </button>
+          </div>
+          {paymentMode === 'online' && (
+            <p className="mt-2 text-sm text-gray-500">
+              Secure online payment via eSewa
+            </p>
+          )}
         </div>
-        {paymentMode === 'online' && (
-          <p className="mt-2 text-sm text-gray-500">
-            Secure online payment via eSewa
-          </p>
-        )}
-      </div>
 
         <button
           type="submit"

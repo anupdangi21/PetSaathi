@@ -28,6 +28,16 @@ const register = async (req, res)=>{
             return res.status(400).json({ message: "Email already exists" });
         }
 
+        if(username.length <4){
+            return res.status(400).json({message:"Username should be more than 4 letters"})
+        }
+        if(password.length < 4 ){
+            return res.status(400).json({message:"Password should be more than 4 letters"})
+        }
+        if(number.length < 9 ){
+            return res.status(400).json({message:"Number should be more than 9 letters"})
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new registerModel({ email, username, number,  password: hashedPassword });
@@ -63,7 +73,7 @@ const register = async (req, res)=>{
             }
          });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(400).json({ success: false, message: error.message });
     }
 }
 
@@ -103,10 +113,10 @@ const updateRegisterData = async (req, res) => {
   
       // Update fields
       if (username) {
-        if (username.length < 3) {
+        if (username.length < 4) {
           return res.status(400).json({
             success: false,
-            message: "Username must be at least 3 characters"
+            message: "Username must be at least 4 characters"
           });
         }
         user.username = username;
@@ -180,8 +190,17 @@ const updateRegisterData = async (req, res) => {
         console.log(req.body)
         const { organizationname, email ,services, username,location, password, number,experience } = req.body;
 
-        if ( !organizationname ||!services || !username || !location || !password) {
+        if ( !organizationname ||!services || !username || !location || !password || !number ) {
             return res.status(400).json({ message: "All fields are required" });
+        }
+        if(username.length <4){
+            return res.status(400).json({message:"Username should be more than 4 letters"})
+        }
+        if(password.length < 4 ){
+            return res.status(400).json({message:"Password should be more than 4 letters"})
+        }
+        if(number.length < 9 ){
+            return res.status(400).json({message:"Number should be more than 9 letters"})
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -222,7 +241,7 @@ const updateRegisterData = async (req, res) => {
             }
          });
     } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
+       return res.status(400).json({ success: false, message: err.message });
     }
 };
 

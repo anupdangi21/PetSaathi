@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import EsewaIntegration from "../Payment/EsewaIntegration"
 
 const trainingReservation = ({pet, onClick}) => {
     const [date, setDate]=useState("")
     const [selectedTiming, setSelectedTiming]= useState("")
     const [selectedPet, setSelectedPet] = useState(null);
+    const [paymentMode, setPaymentMode]=useState("cash");
+    const [initiateEsewa, setInitiateEsewa]=useState(false)
   
     useEffect(() => {
         const petDetails = JSON.parse(localStorage.getItem('selectedPet'));
@@ -39,6 +42,11 @@ const trainingReservation = ({pet, onClick}) => {
                   text: 'The selected date has already passed. Please enter a valid date.',
               });
               return;
+          }
+
+          if(paymentMode === "online"){
+            setInitiateEsewa(true)
+            return
           }
           
           const formData = new FormData(e.target);
@@ -77,7 +85,8 @@ const trainingReservation = ({pet, onClick}) => {
               ownercontact: formData.get("ownercontact"),
               vendorcontact: formData.get("vendorcontact"),
               vendoremail: formData.get("vendoremail"),
-              days: formData.get("days")
+              days: formData.get("days"),
+              paymentStatus: 'cash'
             //   status: formData.get("status"),
           };
       
@@ -111,40 +120,59 @@ const trainingReservation = ({pet, onClick}) => {
   
     return (
         <div className='w-full max-w-[800px] mx-auto'>
+            {initiateEsewa && <EsewaIntegration amount={pet.price}/>}
             <h1 className="text-2xl font-bold text-gray-800 text-center ">
                 Get your service now!!!
             </h1>
             {/* Display the selected pet details */}
             {pet && Object.keys(pet).length > 0 ? (
+            <div className="flex gap-6 mt-8">
+                {/* Image Section - Left Side */}
+                {pet.Image && (
+                <div className="w-1/2">
+                    <img
+                    src={`http://localhost:3000/${pet.Image}`}
+                    alt={pet.Category}
+                    className="w-full h-64 object-cover rounded-lg"
+                    />
+                </div>
+                )}
+
                     <div className="flex-1">
-                    {pet.Image && (
-                      <img
-                      src={`http://localhost:3000/${pet.Image}`}
-                      alt={pet.Category}
-                      className="w-full h-64 object-cover rounded-lg mr-6 mt-4"
-                      />
-                  )}
-                      <div className="flex justify-between items-start mt-4">
-                      <div>
+                    <div className="flex justify-between items-start mb-4">
                         <h3 className="text-xl font-bold">Selected Service Details:</h3>
-                        </div>
-                        <p className='ml-96 text-lg font-bold'>Price</p>
+                        <div className="flex items-center gap-2">
+                        <p className="text-lg font-bold">Price:</p>
                         <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
-                          
-                      Rs {pet.price}
-                    </span>
+                            Rs {pet.price}
+                        </span>
+                        </div>
                     </div>
-                      <div className='flex justify-between items-start'>
-                        <p className='mt-2'><strong>Selected Package:</strong> {pet.serviceoffering}</p>
-                        <p className='mt-2'><strong>Organization Location:</strong> {pet.vendorlocation}</p>
-                      </div>
-                        <p className='mt-2'><strong>Services included:</strong> {pet.includedOfferings}</p>
-                        {/* <p className='mt-2'><strong>Image:</strong> {selectedPet.Image}</p> */}
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                        <p className="mb-2">
+                            <strong>Selected Package:</strong><br />
+                            {pet.serviceoffering}
+                        </p>
+                        <p>
+                            <strong>Organization Location:</strong><br />
+                            {pet.vendorlocation}
+                        </p>
+                        </div>
                         
+                        <div>
+                        <p>
+                            <strong>Services Included:</strong><br />
+                            {pet.includedOfferings}
+                        </p>
+                        </div>
                     </div>
-            ) : (
+                    </div>
+                </div>
+                ) : (
                 <p className="text-center text-gray-500">No pet selected.</p>
-            )}
+                )}
   
             {/* Reservation Form */}
             <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg p-6 w-full'>
@@ -178,21 +206,46 @@ const trainingReservation = ({pet, onClick}) => {
                         </select>
                     </div> 
                     </div>
-                    <div>
-                          <label className='bold-text-gray-700 text-sm font-bold'>Proceed with online payment  </label>
-                          {/* <button className='flex w-36 h-10 font-bold text-lg bg-purple-200 hover:bg-purple-400 ml-2 mt-2'
-                              type='onclick'
-                          >
-                             <h1 className='ml-2 mt-2'>Pay with khalti</h1> 
-                          </button> */}
-                        </div>
-                    {/* Submit Button */}
-                    <button
-                        type="submit"
-                        className="w-24 bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition duration-300"
-                    >
-                        Submit
-                    </button>
+                <div className="p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-4">
+            <span className="text-gray-700 font-medium">Payment Method:</span>
+            <button
+              type="button"
+              onClick={() => setPaymentMode('cash')}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                paymentMode === 'cash' 
+                  ? 'bg-orange-300 text-white' 
+                  : 'bg-white text-gray-600 border border-gray-300'
+              }`}
+            >
+              Cash on Service
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMode('online')}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                paymentMode === 'online' 
+                  ? 'bg-green-600 text-white' 
+                  : 'bg-white text-gray-600 border border-gray-300'
+              }`}
+            >
+              Online Payment
+            </button>
+          </div>
+          {paymentMode === 'online' && (
+            <p className="mt-2 text-sm text-gray-500">
+              Secure online payment via eSewa
+            </p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-orange-300 text-white py-3 px-6 rounded-lg font-medium
+                    hover:bg-orange-400 transition-colors duration-300"
+        >
+          {paymentMode === 'online' ? 'Proceed to Payment' : 'Confirm Booking'}
+        </button>
                 </div>
             </form>
         </div>

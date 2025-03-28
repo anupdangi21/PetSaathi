@@ -18,6 +18,7 @@ const petTrainingSchema = new mongoose.Schema({
     vendoremail:String,
     vendorcontact:String,
     days:String,
+    paymentStatus:String,
     status:{type:String, default:"Booked", required:true},
     rating:{type:String, default:"Not rated", required:true},
     bookedAt: {

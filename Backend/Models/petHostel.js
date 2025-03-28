@@ -20,6 +20,7 @@ const petHostelSchema = new mongoose.Schema({
     medicalsupport:String,
     petpickup:String,
     petdropoff:String,
+    paymentStatus:String,
     status:{type:String, default:"Booked", required:true},
     rating:{type:String, default:"Not rated", required:true},
     bookedAt: {

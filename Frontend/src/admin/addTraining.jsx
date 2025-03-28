@@ -171,7 +171,7 @@ const AddTraining = () => {
       
 
       {/* Checkboxes for Basic & Standard Packages */}
-      {["Obedience Training ", " Clicker Training ", " Nail Trimming ", " Socialization Training "].map((service) => (
+      {["Obedience Training ", " Clicker Training ", " Behavioral training ", " Socialization Training "].map((service) => (
         <div key={service} className="form-control flex">
           <label className="label cursor-pointer">
             <span className="label-text">{service}</span>
@@ -187,7 +187,7 @@ const AddTraining = () => {
 
         {/* Extra Checkboxes for Standard Package */}
         {serviceoffering === "Standard" &&
-        [" Positive Reinforcement Training ", " Protection Training ", " Pet Dropoff "].map((service) => (
+        [" Positive Reinforcement Training ", " Protection Training ", " Relationship-based training "].map((service) => (
           <div key={service} className="form-control">
             <label className="label cursor-pointer">
               <span className="label-text">{service}</span>

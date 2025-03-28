@@ -5,7 +5,7 @@ import transporter from "../nodeMailer.js";
 const bookHostel = async(req, res)=>{
     try {
         // console.log("aako hostel data", req.body)
-        const {fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating,bookedAt}=req.body
+        const {fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating,bookedAt,paymentStatus}=req.body
         const petHostel = new petHostelModel({
             fullname,
             ownercontact,
@@ -25,7 +25,8 @@ const bookHostel = async(req, res)=>{
             petdropoff,
             status,
             rating,
-            bookedAt
+            bookedAt,
+            paymentStatus
         })
         // console.log("Save hune hostel data", petHostel)
         await petHostel.save()

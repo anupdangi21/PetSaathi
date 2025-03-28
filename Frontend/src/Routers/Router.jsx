@@ -35,6 +35,11 @@ import PetGroom from "../admin/petGroom"
 import Addhostel from "../admin/addHostel"
 import Addgrooming from "../admin/addGrooming"
 import AddTraining from "../admin/addTraining"
+import PaymentSuccess from "../Payment/Success"
+import PaymentFailure from "../Payment/Failure.jsx"
+import TrainingInfo from "../Services/ServicesInfo/TrainingInfo.jsx"
+import GroomingInfo from "../Services/ServicesInfo/GroomingInfo.jsx"
+import HostelInfo from "../Services/ServicesInfo/HostelInfo.jsx"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -100,8 +105,28 @@ function AppRouter() {
       element: <Vregister />,
     },
     {
+      path: "/payment/success",
+      element: <PaymentSuccess />,
+    },
+    {
+      path: "/payment/failure",
+      element: <PaymentFailure />,
+    },
+    {
+      path: "/services/training/pettraininginfo",
+      element: <TrainingInfo />,
+    },
+    {
+      path: "/services/grooming/petgroominginfo",
+      element: <GroomingInfo />,
+    },
+    {
+      path: "/services/hostel/pethostelinfo",
+      element: <HostelInfo />,
+    },
+
+    {
       path:"/dashboard/adoption",
-      
       element:(<PrivateRouter>
         <AdminAdoption />
       </PrivateRouter>) 

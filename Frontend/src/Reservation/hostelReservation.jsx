@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import {Truck,Ambulance,Utensils,MapPin } from 'lucide-react';
+import EsewaIntegration from '../Payment/EsewaIntegration';
 
 
 const hostelReservation = () => {
@@ -10,6 +11,8 @@ const hostelReservation = () => {
   const [selectedPet, setSelectedPet] = useState(null);
   const [selectedAccommodation, setSelectedAccommodation] = useState(null);
   const [price, setPrice] = useState(0);
+  const [paymentMode, setPaymentMode]=useState('cash')
+  const [initiateEsewa, setInitiateEsewa]=useState(false)
 
   useEffect(() => {
       // Get the selected pet details from localStorage
@@ -49,6 +52,11 @@ const hostelReservation = () => {
                   return;
               }
 
+              if(paymentMode === "online"){
+                setInitiateEsewa(true)
+                return ;
+              }
+
       // Proceed with form submission
       const formData = new FormData(e.target);
       formData.append("image",selectedPet.Image)
@@ -66,7 +74,7 @@ const hostelReservation = () => {
       formData.append("vendoremail", selectedPet.vendoremail);
       // formData.append("status", selectedPet.status);
       formData.append("accommodationType", selectedAccommodation.type); // Add selected accommodation type
-      formData.append("price", price);
+      formData.append("price", price * parseInt(days));
       formData.append("organizationname", selectedPet.organizationname);
       const submissionData = {
           image:formData.get("image"),
@@ -86,6 +94,7 @@ const hostelReservation = () => {
           accommodationType: formData.get("accommodationType"),
           price: formData.get("price"),
           organizationname: formData.get("organizationname"),
+          paymentStatus:"cash"
       };
 
       console.log('Submission data:', submissionData);
@@ -125,6 +134,7 @@ const hostelReservation = () => {
 
   return (
       <div className='w-full max-w-[800px] mx-auto'>
+        {initiateEsewa && <EsewaIntegration amount = {price * parseInt(days)} />}
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
               Get your hostel now!!!
           </h1>
@@ -186,6 +196,7 @@ const hostelReservation = () => {
 
           {/* Reservation Form */}
           <form onSubmit={handleSubmit} className='bg-white shadow-md rounded-lg p-2 min-h-[20vh] w-full'>
+            <div>
         <div className="flex flex-col gap">
           <div className="flex flex-wrap gap-2">
           <div className="flex-1 w-1/2">
@@ -245,14 +256,48 @@ const hostelReservation = () => {
             </div>
           )}
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-24 bg-orange-600 text-white px-1 py-2 rounded-lg font-medium hover:bg-orange-700 transition duration-300"
-          >
-            Submit
-          </button>
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-4">
+            <span className="text-gray-700 font-medium">Payment Method:</span>
+            <button
+              type="button"
+              onClick={() => setPaymentMode('cash')}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                paymentMode === 'cash' 
+                  ? 'bg-orange-300 text-white' 
+                  : 'bg-white text-gray-600 border border-gray-300'
+              }`}
+            >
+              Cash on Service
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMode('online')}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                paymentMode === 'online' 
+                  ? 'bg-green-600 text-white' 
+                  : 'bg-white text-gray-600 border border-gray-300'
+              }`}
+            >
+              Online Payment
+            </button>
+          </div>
+          {paymentMode === 'online' && (
+            <p className="mt-2 text-sm text-gray-500">
+              Secure online payment via eSewa
+            </p>
+          )}
         </div>
-        
+
+        <button
+          type="submit"
+          className="w-full bg-orange-300 text-white py-3 px-6 rounded-lg font-medium
+           hover:bg-orange-400 transition-colors duration-300"
+        >
+          {paymentMode === 'online' ? 'Proceed to Payment' : 'Confirm Booking'}
+        </button>
+        </div>
+        </div>
       </form>
       </div>
   );
