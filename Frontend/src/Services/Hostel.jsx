@@ -72,7 +72,7 @@ const Hostel = () => {
 
   const handleHostel = (pet) => {
     const { Description, ...petDetails } = pet;
-    localStorage.setItem('selectedPet', JSON.stringify(petDetails));
+    localStorage.setItem('selectedPetHostel', JSON.stringify(petDetails));
 
     setTimeout(() => {
       localStorage.removeItem('selectedPet');

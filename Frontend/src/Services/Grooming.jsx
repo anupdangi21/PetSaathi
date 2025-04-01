@@ -64,6 +64,10 @@ const Grooming = () => {
   }, []);
 
   const handleGrooming = (pet) => {
+    localStorage.setItem('selectedPet(groom)', JSON.stringify(pet));
+    setTimeout(() => {
+      localStorage.removeItem('selectedPet(groom)');
+  }, 60000);
     setBookingPet(pet);
     setShowConfirmation(true);
     setSelectedPet(null); // Close info modal if open

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import EsewaIntegration from "../Payment/EsewaIntegration"
+import EsewaIntegration from "../Payment/EsewaIntegrationgroom"
 
 const trainingReservation = ({pet, onClick}) => {
     const [date, setDate]=useState("")
@@ -24,6 +24,15 @@ const trainingReservation = ({pet, onClick}) => {
             })
             return ;
         }
+
+        useEffect(() => {
+          if (date) {
+            localStorage.setItem('trainingdate', date);
+          }
+          setTimeout(() => {
+            localStorage.removeItem('trainingdate');
+        }, 120000);
+        }, [date]);
   
   
         const handleSubmit = async (e) => {

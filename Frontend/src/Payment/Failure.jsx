@@ -2,18 +2,18 @@ import React from 'react'
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
 import Cross from "../Images/Cross.png"
-import { useSearchParams } from 'react-router-dom';
+// import { useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const Failure = () => {
   const navigate = useNavigate()
-  const [search]=useSearchParams()
-    const info=search.get('data')
-    let decodeinfo = atob(info)
-    console.log(info)
-    console.log(decodeinfo)
-    let newInfo = JSON.parse(decodeinfo)
-    console.log(newInfo)
+  // const [search]=useSearchParams()
+    // const info=search.get('data')
+    // let decodeinfo = atob(info)
+    // console.log(info)
+    // console.log(decodeinfo)
+    // let newInfo = JSON.parse(decodeinfo)
+    // console.log(newInfo)
 
     const handleCancel=()=>{
       navigate("/")
@@ -36,8 +36,8 @@ const Failure = () => {
               <div className="space-y-4">
                 <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                    <h1 className='text-lg ml-16'>Payment Status: {newInfo.status}</h1>
-                    <h1 className='mt-4 text-lg ml-16'>Payment Amount:{newInfo.total_amount}</h1>
+                    <h1 className='text-lg ml-16'>Payment Status: Failed</h1>
+                    <h1 className='mt-4 text-lg ml-16'>Payment Amount: NaN</h1>
                   </label>
                 </div>
                 <button onClick={handleCancel} className='ml-32 px-10 py-2 bg-orange-200 hover:bg-orange-300'>Cancel</button>

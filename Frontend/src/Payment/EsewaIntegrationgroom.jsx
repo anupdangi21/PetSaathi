@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 
-const EsewaIntegration = ({ amount }) => {
+const EsewaIntegrationGroom = ({ amount }) => {
   useEffect(() => {
     const secretKey = "8gBm/:&EnhH.1/q";
     const transactionUUID = `txn_${Date.now()}`;
@@ -26,7 +26,7 @@ const EsewaIntegration = ({ amount }) => {
       product_code: productCode,
       product_service_charge: 0,
       product_delivery_charge: 0,
-      success_url: "http://localhost:5173/payment/success",
+      success_url: "http://localhost:5173/payment/success/training",
       failure_url: "http://localhost:5173/payment/failure",
       signed_field_names: signedFieldNames,
       signature: signature,
@@ -51,4 +51,4 @@ const EsewaIntegration = ({ amount }) => {
   return null;
 };
 
-export default EsewaIntegration;
+export default EsewaIntegrationGroom;

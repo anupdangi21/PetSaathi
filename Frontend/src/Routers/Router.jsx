@@ -105,7 +105,7 @@ function AppRouter() {
       element: <Vregister />,
     },
     {
-      path: "/payment/success",
+      path: "/payment/success/groom",
       element: <PaymentSuccess />,
     },
     {

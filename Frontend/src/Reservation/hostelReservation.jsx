@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import {Truck,Ambulance,Utensils,MapPin } from 'lucide-react';
-import EsewaIntegration from '../Payment/EsewaIntegration';
+import EsewaIntegrationHostel from "../Payment/EsewaIntegration(hostel)"
 
 
 const hostelReservation = () => {
@@ -16,7 +16,7 @@ const hostelReservation = () => {
 
   useEffect(() => {
       // Get the selected pet details from localStorage
-      const petDetails = JSON.parse(localStorage.getItem('selectedPet'));
+      const petDetails = JSON.parse(localStorage.getItem('selectedPetHostel'));
       setSelectedPet(petDetails); // Set the state with the pet details
   }, []);
 
@@ -30,6 +30,14 @@ const hostelReservation = () => {
           return ;
       }
 
+        useEffect(() => {
+          if (date) {
+            localStorage.setItem('hosteldate', date);
+          }
+          setTimeout(() => {
+            localStorage.removeItem('hosteldate');
+        }, 120000);
+        }, [date]);
 
   const handleSubmit = async (e) => {
       e.preventDefault();
@@ -134,7 +142,7 @@ const hostelReservation = () => {
 
   return (
       <div className='w-full max-w-[800px] mx-auto'>
-        {initiateEsewa && <EsewaIntegration amount = {price * parseInt(days)} />}
+        {initiateEsewa && <EsewaIntegrationHostel amount = {price * parseInt(days)} />}
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
               Get your hostel now!!!
           </h1>

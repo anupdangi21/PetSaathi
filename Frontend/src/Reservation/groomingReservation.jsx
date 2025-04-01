@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import EsewaIntegration from "../Payment/EsewaIntegration"
+import EsewaIntegration from "../Payment/EsewaIntegrationgroom"
 
 const GroomingReservation = ({ pet, onClick }) => {
   const [date, setDate] = useState("");
@@ -9,10 +9,10 @@ const GroomingReservation = ({ pet, onClick }) => {
   const [paymentMode, setPaymentMode] = useState('cash');
   const [initiateEsewa, setInitiateEsewa] = useState(false);
 
-  useEffect(() => {
-    const petDetails = JSON.parse(localStorage.getItem('selectedPet'));
-    setSelectedPet(petDetails);
-  }, []);
+  // useEffect(() => {
+  //   const petDetails = JSON.parse(localStorage.getItem('selectedPet(groom)'));
+  //   setSelectedPet(petDetails);
+  // }, []);
 
   const userData = JSON.parse(localStorage.getItem("user_data"));
   if (!userData?.user?.email) {
@@ -23,6 +23,19 @@ const GroomingReservation = ({ pet, onClick }) => {
     });
     return;
   }
+
+  useEffect(() => {
+    if (date) {
+      localStorage.setItem("groomingdate", date);
+  
+      const timeoutId = setTimeout(() => {
+        console.log("Removing date from localStorage...");
+        localStorage.removeItem("groomingdate");
+      }, 120000); // 2 minutes
+  
+      return () => clearTimeout(timeoutId); // Cleanup timeout on re-render
+    }
+  }, [date]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,10 +54,7 @@ const GroomingReservation = ({ pet, onClick }) => {
       return;
     }
 
-    if (paymentMode === 'online') {
-      setInitiateEsewa(true);
-      return;
-    }
+    
 
     // Cash payment processing
     const formData = new FormData(e.target);
@@ -76,6 +86,12 @@ const GroomingReservation = ({ pet, onClick }) => {
       vendoremail: formData.get("vendoremail"),
       paymentStatus: 'cash'
     };
+
+    if (paymentMode === 'online') {
+      localStorage.setItem('formData', JSON.stringify(formData));
+      setInitiateEsewa(true);
+      return;
+    }
 
     try {
       const response = await axios.post("http://localhost:3000/bookgroom", submissionData, {
