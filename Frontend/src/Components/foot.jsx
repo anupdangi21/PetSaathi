@@ -1,24 +1,24 @@
-const foot = () => {
+const Footer = () => {
   return (
-    <footer className="bg-orange-200 text-white  py-2">
-      <div className="max-w-screen-xl mx-auto px-2">
+    <footer className="bg-orange-200 text-zinc-50 py-4">
+      <div className="max-w-screen-xl mx-auto px-4 text-center">
+        
         {/* Contact Section */}
-        <div className="flex flex-col items-center ">
-          <h3 className="text-xl font-semibold mb-2 ">Contact us:</h3>
-          <ul className="flex space-x-6 text-sm text-white">
-            <li>Email: anupdangi92@gmail.com</li>
-            <li>Phone: +977 9876543210</li>
-            <li>Address: Bhaktapur, Nepal</li>
-          </ul>
+        <h3 className="text-lg font-semibold mb-2">Contact us:</h3>
+        <div className="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-8 text-sm">
+          <p>Email: anupdangi92@gmail.com</p>
+          <p>Phone: +977 9876543210</p>
+          <p>Address: Bhaktapur, Nepal</p>
         </div>
 
-        {/* Bottom section: Copyright */}
-        <div className="mt-4 border-t border-gray-700 pt-2 text-center">
-          <p className="text-sm text-white">© 2024 PetSaathi. All rights reserved.</p>
-        </div>
+        {/* Divider Line */}
+        <div className="mt-4 border-t border-gray-500 w-full mx-auto"></div>
+
+        {/* Copyright Section */}
+        <p className="text-sm mt-2">© 2024 PetSaathi. All rights reserved.</p>
       </div>
     </footer>
   );
 };
 
-export default foot;
+export default Footer;

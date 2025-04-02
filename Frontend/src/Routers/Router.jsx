@@ -8,19 +8,19 @@ import Register from "../Components/register";
 import About from "../Main/Aboutus";
 import Marketplace from "../Main/market";
 import Vregister from "../VendorRegistration/Vregister";
-import Dashboard from "../admin/dashboard";
+import Dashboard from "../vendor/dashboard.jsx"
 import Adoption from "../Services/Adoption";
 import Hostel from "../Services/Hostel";
 import Training from "../Services/PetTraining";
 import Grooming from "../Services/Grooming"
 import Lostfound from "../Services/lostfound";
-import AdminAdoption from "../admin/Adoption"
-import AddPet from "../admin/addPets"
+import AdminAdoption from "../vendor/Adoption.jsx"
+import AddPet from "../vendor/addPets.jsx"
 import LostPet from "../Pages/Lost"
 import FoundPet from "../Pages/Found"
-import NotificationAdmin from "../admin/notificationAdmin"
-import HostelAdmin from "../admin/Hostel";
-import TrainingAdmin from "../admin/Training";
+import NotificationAdmin from "../vendor/notificationAdmin.jsx"
+import HostelAdmin from "../vendor/Hostel.jsx"
+import TrainingAdmin from "../vendor/Training.jsx"
 import Tracking from "../Pages/Tracking"
 import UpdateProfile from "../Pages/cProfile"
 import AdoptionNotification from "../Notifications/adoptionNotification"
@@ -30,22 +30,38 @@ import HostelNotification from "../Notifications/hostelNotification"
 import GroomingRatingNotification from "../Notifications/groomingRatingNotification"
 import HostelRatingNotification from "../Notifications/hostelRatingNotification"
 import TrainingRatingNotification from "../Notifications/trainingRatingNotification"
-import AddService from "../admin/addService";
-import PetGroom from "../admin/petGroom"
-import Addhostel from "../admin/addHostel"
-import Addgrooming from "../admin/addGrooming"
-import AddTraining from "../admin/addTraining"
+import AddService from "../vendor/addService.jsx"
+import PetGroom from "../vendor/petGroom.jsx"
+import Addhostel from "../vendor/addHostel.jsx"
+import Addgrooming from "../vendor/addGrooming.jsx"
+import AddTraining from "../vendor/addTraining.jsx"
 import PaymentSuccess from "../Payment/Success"
 import PaymentFailure from "../Payment/Failure.jsx"
 import TrainingInfo from "../Services/ServicesInfo/TrainingInfo.jsx"
 import GroomingInfo from "../Services/ServicesInfo/GroomingInfo.jsx"
 import HostelInfo from "../Services/ServicesInfo/HostelInfo.jsx"
+import AdminDashboard from "../ADMIN/AdminDashboard.jsx";
+import Allusers from "../ADMIN/Allusers.jsx"
+import Allvendors from "../ADMIN/Allvendors.jsx"
+import Vendorprofile from "../Pages/vendorProfile.jsx"
 
 function AppRouter() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Home />,
+    },
+    {
+      path: "/Admin-AnUpDaNgI-2333319",
+      element: <AdminDashboard />,
+    },
+    {
+      path:"/Admin-All-User",
+      element:<Allusers />
+    },
+    {
+      path:"/Admin-All-Vendor",
+      element:<Allvendors />
     },
     {
       path: "/register",
@@ -64,7 +80,7 @@ function AppRouter() {
       element: <Marketplace />,
     },
     {
-      path: "/dashboard",
+      path: "/vendordashboard",
       element: 
         <PrivateRouter>
           <Dashboard />
@@ -124,13 +140,17 @@ function AppRouter() {
       path: "/services/hostel/pethostelinfo",
       element: <HostelInfo />,
     },
-
+    {
+      path:"/dashboard/vendorprofile",
+      element:(<PrivateRouter>
+        <Vendorprofile />
+      </PrivateRouter>) 
+    },
     {
       path:"/dashboard/adoption",
       element:(<PrivateRouter>
         <AdminAdoption />
       </PrivateRouter>) 
-      
     },
     {
       path: "/dashboard/hostel",

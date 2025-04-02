@@ -28,7 +28,17 @@ const Signin = ({ closeModal }) => {
                         text: "You are successfully logged in as user.",
                     });
                     navigate("/"); // Redirect to user home
-                } else if (role === "vendor") {
+                } else if (role === "admin") {
+                    login(token, user); 
+                    Swal.fire({
+                        icon: "success",
+                        title: "Admin Login Successfully",
+                        text: "Welcome Back Admin.",
+                    });
+                    navigate("/Admin-AnUpDaNgI-2333319"); // Redirect to vendor dashboard
+                }
+                
+                else if (role === "vendor") {
                     console.log("Vendor login success");
                     login(token, user); 
                     Swal.fire({
@@ -36,7 +46,7 @@ const Signin = ({ closeModal }) => {
                         title: "Vendor Login Successfully",
                         text: "You are successfully logged in as Vendor.",
                     });
-                    navigate("/dashboard"); // Redirect to vendor dashboard
+                    navigate("/vendordashboard"); // Redirect to vendor dashboard
                 }
             } else {
                 alert("Login failed");

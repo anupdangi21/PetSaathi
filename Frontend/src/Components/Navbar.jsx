@@ -129,7 +129,7 @@ function Nav() {
                             <MenuItems className="absolute right-0 mt-2 w-48 bg-orange-200 rounded-md shadow-lg py-1">
                                 <MenuItem>
                                     {isVendor ? (
-                                        <Link to="/dashboard" className="block px-4 py-2 text-white hover:bg-orange-100">Dashboard</Link>
+                                        <Link to="/vendordashboard" className="block px-4 py-2 text-white hover:bg-orange-100">Dashboard</Link>
                                     ) : (
                                         <Link to="/vendor/register" className="block px-4 py-2 text-white hover:bg-orange-100">Become Vendor</Link>
                                     )}

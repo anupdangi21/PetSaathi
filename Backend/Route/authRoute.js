@@ -19,7 +19,7 @@ import trainRating from "../Controllers/trainingRating.js"
 import hostelRating from "../Controllers/hostelRating.js"
 import GroomingVerifyPayment from "../Controllers/groomingPayment.js"
 
-const { register,registerGetData,updateRegisterData,VendorregisterGetData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
+const {admin,getadmin, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
 const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
@@ -39,11 +39,14 @@ const {verifyPayment}=GroomingVerifyPayment
 
 //routes for posting the data and getting the data
 const authRouter = express.Router();
+authRouter.post("/admin", admin);
+authRouter.get("/admin", getadmin);
 authRouter.post("/register", register);
 authRouter.get("/register", registerGetData);
 authRouter.put("/register/:id", updateRegisterData);
 authRouter.post("/registration", vendorRegister);
 authRouter.get("/registration", VendorregisterGetData)
+authRouter.put("/registration/:id", updateVendorData)
 authRouter.post("/signin", signin);
 authRouter.post("/logout", logout);
 authRouter.get("/is-auth",userAuth, isAuthenticated);

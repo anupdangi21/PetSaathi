@@ -4,7 +4,7 @@ import Icon from "../Images/logo.png";
 import { AppContext } from "../Context/AppContext.jsx";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
-import Addservice from "../admin/addService.jsx";
+import Addservice from "../vendor/addService.jsx";
 import { 
   LayoutDashboard, 
   Package,
@@ -14,6 +14,7 @@ import {
   ChevronDown,
   Bell,
   LogOut,
+  Banknote,
   CirclePlus,
   Sparkles
 } from 'lucide-react';
@@ -99,22 +100,26 @@ const Aside = () => {
     services = [...services, ...userServices];
   }
 
+  const handleEdit = () => {
+    navigate("/dashboard/vendorprofile")
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
       <aside className="bg-white shadow-lg transition-all duration-300 fixed h-full w-auto">
         <div className='rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200'>
-          <h1 className="ml-12 font-bold text-xl text-orange-600 mt-2">Admin Panel</h1>
+          <h1 className="ml-12 font-bold text-xl text-orange-600 mt-2">Vendor Panel</h1>
           <img src={Icon} className='rounded-lg w-24 h-24 ml-12 mt-4' alt="Logo" />
           <p className='ml-4 text-lg'>Welcome <span className='text-red-500'>{userData?.username}</span></p>
+          <button onClick={handleEdit} className="ml-16 mt-1 bg-orange-200 hover:bg-orange-400 w-24 h-8" >Edit profile</button>
         </div>
 
         {/* Navigation */}
-        <nav className="mt-8">
+        <nav className="mt-1">
           <div className="px-4">
             {/* Dashboard Link */}
-            <a href="/dashboard" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
+            <a href="/vendordashboard" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <LayoutDashboard size={20} />
               <span>Dashboard</span>
             </a>
@@ -158,13 +163,16 @@ const Aside = () => {
           </div>
 
           {/* Bottom Links */}
-          <div className="absolute bottom-0 w-full p-4 border-t">
+          <div className="absolute bottom-0 w-full p-2 border-t">
             {/* Notifications Link */}
+            <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
+              <Banknote size={20} />
+              <span>Payments</span>
+            </a>
             <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <Bell size={20} />
               <span>Notifications</span>
             </a>
-
             {/* Logout Button */}
             <button 
               onClick={() => {

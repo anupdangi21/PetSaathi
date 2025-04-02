@@ -1,16 +1,17 @@
 import { React, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import Navbar from "../Components/Navbar";
-import Footer from "../Components/foot";
+import Aside from "../Components/aside";
 import { AppContext } from '../Context/AppContext';
 
-const CProfile = () => {
+const VendorProfile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     number: '',
     username: '',
-    password: ''
+    password: '',
+    organizationname: "",
+    experience: ""
   });
   const [loading, setLoading] = useState(true);
   const { logout } = useContext(AppContext);
@@ -25,7 +26,7 @@ const CProfile = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/register");
+        const response = await fetch("http://localhost:3000/registration");
         if (!response.ok) throw new Error('Failed to fetch user data');
         
         const { data } = await response.json();
@@ -36,9 +37,11 @@ const CProfile = () => {
         if (!currentUser) throw new Error('User data not found');
         
         setFormData({
+          organizationname: currentUser.organizationname || "",
           number: currentUser.number || '',
           username: currentUser.username || '',
-          password: ''
+          password: '',
+          experience: currentUser.experience || ""
         });
       } catch (error) {
         Swal.fire("Error", error.message, "error");
@@ -57,7 +60,7 @@ const CProfile = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/register/${userData.user.id}`,
+        `http://localhost:3000/registration/${userData.user.id}`,
         {
           method: "PUT",
           headers: {
@@ -111,12 +114,13 @@ const CProfile = () => {
   if (loading) return <div className="text-center p-8">Loading...</div>;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      
-      <main className="flex-1 bg-orange-50">
+    <div className="bg-gray-50 flex">
+      <aside>
+        <Aside />
+      </aside>
+      <main className="flex-1 bg-zinc-100 ml-60 mt-8">
         <div className="flex items-center justify-center min-h-[calc(100vh-160px)] py-8">
-          <div className="bg-gradient-to-r from-orange-200 to-orange-100 rounded-xl shadow-lg p-8 w-full max-w-md mx-4">
+          <div className="bg-gradient-to-r from-zinc-300 to-zinc-200 rounded-xl shadow-lg p-8 w-full max-w-md mx-4">
             <form onSubmit={handleSubmit} className="space-y-6">
               <h1 className="text-2xl font-bold text-gray-800 text-center">
                 Update your Profile
@@ -126,6 +130,20 @@ const CProfile = () => {
               </p>
 
               <div className="space-y-4">
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Organization name
+                  </label>
+                  <input
+                    type="text"
+                    name="organizationname"
+                    value={formData.organizationname}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
                 <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2">
                     Username
@@ -139,6 +157,21 @@ const CProfile = () => {
                     required
                   />
                 </div>
+
+                {formData.experience && (
+                  <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Experience
+                    </label>
+                    <input
+                      type="text"
+                      name="experience"
+                      value={formData.experience}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -170,7 +203,7 @@ const CProfile = () => {
               <div className="flex justify-between gap-4">
                 <button
                   type="button"
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/vendordashboard')}
                   className="flex-1 bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
                 >
                   Cancel
@@ -186,10 +219,8 @@ const CProfile = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };
 
-export default CProfile;
+export default VendorProfile;

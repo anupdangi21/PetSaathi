@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import "./App.css";
+// import "./App.css";
 import Navbar from "../Components/Navbar"; // Importing Navbar component
 import Foot from "../Components/foot"; // Importing foot component
 import pet from "../Images/display-main1.png";
