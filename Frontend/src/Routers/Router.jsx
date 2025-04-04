@@ -35,8 +35,10 @@ import PetGroom from "../vendor/petGroom.jsx"
 import Addhostel from "../vendor/addHostel.jsx"
 import Addgrooming from "../vendor/addGrooming.jsx"
 import AddTraining from "../vendor/addTraining.jsx"
-import PaymentSuccess from "../Payment/Success"
+import PaymentSuccess from "../Payment/Success.jsx"
 import PaymentFailure from "../Payment/Failure.jsx"
+import PaymentHostelSuccess from "../Payment/EsewaIntegration(hostel).jsx"
+import PaymentTrainingSuccess from "../Payment/EsewaIntegrationTraining.jsx"
 import TrainingInfo from "../Services/ServicesInfo/TrainingInfo.jsx"
 import GroomingInfo from "../Services/ServicesInfo/GroomingInfo.jsx"
 import HostelInfo from "../Services/ServicesInfo/HostelInfo.jsx"
@@ -127,6 +129,14 @@ function AppRouter() {
     {
       path: "/payment/failure",
       element: <PaymentFailure />,
+    },
+    {
+      path: "/payment/failure/hostel",
+      element: <PaymentHostelSuccess />,
+    },
+    {
+      path: "/payment/failure/training",
+      element: <PaymentTrainingSuccess />,
     },
     {
       path: "/services/training/pettraininginfo",

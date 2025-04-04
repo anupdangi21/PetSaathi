@@ -6,7 +6,7 @@ const Footer = () => {
         {/* Contact Section */}
         <h3 className="text-lg font-semibold mb-2">Contact us:</h3>
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-8 text-sm">
-          <p>Email: anupdangi92@gmail.com</p>
+          <p>Email: noreplypetsaathi1@gmail.com</p>
           <p>Phone: +977 9876543210</p>
           <p>Address: Bhaktapur, Nepal</p>
         </div>

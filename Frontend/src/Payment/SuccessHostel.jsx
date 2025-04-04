@@ -22,7 +22,7 @@ const SuccessHostel = () => {
     useEffect(() => {
       const petDetails = JSON.parse(localStorage.getItem('selectedPetHostel'));
       setSelectedPet(petDetails);
-      const petDate = JSON.parse(localStorage.getItem('hosteldate'));
+      const petDate = (localStorage.getItem('hosteldate'));
       setDate(petDate);
     }, []);
   

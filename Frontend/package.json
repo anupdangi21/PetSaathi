@@ -17,6 +17,10 @@
     "@mui/icons-material": "^6.2.1",
     "@mui/material": "^6.2.1",
     "axios": "^1.7.9",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0",
+    "express": "^5.1.0",
+    "js-base64": "^3.7.7",
     "lucide-react": "^0.469.0",
     "moment-timezone": "^0.5.47",
     "react": "^18.3.1",
@@ -32,7 +36,8 @@
     "rsuite": "^5.76.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.15.10",
-    "tw-elements-react": "^1.0.0-alpha-end"
+    "tw-elements-react": "^1.0.0-alpha-end",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

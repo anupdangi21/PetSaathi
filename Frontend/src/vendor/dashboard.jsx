@@ -3,6 +3,7 @@ import Aside from "../Components/aside";
 import React, { useState, useEffect } from 'react';
 import { 
   PawPrint,
+  Dog,
   Scissors,
   Home,
   Bone,
@@ -111,7 +112,7 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between mb-4">
               <div className="bg-orange-50 p-3 rounded-lg">
-                <List className="h-6 w-6 text-orange-500" />
+                <Dog className="h-6 w-6 text-orange-500" />
               </div>
             </div>
             <h3 className="text-2xl font-bold text-gray-900">{counts.listings}</h3>
@@ -120,7 +121,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow-sm p-6 h-96">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Services Overview</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Analytics Overview</h2>
           <ResponsiveContainer width="100%" height="90%">
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />

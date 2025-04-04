@@ -23,14 +23,14 @@ const SuccessTraining = () => {
     useEffect(() => {
       const petDetails = JSON.parse(localStorage.getItem('selectedPet(groom)'));
       setSelectedPet(petDetails);
-      const petDate = JSON.parse(localStorage.getItem('groomingdate'));
+      const petDate = (localStorage.getItem('groomingdate'));
       setDate(petDate);
     }, []);
   
     const handleOk = async () => {
       const petDetails = JSON.parse(localStorage.getItem('selectedPet(groom)'));
       const userData = JSON.parse(localStorage.getItem('user_data'));
-      // const petDate = JSON.parse(localStorage.getItem('groomingdate'));
+      const petDate = JSON.parse(localStorage.getItem('groomingdate'));
   
       if (!petDetails || !userData) {
         Swal.fire({
