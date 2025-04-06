@@ -30,7 +30,7 @@ const SuccessTraining = () => {
     const handleOk = async () => {
       const petDetails = JSON.parse(localStorage.getItem('selectedPet(groom)'));
       const userData = JSON.parse(localStorage.getItem('user_data'));
-      const petDate = JSON.parse(localStorage.getItem('groomingdate'));
+      const petDate = (localStorage.getItem('groomingdate'));
   
       if (!petDetails || !userData) {
         Swal.fire({

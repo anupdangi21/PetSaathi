@@ -46,6 +46,8 @@ import AdminDashboard from "../ADMIN/AdminDashboard.jsx";
 import Allusers from "../ADMIN/Allusers.jsx"
 import Allvendors from "../ADMIN/Allvendors.jsx"
 import Vendorprofile from "../Pages/vendorProfile.jsx"
+import AdditemsMarket from "../Marketplace/addItems.jsx"
+import Recentitems from "../Marketplace/recentItems.jsx"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -80,6 +82,14 @@ function AppRouter() {
     {
       path: "/marketplace",
       element: <Marketplace />,
+    },
+    {
+      path:"/marketplace/additems",
+      element:<AdditemsMarket />,
+    },
+    {
+      path:"/marketplace/recentitems",
+      element:<Recentitems />,
     },
     {
       path: "/vendordashboard",

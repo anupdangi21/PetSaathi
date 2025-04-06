@@ -17,6 +17,7 @@ import petHosteling from "../Controllers/petHostel.js"
 import groomRating from "../Controllers/groomingRating.js"
 import trainRating from "../Controllers/trainingRating.js"
 import hostelRating from "../Controllers/hostelRating.js"
+import Itemmarket from "../Controllers/addItems.js"
 
 const {admin,getadmin, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
@@ -35,6 +36,9 @@ const {groomRate, getgroomRating,updateGroomingRating}=groomRating
 const {trainingRate, getrainingRate,updateTrainingRating}=trainRating
 const {hostelRate, gethostelRate,updateHostelRating}=hostelRating
 // const {verifyPayment}=GroomingVerifyPayment
+const {itemAdd,getItem, updateMarketitem, deleteMarketItem,getitemliststatus, changeitemStatus}=Itemmarket
+
+
 
 //routes for posting the data and getting the data
 const authRouter = express.Router();
@@ -138,6 +142,12 @@ authRouter.post("/addservice", addService)
 //router for posting the details of lost petowner and getting its data
 authRouter.post("/petreunite", petOwner)
 authRouter.get("/petreunite", getpetOwner)
+
+//router for posting the marketplace items 
+authRouter.post("/marketplacelisting", upload.array("Image", 5), itemAdd);
+authRouter.get("/marketplacelisting", getItem)
+authRouter.put("marketplacelisting", upload.single("Image"), updateMarketitem)
+authRouter.delete("/marketplacelisting/:_id", deleteMarketItem)
 //router for verifying payment
 
 export default authRouter;

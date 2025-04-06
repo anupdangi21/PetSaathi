@@ -1,77 +1,152 @@
 import Logo from "../Images/logo.png";
-import AdminAside from "../Components/Adminaside"
-import React, { useState } from 'react';
+import AdminAside from "../Components/Adminaside";
+import React, { useState, useEffect } from 'react';
+
 import { 
   Heart, 
   Users,
   Star,
   Calendar,
-
+  PawPrint,
+  Dog,
+  Scissors,
+  Home,
+  Bone,
+  List 
 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const AdminDashboard = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  
-    return (
-      <div className="min-h-screen bg-gray-50 flex">
-        {/* Sidebar */}
-        <aside>
-          <AdminAside />
-        </aside>
-        {/* Main Content */}
-        <main className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-20'} transition-all duration-300 p-8`}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <Users className="h-6 w-6 text-blue-500" />
-                </div>
-                <span className="text-sm font-medium text-green-500">+12.5%</span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">1,482</h3>
-              <p className="text-sm text-gray-500">Total Adoptions</p>
-            </div>
-  
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
-                <div className="bg-purple-50 p-3 rounded-lg">
-                  <Star className="h-6 w-6 text-purple-500" />
-                </div>
-                <span className="text-sm font-medium text-green-500">+8.2%</span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">4.8</h3>
-              <p className="text-sm text-gray-500">Average Rating</p>
-            </div>
-  
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
-                <div className="bg-pink-50 p-3 rounded-lg">
-                  <Heart className="h-6 w-6 text-pink-500" />
-                </div>
-                <span className="text-sm font-medium text-green-500">+24.3%</span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">892</h3>
-              <p className="text-sm text-gray-500">Pets Available</p>
-            </div>
-  
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
-                <div className="bg-orange-50 p-3 rounded-lg">
-                  <Calendar className="h-6 w-6 text-orange-500" />
-                </div>
-                <span className="text-sm font-medium text-green-500">+18.7%</span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">245</h3>
-              <p className="text-sm text-gray-500">Monthly Bookings</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
-            <h2 className=" grid ml text-2xl font-semibold text-gray-800 place-items-end">Recent Orders </h2>
-            <p className="grid mt-2 place-items-end ">hello</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [counts, setCounts] = useState({
+    grooming: 0,
+    listings: 0,
+    hostel: 0,
+    training: 0
+  });
 
-export default AdminDashboard
+  useEffect(() => {
+    const fetchData = async () => {
+      const userData = JSON.parse(localStorage.getItem('user_data'));
+      const userEmail = userData?.user?.email;
+
+      if (!userEmail) return;
+
+      try {
+        const endpoints = [
+          { url: 'http://localhost:3000/petgrooming', key: 'grooming' },
+          { url: 'http://localhost:3000/petlisting', key: 'listings' },
+          { url: 'http://localhost:3000/pethostel', key: 'hostel' },
+          { url: 'http://localhost:3000/training', key: 'training' }
+        ];
+
+        const results = await Promise.all(
+          endpoints.map(async ({ url, key }) => {
+            try {
+              const response = await fetch(url);
+              if (!response.ok) throw new Error(`Failed to fetch ${key}`);
+              const { data } = await response.json();
+              const count = Array.isArray(data) ? data.length : 0;
+              return { key, count };
+            } catch (error) {
+              console.error(`Error fetching ${key}:`, error);
+              return { key, count: 0 };
+            }
+          })
+        );
+
+        const newCounts = results.reduce((acc, { key, count }) => {
+          acc[key] = count;
+          return acc;
+        }, {});
+
+        setCounts(prev => ({ ...prev, ...newCounts }));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const chartData = [
+    { name: 'Grooming', count: counts.grooming },
+    { name: 'Adoption', count: counts.listings },
+    { name: 'Hostel', count: counts.hostel },
+    { name: 'Training', count: counts.training },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <aside>
+        <AdminAside />
+      </aside>
+
+      {/* Main Content */}
+      <main className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-20'} transition-all duration-300 p-8`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <Scissors className="h-6 w-6 text-blue-500" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900">{counts.grooming}</h3>
+            <p className="text-sm text-gray-500">Grooming Services</p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-purple-50 p-3 rounded-lg">
+                <Bone className="h-6 w-6 text-purple-500" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900">{counts.training}</h3>
+            <p className="text-sm text-gray-500">Training Programs</p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-pink-50 p-3 rounded-lg">
+                <Home className="h-6 w-6 text-pink-500" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900">{counts.hostel}</h3>
+            <p className="text-sm text-gray-500">Hostel Bookings</p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-orange-50 p-3 rounded-lg">
+                <Dog className="h-6 w-6 text-orange-500" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900">{counts.listings}</h3>
+            <p className="text-sm text-gray-500">Pet Adoption Listings</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm p-6 h-96">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Analytics Overview</h2>
+          <ResponsiveContainer width="100%" height="90%">
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar 
+                dataKey="count" 
+                fill="#f97316" 
+                radius={[10, 10, 0, 0]}
+                label={{ position: 'top', fill: '#6b7280' }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default AdminDashboard;

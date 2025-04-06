@@ -92,8 +92,8 @@ function App() {
 
         {/* Recent Pets Section */}
         <div className="bg-orange-50">
-          <div className="container ml-24 max-w-screen-xl">
-            <h2 className="text-3xl font-bold text-gray-800 mb-8 mt-16">Recently Added Pets</h2>
+          <div className="container ml-24 max-w-screen-xl mt-16">
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 ">Recently Added Pets</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array.isArray(pets) && pets.length > 0 ? (
               pets.slice(-3).map((pet) => ( // 

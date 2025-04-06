@@ -67,7 +67,7 @@ const AdminDashboard = () => {
 
   const chartData = [
     { name: 'Grooming', count: counts.grooming },
-    { name: 'Listings', count: counts.listings },
+    { name: 'Adoption', count: counts.listings },
     { name: 'Hostel', count: counts.hostel },
     { name: 'Training', count: counts.training },
   ];
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
               </div>
             </div>
             <h3 className="text-2xl font-bold text-gray-900">{counts.listings}</h3>
-            <p className="text-sm text-gray-500">Pet Listings</p>
+            <p className="text-sm text-gray-500">Pet Adoption Listings</p>
           </div>
         </div>
 
