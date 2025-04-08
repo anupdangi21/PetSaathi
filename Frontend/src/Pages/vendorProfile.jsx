@@ -60,7 +60,7 @@ const VendorProfile = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/registration/${userData.user.id}`,
+        `http://localhost:3000/registration/${encodeURIComponent(userData.user.email)}`,
         {
           method: "PUT",
           headers: {

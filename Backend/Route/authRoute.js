@@ -49,7 +49,7 @@ authRouter.get("/register", registerGetData);
 authRouter.put("/register/:id", updateRegisterData);
 authRouter.post("/registration", vendorRegister);
 authRouter.get("/registration", VendorregisterGetData)
-authRouter.put("/registration/:id", updateVendorData)
+authRouter.put("/registration/:email", updateVendorData)
 authRouter.post("/signin", signin);
 authRouter.post("/logout", logout);
 authRouter.get("/is-auth",userAuth, isAuthenticated);

@@ -31,7 +31,7 @@ const GroomingReservation = ({ pet, onClick }) => {
       const timeoutId = setTimeout(() => {
         console.log("Removing date from localStorage...");
         localStorage.removeItem("groomingdate");
-      }, 120000); // 2 minutes
+      }, 240000); // 2 minutes
   
       return () => clearTimeout(timeoutId); // Cleanup timeout on re-render
     }

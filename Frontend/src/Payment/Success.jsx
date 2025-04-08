@@ -30,7 +30,7 @@ const Success = () => {
   const handleOk = async () => {
     const petDetails = JSON.parse(localStorage.getItem('selectedPet(groom)'));
     const userData = JSON.parse(localStorage.getItem('user_data'));
-    const petDate = JSON.parse(localStorage.getItem('groomingdate'));
+    const petDate = (localStorage.getItem('groomingdate'));
 
     if (!petDetails || !userData) {
       Swal.fire({
@@ -44,7 +44,7 @@ const Success = () => {
 
     const submissionData = {
       image: petDetails.Image,
-      date: petDate.date, // Use current date if missing
+      date: petDate, // Use current date if missing
       organizationname: petDetails.organizationname,
       selectedpackage: petDetails.serviceoffering,
       includedservice: petDetails.includedOfferings,

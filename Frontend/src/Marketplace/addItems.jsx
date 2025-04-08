@@ -53,7 +53,7 @@ const AddItems = () => {
         title: "Authentication Error",
         text: "Please login to continue",
       });
-      navigate('/login');
+      navigate('/');
       return;
     }
 

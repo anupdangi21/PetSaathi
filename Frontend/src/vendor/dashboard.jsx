@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const AdminDashboard = () => {
+const VendorDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [counts, setCounts] = useState({
     grooming: 0,
@@ -40,7 +40,7 @@ const AdminDashboard = () => {
             try {
               const response = await fetch(url);
               if (!response.ok) throw new Error(`Failed to fetch ${key}`);
-              const { data } = await response.json(); // Changed here
+              const { data } = await response.json();
               const count = Array.isArray(data) ? 
                 data.filter(item => item[emailField] === userEmail).length : 0;
               return { key, count };
@@ -71,6 +71,9 @@ const AdminDashboard = () => {
     { name: 'Hostel', count: counts.hostel },
     { name: 'Training', count: counts.training },
   ];
+
+  // Calculate the maximum value for Y-axis domain
+  const maxCount = Math.max(...chartData.map(item => item.count), 1);
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -126,7 +129,11 @@ const AdminDashboard = () => {
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis />
+              <YAxis 
+                domain={[0, maxCount]} 
+                tickCount={maxCount + 1}
+                allowDecimals={false}
+              />
               <Tooltip />
               <Bar 
                 dataKey="count" 
@@ -142,4 +149,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default VendorDashboard;

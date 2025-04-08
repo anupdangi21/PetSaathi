@@ -316,7 +316,7 @@ const VendorregisterGetData = async (req, res) => {
 //update vendor profile:
 const updateVendorData = async (req, res) => {
     try {
-      const { id } = req.params;
+      const { email  } = req.params;
       const { username, number, password, organizationname, experience } = req.body;
   
       // Input validation
@@ -327,7 +327,7 @@ const updateVendorData = async (req, res) => {
         });
       }
   
-      const user = await vendorregisterModel.findById(id);
+      const user = await vendorregisterModel.findOne({ email });
       if (!user) {
         return res.status(404).json({
           success: false,

@@ -145,14 +145,14 @@ const RecentOrders = () => {
             <p className="text-gray-500 text-lg">No items found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6">
             {items.map((item) => {
               const currentIndex = currentImageIndices[item._id] || 0;
               const totalImages = item.Image?.length || 0;
               
               return (
                 <div key={item._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="relative h-48">
+                  <div className="relative h-64">
                     {item.Image && item.Image.length > 0 ? (
                       <>
                         <img

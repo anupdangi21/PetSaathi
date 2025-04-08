@@ -44,7 +44,7 @@ const SuccessTraining = () => {
   
       const submissionData = {
         image: petDetails.Image,
-        // date: petDate.date, // Use current date if missing
+        date: petDate, // Use current date if missing
         organizationname: petDetails.organizationname,
         selectedpackage: petDetails.serviceoffering,
         includedservice: petDetails.includedOfferings,
