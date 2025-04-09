@@ -10,15 +10,12 @@ import moment from "moment-timezone";
 
 const Success = () => {
   const [selectedPet, setSelectedPet] = useState(null);
-  const [date, setDate]=useState("")
-  const navigate = useNavigate()
-  const [search]=useSearchParams()
-  const info=search.get('data')
-  let decodeinfo = atob(info)
-  console.log(info)
-  console.log(decodeinfo)
-  let newInfo = JSON.parse(decodeinfo)
-  console.log(newInfo)
+  const [date, setDate] = useState("");
+  const navigate = useNavigate();
+  const [search] = useSearchParams();
+  const info = search.get('data');
+  let decodeinfo = atob(info);
+  let newInfo = JSON.parse(decodeinfo);
 
   useEffect(() => {
     const petDetails = JSON.parse(localStorage.getItem('selectedPet(groom)'));
@@ -44,10 +41,10 @@ const Success = () => {
 
     const submissionData = {
       image: petDetails.Image,
-      date: petDate, // Use current date if missing
+      date: petDate,
       organizationname: petDetails.organizationname,
       selectedpackage: petDetails.serviceoffering,
-      includedservice: petDetails.includedOfferings,
+      includedservice: petDetails.includedOfferings.join(', '), // Convert array to string
       price: petDetails.price,
       location: petDetails.vendorlocation,
       fullname: userData.user.username,
@@ -72,8 +69,8 @@ const Success = () => {
         });
 
         if (result.isConfirmed) {
-          localStorage.removeItem('selectedPet(groom)'); // Clear pet details after booking
-          localStorage.removeItem('groomingdate')
+          localStorage.removeItem('selectedPet(groom)');
+          localStorage.removeItem('groomingdate');
           navigate("/");
         }
       }

@@ -37,7 +37,7 @@ import Addgrooming from "../vendor/addGrooming.jsx"
 import AddTraining from "../vendor/addTraining.jsx"
 import PaymentSuccess from "../Payment/Success.jsx"
 import PaymentFailure from "../Payment/Failure.jsx"
-import PaymentHostelSuccess from "../Payment/EsewaIntegration(hostel).jsx"
+import PaymentHostelSuccess from "../Payment/SuccessHostel.jsx"
 import PaymentTrainingSuccess from "../Payment/EsewaIntegrationTraining.jsx"
 import TrainingInfo from "../Services/ServicesInfo/TrainingInfo.jsx"
 import GroomingInfo from "../Services/ServicesInfo/GroomingInfo.jsx"
@@ -141,7 +141,7 @@ function AppRouter() {
       element: <PaymentFailure />,
     },
     {
-      path: "/payment/failure/hostel",
+      path: "/payment/success/hostel",
       element: <PaymentHostelSuccess />,
     },
     {

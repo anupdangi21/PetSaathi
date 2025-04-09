@@ -2,26 +2,36 @@ import React, { useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 
 const EsewaIntegrationhostel = ({ amount }) => {
-    useEffect(() => {
-        const secretKey = "8gBm/:&EnhH.1/q";
-        const transactionUUID = `txn_${Date.now()}`;
-        const productCode = "EPAYTEST";
-        const totalAmount = amount;
-        const signedFieldNames = "total_amount,transaction_uuid,product_code";
+  useEffect(() => {
+    const secretKey = "8gBm/:&EnhH.1/q";
+    const transactionUUID = `txn_${Date.now()}`;
+    const productCode = "EPAYTEST";
     
-        const signature = CryptoJS.HmacSHA256(
-          `total_amount=${totalAmount},transaction_uuid=${transactionUUID},product_code=${productCode}`,
-          secretKey
-        ).toString(CryptoJS.enc.Base64);
+    // Validate amount
+    console.log("uta bata akako", amount)
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+        console.error('Invalid amount for eSewa transaction', numericAmount);
+        return;
+    }
+    const formattedAmount = numericAmount.toFixed(2);
+
+    // Rest of your existing code...
+    const signedFieldNames = "total_amount,transaction_uuid,product_code";
+
+    const signature = CryptoJS.HmacSHA256(
+      `total_amount=${formattedAmount},transaction_uuid=${transactionUUID},product_code=${productCode}`,
+      secretKey
+    ).toString(CryptoJS.enc.Base64);
     
         const form = document.createElement("form");
         form.method = "POST";
         form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
     
         const formData = {
-          amount: amount,
+          amount: formattedAmount,
           tax_amount: 0,
-          total_amount: totalAmount,
+          total_amount: formattedAmount,
           transaction_uuid: transactionUUID,
           product_code: productCode,
           product_service_charge: 0,

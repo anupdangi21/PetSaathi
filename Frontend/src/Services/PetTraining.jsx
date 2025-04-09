@@ -64,6 +64,10 @@ const PetTraining = () => {
   }, []);
 
   const handleTraining = (pet) => {
+    localStorage.setItem('selectedPet(training)', JSON.stringify(pet));
+    setTimeout(() => {
+      localStorage.removeItem('selectedPet(training)');
+  }, 60000);
     setBookingPet(pet);
     setShowConfirmation(true);
     setSelectedPet(null); // Close info modal if open

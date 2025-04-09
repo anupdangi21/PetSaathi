@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 const SuccessHostel = () => {
     const [selectedPet, setSelectedPet] = useState(null);
     const [date, setDate]=useState("")
+    const [price, setPrice]= useState("")
     const navigate = useNavigate()
     const [search]=useSearchParams()
     const info=search.get('data')
@@ -22,15 +23,19 @@ const SuccessHostel = () => {
     useEffect(() => {
       const petDetails = JSON.parse(localStorage.getItem('selectedPetHostel'));
       setSelectedPet(petDetails);
-      const petDate = (localStorage.getItem('hosteldate'));
+      const petDate = JSON.parse(localStorage.getItem('hosteldetails'));
       setDate(petDate);
+      const petPrice = (localStorage.getItem('hostelprice'));
+      setPrice(petPrice);
     }, []);
   
     const handleOk = async () => {
       const petDetails = JSON.parse(localStorage.getItem('selectedPetHostel'));
       const userData = JSON.parse(localStorage.getItem('user_data'));
-      const petDate = (localStorage.getItem('hosteldate'));
-  
+      const petDate = JSON.parse(localStorage.getItem('hosteldetails'));
+      const petPrice =(localStorage.getItem('hostelprice'));
+
+      console.log("hostel details,", petDate)
       if (!petDetails || !userData) {
         Swal.fire({
           title: 'Error!',
@@ -43,8 +48,8 @@ const SuccessHostel = () => {
   
       const submissionData = {
         image: petDetails.Image,
-        date: petDate, // Use current date if missing
-        days: petDetails.days,
+        date: petDate.date, // Use current date if missing
+        days: petDate.days,
         food: petDetails.food, 
         medicalsupport: petDetails.medicalsupport,
         petpickup: petDetails.petpickup,
@@ -55,12 +60,12 @@ const SuccessHostel = () => {
         ownercontact: userData.user.number,
         vendorcontact: petDetails.vendorcontact,
         vendoremail: petDetails.vendoremail,
-        accommodationType: petDetails.accommodationType,
-        price: petDetails.price,
+        accommodationType: petDate.accommodationType,
+        price: petDate.totalPrice,
         organizationname: petDetails.organizationname,
         paymentStatus: 'Online Paid'
       };
-  
+      console.log("save hiun", submissionData)
       try {
         const response = await axios.post("http://localhost:3000/bookhostel", submissionData, {
           headers: { "Content-Type": "application/json" },
@@ -75,8 +80,8 @@ const SuccessHostel = () => {
           });
   
           if (result.isConfirmed) {
-            localStorage.removeItem('selectedPet(groom)'); // Clear pet details after booking
-            localStorage.removeItem('groomingdate')
+            localStorage.removeItem('selectedPetHostel'); // Clear pet details after booking
+            localStorage.removeItem('hosteldate')
             navigate("/");
           }
         }

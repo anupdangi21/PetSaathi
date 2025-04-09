@@ -167,7 +167,7 @@ const Aside = () => {
             {/* Notifications Link */}
             <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <Banknote size={20} />
-              <span>Payments</span>
+              <span>Earnings</span>
             </a>
             <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <Bell size={20} />

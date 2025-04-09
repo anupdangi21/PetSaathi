@@ -6,6 +6,9 @@ const bookHostel = async(req, res)=>{
     try {
         // console.log("aako hostel data", req.body)
         const {fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating,bookedAt,paymentStatus}=req.body
+        if(!price || !days || !accommodationType){
+            return res.status(400).json({message: "Please fill all the fields."})
+        }
         const petHostel = new petHostelModel({
             fullname,
             ownercontact,
@@ -65,6 +68,7 @@ const bookHostel = async(req, res)=>{
                      };
          
          await transporter.sendMail(mailOptionsVendor);
+         return res.status(200).json({success:true, message:"Hostel booked successfully"})
              } catch (error) {
                  return res.status(400).json({status: false, message:error.message})
              }  

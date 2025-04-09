@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import EsewaIntegration from "../Payment/EsewaIntegrationgroom"
+import EsewaIntegration from "../Payment/EsewaIntegrationTraining"
 
 const trainingReservation = ({pet, onClick}) => {
     const [date, setDate]=useState("")
@@ -11,7 +11,7 @@ const trainingReservation = ({pet, onClick}) => {
     const [initiateEsewa, setInitiateEsewa]=useState(false)
   
     useEffect(() => {
-        const petDetails = JSON.parse(localStorage.getItem('selectedPet'));
+        const petDetails = JSON.parse(localStorage.getItem('selectedPet(training)'));
         setSelectedPet(petDetails); // Set the state with the pet details
     }, []);
   
@@ -26,13 +26,28 @@ const trainingReservation = ({pet, onClick}) => {
         }
 
         useEffect(() => {
-          if (date) {
-            localStorage.setItem('trainingdate', date);
-          }
-          setTimeout(() => {
-            localStorage.removeItem('trainingdate');
-        }, 120000);
-        }, [date]);
+            if (date) {
+              localStorage.setItem('trainingdate', date);
+          
+              const timeoutId = setTimeout(() => {
+                localStorage.removeItem('trainingdate');
+              }, 60000);
+          
+              return () => clearTimeout(timeoutId); // cleanup
+            }
+          }, [date]);
+          
+          useEffect(() => {
+            if (selectedTiming) {
+              localStorage.setItem('selectedtiming', selectedTiming);
+          
+              const timeoutId = setTimeout(() => {
+                localStorage.removeItem('selectedtiming');
+              }, 60000);
+          
+              return () => clearTimeout(timeoutId); // cleanup
+            }
+          }, [selectedTiming]);
   
   
         const handleSubmit = async (e) => {
