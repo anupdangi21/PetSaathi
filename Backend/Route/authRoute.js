@@ -18,6 +18,7 @@ import groomRating from "../Controllers/groomingRating.js"
 import trainRating from "../Controllers/trainingRating.js"
 import hostelRating from "../Controllers/hostelRating.js"
 import Itemmarket from "../Controllers/addItems.js"
+import Bankdetails from "../Controllers/vendorBankings.js"
 
 const {admin,getadmin, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
@@ -37,7 +38,7 @@ const {trainingRate, getrainingRate,updateTrainingRating}=trainRating
 const {hostelRate, gethostelRate,updateHostelRating}=hostelRating
 // const {verifyPayment}=GroomingVerifyPayment
 const {itemAdd,getItem, updateMarketitem, deleteMarketItem,getitemliststatus, changeitemStatus}=Itemmarket
-
+const {addBankDetails, getBankdetails}= Bankdetails
 
 
 //routes for posting the data and getting the data
@@ -150,4 +151,6 @@ authRouter.put("marketplacelisting", upload.single("Image"), updateMarketitem)
 authRouter.delete("/marketplacelisting/:_id", deleteMarketItem)
 //router for verifying payment
 
+authRouter.post("/bankaccount",addBankDetails)
+authRouter.get("/bankaccount",getBankdetails)
 export default authRouter;

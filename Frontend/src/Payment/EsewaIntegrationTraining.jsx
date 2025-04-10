@@ -26,7 +26,7 @@ const EsewaIntegrationTraining = ({ amount }) => {
           product_code: productCode,
           product_service_charge: 0,
           product_delivery_charge: 0,
-          success_url: "http://localhost:5173/payment/success/groom",
+          success_url: "http://localhost:5173/payment/success/training",
           failure_url: "http://localhost:5173/payment/failure",
           signed_field_names: signedFieldNames,
           signature: signature,

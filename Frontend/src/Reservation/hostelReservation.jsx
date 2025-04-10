@@ -18,6 +18,7 @@ const HostelReservation = () => {
     const hosteldetails = {
       date,
       days,
+      price,
       accommodationType: selectedAccommodation?.type,
     };
     
@@ -25,21 +26,21 @@ const HostelReservation = () => {
     
     const timer = setTimeout(() => {
       localStorage.removeItem('hosteldetails');
-    }, 120000); // 2 minutes
+    }, 60000); // 2 minutes
 
     return () => clearTimeout(timer);
-  }, [date, days, selectedAccommodation]);
+  }, [date, days, price,selectedAccommodation]);
 
-  useEffect (() => {
-    const price ={
-      totalPrice: price * parseInt(days || 0)
-    }
-      localStorage.setItem("hostelprice",JSON.stringify(price))
+  // useEffect (() => {
+  //   const price ={
+  //     totalPrice: price * parseInt(days || 0)
+  //   }
+  //     localStorage.setItem("hostelprice",JSON.stringify(price))
   
-      const timer = setTimeout(() => {
-        localStorage.removeItem('hostelprice');
-      }, 120000);
-   }, [price])
+  //     const timer = setTimeout(() => {
+  //       localStorage.removeItem('hostelprice');
+  //     }, 120000);
+  //  }, [price])
 
 
   useEffect(() => {

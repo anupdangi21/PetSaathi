@@ -48,6 +48,7 @@ const petAdopt = async (req, res)=>{
             };
 
 await transporter.sendMail(mailOptionsVendor);
+res.status(200).json({ success: true, message: "Appointment Booked successfully"});
     } catch (error) {
         return res.status(400).json({status: false, message:error.message})
     }

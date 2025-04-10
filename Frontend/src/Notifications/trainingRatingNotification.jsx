@@ -106,7 +106,7 @@ const trainingRatingNotification = () => {
     <aside>
       <Aside />
     </aside>
-    <main className="ml-60">
+    <main className="ml-64">
       <div className="w-full md:w-[1200px] mx-auto bg-white rounded-lg shadow-lg min-h-screen">
         <h2 className="text-2xl font-semibold text-gray-800 pt-10 pl-4">
           Your Recent Service raters:

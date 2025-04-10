@@ -38,7 +38,7 @@ import AddTraining from "../vendor/addTraining.jsx"
 import PaymentSuccess from "../Payment/Success.jsx"
 import PaymentFailure from "../Payment/Failure.jsx"
 import PaymentHostelSuccess from "../Payment/SuccessHostel.jsx"
-import PaymentTrainingSuccess from "../Payment/EsewaIntegrationTraining.jsx"
+import PaymentTrainingSuccess from "../Payment/SuccessTraining.jsx"
 import TrainingInfo from "../Services/ServicesInfo/TrainingInfo.jsx"
 import GroomingInfo from "../Services/ServicesInfo/GroomingInfo.jsx"
 import HostelInfo from "../Services/ServicesInfo/HostelInfo.jsx"
@@ -48,6 +48,7 @@ import Allvendors from "../ADMIN/Allvendors.jsx"
 import Vendorprofile from "../Pages/vendorProfile.jsx"
 import AdditemsMarket from "../Marketplace/addItems.jsx"
 import Recentitems from "../Marketplace/recentItems.jsx"
+import Vendorearnings from "../vendor/earnings.jsx"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -145,7 +146,7 @@ function AppRouter() {
       element: <PaymentHostelSuccess />,
     },
     {
-      path: "/payment/failure/training",
+      path: "/payment/success/training",
       element: <PaymentTrainingSuccess />,
     },
     {
@@ -302,6 +303,14 @@ function AppRouter() {
           <AddTraining />
         </PrivateRouter>
       ) 
+    },
+    {
+      path: "/dashboard/e9826342424674872642-A234782423e45G289hI423reffkajsgfjhGeTdDgGyshg/earnings",
+      element: (
+      <PrivateRouter>
+      <Vendorearnings />
+      </PrivateRouter>
+      )
     },
     {
       path:"/lostfound/lost",

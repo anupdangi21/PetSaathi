@@ -25,15 +25,12 @@ const SuccessHostel = () => {
       setSelectedPet(petDetails);
       const petDate = JSON.parse(localStorage.getItem('hosteldetails'));
       setDate(petDate);
-      const petPrice = (localStorage.getItem('hostelprice'));
-      setPrice(petPrice);
     }, []);
   
     const handleOk = async () => {
       const petDetails = JSON.parse(localStorage.getItem('selectedPetHostel'));
       const userData = JSON.parse(localStorage.getItem('user_data'));
       const petDate = JSON.parse(localStorage.getItem('hosteldetails'));
-      const petPrice =(localStorage.getItem('hostelprice'));
 
       console.log("hostel details,", petDate)
       if (!petDetails || !userData) {
@@ -61,7 +58,7 @@ const SuccessHostel = () => {
         vendorcontact: petDetails.vendorcontact,
         vendoremail: petDetails.vendoremail,
         accommodationType: petDate.accommodationType,
-        price: petDate.totalPrice,
+        price: petDate.price,
         organizationname: petDetails.organizationname,
         paymentStatus: 'Online Paid'
       };
@@ -81,7 +78,7 @@ const SuccessHostel = () => {
   
           if (result.isConfirmed) {
             localStorage.removeItem('selectedPetHostel'); // Clear pet details after booking
-            localStorage.removeItem('hosteldate')
+            localStorage.removeItem('hosteldetails')
             navigate("/");
           }
         }

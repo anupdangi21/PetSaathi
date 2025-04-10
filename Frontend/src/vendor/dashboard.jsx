@@ -138,7 +138,7 @@ const VendorDashboard = () => {
               <Bar 
                 dataKey="count" 
                 fill="#f97316" 
-                radius={[10, 10, 0, 0]}
+                radius={[4, 4, 0, 0]}
                 label={{ position: 'top', fill: '#6b7280' }}
               />
             </BarChart>

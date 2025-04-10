@@ -107,7 +107,7 @@ const Aside = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <aside className="bg-white shadow-lg transition-all duration-300 fixed h-full w-auto">
+      <aside className="bg-white shadow-lg transition-all duration-300 fixed h-full w-64">
         <div className='rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-200'>
           <h1 className="ml-12 font-bold text-xl text-orange-600 mt-2">Vendor Panel</h1>
           <img src={Icon} className='rounded-lg w-24 h-24 ml-12 mt-4' alt="Logo" />
@@ -139,7 +139,7 @@ const Aside = () => {
 
               {/* Services List */}
               {isServicesOpen && (
-                <div className="pl-10 space-y-2 mt-2">
+                <div className="pl-16 space-y-2 mt-2">
                   {services.map((service) => (
                     <a
                       key={service.name}
@@ -165,7 +165,7 @@ const Aside = () => {
           {/* Bottom Links */}
           <div className="absolute bottom-0 w-full p-2 border-t">
             {/* Notifications Link */}
-            <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
+            <a href="/dashboard/e9826342424674872642-A234782423e45G289hI423reffkajsgfjhGeTdDgGyshg/earnings" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
               <Banknote size={20} />
               <span>Earnings</span>
             </a>
