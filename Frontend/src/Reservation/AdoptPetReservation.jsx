@@ -62,6 +62,7 @@ const AdoptPetReservation = () => {
 
         // Proceed with form submission
         const formData = new FormData(e.target);
+        formData.append("petId", selectedPet._id)
         formData.append("image",selectedPet.Image)
         formData.append("date", date);
         formData.append("firstPet", hasFirstPet)
@@ -76,6 +77,7 @@ const AdoptPetReservation = () => {
         formData.append("vendoremail", selectedPet.email);
         // formData.append("status", selectedPet.status);
         const submissionData = {
+            petId:formData.get("petId"),
             image:formData.get("image"),
             date: formData.get('date'),
             firstPet: formData.get("firstPet"),
@@ -92,7 +94,6 @@ const AdoptPetReservation = () => {
         };
 
         console.log('Submission data:', submissionData);
-        Swal.fire('Success!', 'Your application has been submitted!', 'success');
 
         try {
             const response = await axios.post("http://localhost:3000/adoption",submissionData,{
@@ -105,7 +106,7 @@ const AdoptPetReservation = () => {
                             Swal.fire({
                                 icon: 'success',
                                 title: "Pet Adoption request",
-                                text: "Your request has been submitted successfully"
+                                text: response.data.message
                                 })
                         }
         } catch (error) {

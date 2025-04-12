@@ -6,14 +6,15 @@ import transporter from "../nodeMailer.js";
 
 const petAdopt = async (req, res)=>{
     try {
-        const {image, email,petname,Category,fullname, ownercontact, location,vendoremail, vendorcontact,date, firstPet,enoughSpace,status,bookedAt}=req.body;
+        const {petId, image, email,petname,Category,fullname, ownercontact, location,vendoremail, vendorcontact,date, firstPet,enoughSpace,status,bookedAt}=req.body;
         if(!date ){
             return res.status(400).json({message:"please select date for booking an appointment for getting the pet"})
         }
         const petadopt = new petAdoptModel({
-            image, email,petname,Category,fullname, ownercontact, location,vendoremail, vendorcontact, date, firstPet, enoughSpace, status,bookedAt
+            petId, image, email,petname,Category,fullname, ownercontact, location,vendoremail, vendorcontact, date, firstPet, enoughSpace, status,bookedAt
         })
         await petadopt.save()
+        res.status(200).json({ success: true, message: "Appointment Booked successfully"});
 
 
         const mailOptionsUser = {
@@ -46,9 +47,8 @@ const petAdopt = async (req, res)=>{
                 
                 Thank you for choosing our services.`
             };
-
 await transporter.sendMail(mailOptionsVendor);
-res.status(200).json({ success: true, message: "Appointment Booked successfully"});
+
     } catch (error) {
         return res.status(400).json({status: false, message:error.message})
     }

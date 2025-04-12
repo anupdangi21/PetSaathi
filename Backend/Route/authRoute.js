@@ -19,6 +19,7 @@ import trainRating from "../Controllers/trainingRating.js"
 import hostelRating from "../Controllers/hostelRating.js"
 import Itemmarket from "../Controllers/addItems.js"
 import Bankdetails from "../Controllers/vendorBankings.js"
+import Payment from "../Controllers/withdrawl.js"
 
 const {admin,getadmin, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
@@ -39,7 +40,7 @@ const {hostelRate, gethostelRate,updateHostelRating}=hostelRating
 // const {verifyPayment}=GroomingVerifyPayment
 const {itemAdd,getItem, updateMarketitem, deleteMarketItem,getitemliststatus, changeitemStatus}=Itemmarket
 const {addBankDetails, getBankdetails}= Bankdetails
-
+const {vendorWithdraw,getWithdrawldata,approveWithdrawal,rejectWithdrawal,getWithdrawldataApprove ,getWithdrawldataReject}=Payment
 
 //routes for posting the data and getting the data
 const authRouter = express.Router();
@@ -153,4 +154,15 @@ authRouter.delete("/marketplacelisting/:_id", deleteMarketItem)
 
 authRouter.post("/bankaccount",addBankDetails)
 authRouter.get("/bankaccount",getBankdetails)
+
+//router for posting the withdrawl request
+authRouter.post("/withdrawalrequest",vendorWithdraw)
+authRouter.get("/withdrawalrequest", getWithdrawldata)
+authRouter.get("/withdrawalrequestapprove", getWithdrawldataApprove)
+authRouter.get("/withdrawalrequestreject", getWithdrawldataReject)
+authRouter.put("/withdrawalrequestapprove/:id", approveWithdrawal);
+authRouter.put("/withdrawalrequestreject/:id", rejectWithdrawal);
+
+
+
 export default authRouter;

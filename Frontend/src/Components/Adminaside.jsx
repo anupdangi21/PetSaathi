@@ -133,7 +133,7 @@ const Adminaside = () => {
                 {/* Bottom Links */}
                 <div className="p-4 border-t">
                     <a 
-                        href="/dashboard/notification" 
+                        href="/Admin/withdrawalrequest?" 
                         className="flex items-center p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >

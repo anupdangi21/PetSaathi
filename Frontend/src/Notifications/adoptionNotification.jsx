@@ -22,6 +22,7 @@ const AdoptionNotification = () => {
         const petListingResponse = await fetch("http://localhost:3000/petlisting/status");
         if (!petListingResponse.ok) throw new Error("Failed to fetch pet listing data");
         const petListingData = await petListingResponse.json();
+
         setAdoptions(adoptionData.data || []);
         setPetListings(petListingData.data || []);
       } catch (err) {
@@ -43,7 +44,7 @@ const AdoptionNotification = () => {
     (adoption) => adoption.vendoremail === userData.user.email
   );
 
-  const handleApprove = async (petId) => {
+  const handleApprove = async (adoptionPetId) => {
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "Do you want to approve this pet adoption?",
@@ -58,18 +59,19 @@ const AdoptionNotification = () => {
     if (!result.isConfirmed) return;
 
     try {
-      // Update pet status in petlisting API
-      const response = await fetch(`http://localhost:3000/petlisting/status/${petId}`, {  // Correct endpoint
+      // Send adoptionPetId to backend to update petlisting status
+      const response = await fetch(`http://localhost:3000/petlisting/status/${adoptionPetId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "Confirmed" }),
       });
-  
+
       if (!response.ok) throw new Error("Failed to update pet status");
-      
+
+      // Update local state
       setPetListings((prevPets) =>
         prevPets.map((pet) =>
-          pet._id === petId ? { ...pet, status: "Confirmed" } : pet
+          pet._id === adoptionPetId ? { ...pet, status: "Confirmed" } : pet
         )
       );
 
@@ -95,7 +97,6 @@ const AdoptionNotification = () => {
   if (error) {
     return <div className="text-center text-red-500">Error: {error}</div>;
   }
-  
 
   return (
     <div className="bg-gray-50 flex">
@@ -107,42 +108,39 @@ const AdoptionNotification = () => {
           <h2 className="text-2xl font-semibold text-gray-800 pt-10 pl-4">
             Your Adoption Notifications
           </h2>
-          <div className="flex">
-          {filteredAdoptions.map((adoption) => {
-        const petFromListing = petListings.find(
-          (pet) => pet._id === adoption.petId || pet.email === userData.user.email
-        );
-        console.log("petFromListing for adoption:sambhavi", adoption.petId, petFromListing);
+          <div className="flex flex-wrap">
+            {filteredAdoptions.map((adoption) => {
+              const petFromListing = petListings.find(
+                (pet) => pet._id === adoption.petId
+              );
+
               return (
-              <div key={adoption._id} className="bg-white shadow-md rounded-lg p-4 w-80 mt-4 ml-4">
-                <img
-                  src={`http://localhost:3000/${adoption.image}`}
-                  alt={adoption.petname}
-                  className="w-64 h-48 object-cover rounded-md"
-                />
-                <h3 className="text-lg font-semibold mt-3">{adoption.petname}</h3>
-                <p className="text-gray-600 mt-2">Booked by: {adoption.fullname}</p>
-                <p className="text-gray-600 mt-2">Email: {adoption.email}</p>
-                <p className="text-gray-600 mt-2">Contact: {adoption.ownercontact}</p>
+                <div key={adoption._id} className="bg-white shadow-md rounded-lg p-4 w-80 mt-4 ml-4">
+                  <img
+                    src={`http://localhost:3000/${adoption.image}`}
+                    alt={adoption.petname}
+                    className="w-64 h-48 object-cover rounded-md"
+                  />
+                  <h3 className="text-lg font-semibold mt-3">{adoption.petname}</h3>
+                  <p className="text-gray-600 mt-2">Booked by: {adoption.fullname}</p>
+                  <p className="text-gray-600 mt-2">Email: {adoption.email}</p>
+                  <p className="text-gray-600 mt-2">Contact: {adoption.ownercontact}</p>
 
-                <p className="text-gray-600 mt-2">
-                Status: {petFromListing ? petFromListing.status : "Loading..."}
-                </p>
-                {petFromListing?.status === "Available" ? (
-                  <button
-                  onClick={() => handleApprove(petFromListing._id)}
-                  className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+                  <p className="text-gray-600 mt-2">
+                    Status: {petFromListing ? petFromListing.status : "Loading..."}
+                  </p>
 
-                  >
-                    Approve
-                  </button>
-                ) : (
-                  <></>
-                  // <p className="text-gray-500 mt-2">Status: {petFromListing?.status}</p>
-                )}
-              </div>
-            );
-          })}
+                  {petFromListing?.status === "Available" && (
+                    <button
+                      onClick={() => handleApprove(adoption.petId)}
+                      className="mt-3 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+                    >
+                      Approve
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>

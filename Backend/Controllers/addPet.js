@@ -104,7 +104,7 @@ const changeStatus = async (req, res) => {
     try {
         const { status } = req.body;
         const petId = req.params.id;  
-
+        console.log("ulala", petId)
         const pet = await petListModel.findById(petId);
 
         if (!pet) {

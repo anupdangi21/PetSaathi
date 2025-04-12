@@ -49,6 +49,8 @@ import Vendorprofile from "../Pages/vendorProfile.jsx"
 import AdditemsMarket from "../Marketplace/addItems.jsx"
 import Recentitems from "../Marketplace/recentItems.jsx"
 import Vendorearnings from "../vendor/earnings.jsx"
+import AdminWithdrawal from "../ADMIN/withdrawl.jsx"
+import ResetPassword from "../Components/forgetPassword.jsx"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -69,8 +71,16 @@ function AppRouter() {
       element:<Allvendors />
     },
     {
+      path:"/Admin/withdrawalrequest?",
+      element:<AdminWithdrawal />
+    },
+    {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path:"/resetpassword",
+      element:<ResetPassword />
     },
     {
       path: "/signin",

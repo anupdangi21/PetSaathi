@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import moment from "moment-timezone";
 
 const petAdoptSchema = new mongoose.Schema({
+    petId:String,
     image: String,
     email: String,
     petname: String,

@@ -8,6 +8,7 @@ import axios from 'axios';
 const Earnings = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showWithdrawalForm, setShowWithdrawalForm] = useState(false);
+  const [showHistoryData, setShowhistoryData]=useState(false)
   const [totalEarnings, setTotalEarnings] = useState({
     grooming: 0,
     hostel: 0,
@@ -19,7 +20,7 @@ const Earnings = () => {
     training: 0
   });
   const [bankDetails, setBankDetails] = useState(null);
-
+const [withdrawalDetails, setWithdrawalDetails] = useState(null);
   // State variables
   const [withdrawalAmount, setWithdrawalAmount] = useState(0);
   const [bankname, setBankname] = useState("");
@@ -86,7 +87,6 @@ const Earnings = () => {
         const userBankDetails = bankData.find(
           detail => detail.vendoremail === userEmail
         );
-        console.log("abrian",userBankDetails )
         
         if (userBankDetails) {
           setBankDetails(userBankDetails);
@@ -149,6 +149,52 @@ const Earnings = () => {
     }
   };
 
+  const handleWithdrawl = async (e) => {
+    e.preventDefault();
+    const userData = JSON.parse(localStorage.getItem('user_data'));
+    if (!userData?.user?.email) {
+      Swal.fire({
+        icon: "error",
+        title: "Authentication Error",
+        text: "User email not found. Please login again.",
+      });
+      return;
+    }
+
+    const withdrawRequest = {
+      fullname: userData.user.username,
+      vendorcontact: userData.user.number,
+      vendoremail: userData.user.email,
+      organizationname: userData.user.organizationname,
+      location: userData.user.location,
+      bankname,
+      accountnumber: accountnumber,
+      bankaccountname: bankaccountholder,
+      overallAmount: totalWithdrawal,
+      withdrawalAmount: withdrawalAmount,
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3000/withdrawalrequest", withdrawRequest);
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Withdrawal request submitted",
+          text: "Your Withdrawal request has been sent to admin",
+        });
+        setWithdrawalDetails(withdrawRequest);
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to save bank details",
+      });
+    }
+
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <aside>
@@ -166,12 +212,20 @@ const Earnings = () => {
             </div>
             
             <h3 className="text-2xl font-bold text-gray-900">NPR: {totalWithdrawal.toFixed(2)}</h3>
+            <div className='flex gap-4'>
+            <button 
+              onClick={() => setShowhistoryData(true)}
+              className='w-28 h-8 bg-blue-500 hover:bg-blue-600 mt-2 shadow-2xl text-white rounded-lg'
+            >
+              History
+            </button>
             <button 
               onClick={() => setShowWithdrawalForm(true)}
               className='w-28 h-8 bg-green-500 hover:bg-green-600 mt-2 shadow-2xl text-white rounded-lg'
             >
               Withdraw
             </button>
+            </div>
           </div>
 
           {/* Grooming Earnings Card */}
@@ -239,6 +293,7 @@ const Earnings = () => {
                 <div className="flex justify-end">
                   <button
                     type="submit"
+                    onClick={handleWithdrawl}
                     className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700"
                   >
                     Request Withdrawal
@@ -334,6 +389,34 @@ const Earnings = () => {
             </div>
           </div>
         </div>
+        <div className="flex flex-col w-full md:w-7/12 rounded-lg shadow-lg">
+        {showHistoryData && (
+      <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 rounded-lg shadow-sm">
+        <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+          <div className="overflow-hidden">
+            <table className="min-w-full text-left text-sm font-light">
+              <thead className="border-b font-medium dark:border-neutral-500">
+                <tr>
+                  <th scope="col" className="px-6 py-4">S.N</th>
+                  <th scope="col" className="px-6 py-4">Withdrawal Amount</th>
+                  <th scope="col" className="px-6 py-4">Remaining Amount</th>
+                  <th scope="col" className="px-6 py-4">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b dark:border-neutral-500">
+                  <td className="whitespace-nowrap px-6 py-4 font-medium">1</td>
+                  <td className="whitespace-nowrap px-6 py-4">Mark</td>
+                  <td className="whitespace-nowrap px-6 py-4">Otto</td>
+                  <td className="whitespace-nowrap px-6 py-4">@mdo</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+        )}
+    </div>
       </main>
     </div>
   );
