@@ -525,8 +525,8 @@ const NotificationAdmin = () => {
                   </p>
               </div>                
                 <p className="mt-2.5">
-                  Hello vendor, {trainingrating.fullname} has just reviewed your pet grooming service for package type {trainingrating.selectedpackage}.
-                  He/Her has given {trainingrating.stars} stars and also has suggestions.
+                  Hello vendor, {trainingrating.fullname} has just reviewed your pet training service for package type {trainingrating.selectedpackage}.
+                  He/Her has given {trainingrating.stars} stars and also has suggestions to improve.
                 </p>
                 <button className=' bg-white justify-end w-24 h-10 mt-2 '
                   onClick= {viewTrainingRating}
@@ -551,7 +551,7 @@ const NotificationAdmin = () => {
               </div>                
                 <p className="mt-2.5">
                   Hello vendor, {hostelrating.fullname} has just reviewed your pet hostel service for package type {hostelrating.selectedpackage}.
-                  He/Her has given {hostelrating.stars} stars and also has suggestions.
+                  He/Her has given {hostelrating.stars} stars and also has suggestions to improve.
                 </p>
                 <button className=' bg-white justify-end w-24 h-10 mt-2 '
                   onClick= {viewHostelRating}

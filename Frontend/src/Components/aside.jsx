@@ -203,12 +203,12 @@ const Aside = () => {
 
       {/* Modal for Adding Services */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div ref={modalRef} className="bg-white p-5 rounded-lg shadow-lg">
-            <Addservice closeModal={() => setShowModal(false)} />
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div ref={modalRef} className="bg-white p-5 rounded-lg shadow-lg">
+      <Addservice closeModal={() => setShowModal(false)} />
+    </div>
+  </div>
+)}
     </div>
   );
 };

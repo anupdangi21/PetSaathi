@@ -12,6 +12,7 @@ const AddItems = () => {
   const images = [Image1, Image2, Image3];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -25,7 +26,6 @@ const AddItems = () => {
   const [usedtime, setUsedtime] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [Image, setImage] = useState(null);
   const fileInputRef = useRef(null);
 
   // Pre-fill form for edit mode
@@ -37,7 +37,7 @@ const AddItems = () => {
       setUsedtime(itemData.usedtime || "");
       setPrice(itemData.price || "");
       setDescription(itemData.description || "");
-      setImage(itemData.Image || null);
+      setExistingImages(itemData.Image || []);
     }
   }, [isEdit, itemData]);
 
@@ -45,7 +45,6 @@ const AddItems = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Get user data
     const userData = JSON.parse(localStorage.getItem('user_data'));
     if (!userData?.user?.email) {
       Swal.fire({
@@ -57,7 +56,6 @@ const AddItems = () => {
       return;
     }
 
-    // Prepare form data
     const formData = new FormData();
     formData.append('itemtype', itemtype);
     formData.append('category', category);
@@ -70,6 +68,12 @@ const AddItems = () => {
     formData.append('selleremail', userData.user.email);
     formData.append('selleraddress', userData.user.location);
 
+    // Append existing images if in edit mode
+    if (isEdit) {
+      formData.append('existingImages', JSON.stringify(existingImages));
+    }
+
+    // Append new files
     selectedFiles.forEach((file) => {
       formData.append("Image", file);
     });
@@ -100,18 +104,7 @@ const AddItems = () => {
         });
 
         if (!isEdit) {
-          // Reset form
-          setItemtype("");
-          setCategory("");
-          setCondition("");
-          setUsedtime("");
-          setPrice("");
-          setDescription("");
-          setImage(null);
-          setSelectedFiles([]);
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
+          resetForm();
         }
         navigate("/marketplace");
       }
@@ -125,6 +118,21 @@ const AddItems = () => {
     }
   };
 
+  // Reset form
+  const resetForm = () => {
+    setItemtype("");
+    setCategory("");
+    setCondition("");
+    setUsedtime("");
+    setPrice("");
+    setDescription("");
+    setExistingImages([]);
+    setSelectedFiles([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   // Image slider effect
   useEffect(() => {
     const interval = setInterval(() => {
@@ -133,22 +141,22 @@ const AddItems = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle image selection
+  // Handle new image selection
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (files) {
-      setSelectedFiles(files);
-      setImage(files); // Store array of files
+      setSelectedFiles(prev => [...prev, ...files]);
     }
   };
 
-  // Remove selected image
-  const handleRemoveImage = () => {
-    setImage(null);
-    setSelectedFiles([]);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+  // Remove existing image
+  const handleRemoveExistingImage = (index) => {
+    setExistingImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Remove new image
+  const handleRemoveNewImage = (index) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -158,7 +166,7 @@ const AddItems = () => {
       </header>
 
       <main className="flex flex-col lg:flex-row mx-16 px-2 py-6 gap-6">
-        {/* Back Button */}
+        {/* Back Button (Mobile) */}
         <div className="w-full lg:hidden mb-4">
           <button 
             onClick={() => navigate('/marketplace')}
@@ -196,7 +204,7 @@ const AddItems = () => {
           </h2>
           
           <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
               <div className="w-full sm:w-1/2">
                 <label className="block mb-1 text-sm font-medium text-gray-700">Item Type</label>
                 <input 
@@ -278,22 +286,42 @@ const AddItems = () => {
               <input
                 type="file"
                 accept="image/*"
-                multiple  // Add this attribute
+                multiple
                 className="mt-2 block w-full text-sm"
                 onChange={handleImageChange}
                 ref={fileInputRef}
               />
-              {selectedFiles.length > 0 && (
+              {(existingImages.length > 0 || selectedFiles.length > 0) && (
                 <p className="text-sm text-gray-600 mt-2">
-                  {selectedFiles.length} image selected
+                  {existingImages.length} existing image(s) - {selectedFiles.length} new image(s) selected
                 </p>
               )}
             </div>
 
-            {selectedFiles.length > 0 && (
+            {(existingImages.length > 0 || selectedFiles.length > 0) && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+                {/* Existing images */}
+                {existingImages.map((imageUrl, index) => (
+                  <div key={`existing-${index}`} className="relative border rounded-lg overflow-hidden group">
+                    <img
+                      src={imageUrl}
+                      alt={`Existing preview ${index}`}
+                      className="h-32 w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveExistingImage(index)}
+                      className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 text-xs hover:bg-opacity-80 transition"
+                      title="Remove"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+
+                {/* New images */}
                 {selectedFiles.map((file, index) => (
-                  <div key={index} className="relative border rounded-lg overflow-hidden group">
+                  <div key={`new-${index}`} className="relative border rounded-lg overflow-hidden group">
                     <img
                       src={URL.createObjectURL(file)}
                       alt={`Preview ${index}`}
@@ -301,7 +329,7 @@ const AddItems = () => {
                     />
                     <button
                       type="button"
-                      onClick={handleRemoveImage}
+                      onClick={() => handleRemoveNewImage(index)}
                       className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 text-xs hover:bg-opacity-80 transition"
                       title="Remove"
                     >

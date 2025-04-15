@@ -190,7 +190,7 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
             {/* Details */}
             <div className="p-4">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold text-gray-800 truncate">{item.itemtype}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 truncate">Item Type:  {item.itemtype}</h3>
                 <p className='text-lg font-bold'>Price<span className="bg-green-500 text-zinc-50 text-sm font-medium px-2.5 py-0.5 rounded whitespace-nowrap">
                   RS {item.price}
                 </span></p>

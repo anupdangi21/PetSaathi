@@ -114,9 +114,7 @@ const trainingReservation = ({pet, onClick}) => {
             //   status: formData.get("status"),
           };
       
-          console.log('Submission data:', submissionData);
-          Swal.fire('Success!', 'Your application has been submitted!', 'success');
-      
+          console.log('Submission data:', submissionData);      
           try {
               const response = await axios.post("http://localhost:3000/booktrain", submissionData, {
                   headers: {
@@ -204,7 +202,7 @@ const trainingReservation = ({pet, onClick}) => {
                     <div className="flex flex-wrap gap-2">
                         <div className="flex-1 w-36">
                             <label className="block text-gray-700 text-sm font-bold w-96">
-                                Book a date
+                                Book a starting date
                             </label>
                             <input
                                 type="date"

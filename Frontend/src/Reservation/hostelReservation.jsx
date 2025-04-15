@@ -233,7 +233,7 @@ const HostelReservation = () => {
               </div>
 
               <div className="flex-1 w-1/2">
-                <label className="font-medium text-gray-700">No of training days*</label>
+                <label className="font-medium text-gray-700">No of hosteling days*</label>
                 <select
                 name="eligibility"
                 required

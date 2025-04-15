@@ -148,7 +148,7 @@ authRouter.get("/petreunite", getpetOwner)
 //router for posting the marketplace items 
 authRouter.post("/marketplacelisting", upload.array("Image", 5), itemAdd);
 authRouter.get("/marketplacelisting", getItem)
-authRouter.put("marketplacelisting", upload.single("Image"), updateMarketitem)
+authRouter.put("/marketplacelisting/:id", upload.array("Image", 5), updateMarketitem)
 authRouter.delete("/marketplacelisting/:_id", deleteMarketItem)
 //router for verifying payment
 

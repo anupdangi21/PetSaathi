@@ -228,7 +228,7 @@ const Hostel = () => {
                       </div>
                   <div className="col-span-2 flex mt-2">
                     <h2 className='text-lg font-semibold'>Description:</h2>
-                    <p className="text-gray-600">{selectedPet.description}</p>
+                    <p className="text-gray-600 mt-0.5 ml-1">{selectedPet.description}</p>
                   </div>
                 </div>
                 <div className="flex gap-3 ml-6 mb-6 mr-6">
@@ -238,12 +238,12 @@ const Hostel = () => {
                 >
                   Book Now
                 </button>
-                <button
+                {/* <button
                       onClick={() => setSelectedPet(pet)}
                       className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 hover"
                     >
                       <BadgeAlert  size={20} />
-                    </button>
+                    </button> */}
                     </div>
               </div>
             </div>

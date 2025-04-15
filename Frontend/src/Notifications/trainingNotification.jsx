@@ -127,7 +127,7 @@ import React, { useEffect, useState } from "react";
                    <p className="text-gray-600 mt-2">Booked by: {adoption.fullname}</p>
                    <p className="text-gray-600 mt-2">Email: {adoption.email}</p>
                    <p className="text-gray-600 mt-2">Contact: {adoption.ownercontact}</p>
-   
+                   <p className="text-gray-600 mt-2">Payment Mode: {adoption.paymentStatus}</p>
                    <p className="text-gray-600 mt-2">
                      Status: {adoption ? adoption.status : "Loading..."}
                    </p>

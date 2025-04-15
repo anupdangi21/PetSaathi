@@ -31,33 +31,57 @@ const getItem = async (req, res)=>{
     }
 }
 
-const updateMarketitem = async (req, res)=>{
+const updateMarketitem = async (req, res) => {
     try {
-        const {itemtype, category, condition, usedtime, price, description, Image}=req.body
-        const itemId = req.params.id
-        const updateitem = await additem.findById(itemId)
+        const itemId = req.params.id;
+        const { itemtype, category, condition, usedtime, price, description, existingImages } = req.body;
+        
+        // Parse existing images array
+        const existingImagesArray = existingImages ? JSON.parse(existingImages) : [];
+        
+        const updateitem = await additem.findById(itemId);
+        if (!updateitem) {
+            return res.status(404).json({ success: false, message: "Item not found" });
+        }
 
-        if(!updateitem){
-            return res.status(400).json({success:false, message:"Item not found"})
+        // Get new uploaded filenames
+        const newImages = req.files?.map(file => file.filename) || [];
 
-        }
-        if(itemtype || category || condition || usedtime || price || description || req.file){
-          updateitem.itemtype = itemtype || updateitem.itemtype
-          updateitem.category = category || updateitem.category
-          updateitem.condition = condition || updateitem.condition
-          updateitem.usedtime = usedtime || updateitem.usedtime
-          updateitem.price = price || updateitem.price
-          updateitem.description = description || updateitem.description
-            
-        if (req.file) {
-            item.Image = req.file.path.replace(/\\/g, "/");
-        }
-        }
+        // Combine existing and new images
+        const allImages = [...existingImagesArray, ...newImages];
+
+        // Update fields
+        const updates = {
+            itemtype: itemtype || updateitem.itemtype,
+            category: category || updateitem.category,
+            condition: condition || updateitem.condition,
+            usedtime: usedtime || updateitem.usedtime,
+            price: price || updateitem.price,
+            description: description || updateitem.description,
+            Image: allImages.length > 0 ? allImages : updateitem.Image
+        };
+
+        // Perform update
+        const updatedItem = await additem.findByIdAndUpdate(
+            itemId,
+            { $set: updates },
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Item updated successfully",
+            data: updatedItem
+        });
 
     } catch (error) {
-        return res.status(400).json({success:false, message:error.message})
+        console.error("Update error:", error);
+        res.status(400).json({ 
+            success: false, 
+            message: error.message
+        });
     }
-}
+};
 
 const deleteMarketItem = async (req, res) => {
     try {

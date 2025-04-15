@@ -36,9 +36,9 @@ const AdoptionNotification = () => {
     fetchData();
   }, []);
 
-  if (!userData) {
-    return <div className="text-center text-red-500">Please log in to view adoption requests.</div>;
-  }
+  // if (!userData) {
+  //   return <div className="text-center text-red-500">Please log in to view adoption requests.</div>;
+  // }
 
   const filteredAdoptions = adoptions.filter(
     (adoption) => adoption.vendoremail === userData.user.email

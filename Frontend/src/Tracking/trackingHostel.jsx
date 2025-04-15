@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import HostelRating from "../Rating/hostelRating"
 import axios from "axios"
+import moment from "moment-timezone"
+
 
 const trackingHostel = ({userEmail}) => {
     const [hostel, setHostel] = useState([]);
@@ -159,8 +161,10 @@ const trackingHostel = ({userEmail}) => {
                 className="w-full h-64 object-cover rounded-lg mt-2"
               />
               <p className="mt-2 font-medium">Booked by you</p>
+              <p className="mt-2">Booked on: {moment(grooming.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p>
               <p className="mt-2">Vendor Contact: {hostel.vendorcontact}</p>
               <p className="mt-1">Vendor Email: {hostel.vendoremail}</p>
+              <p className="mt-1">Payment Status: {hostel.paymentStatus}</p>
               <p className="mt-1">
                 Status:
                 <span className={`ml-2 px-2 py-1 rounded ${hostel.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-green-50 text-green-500'}`}>

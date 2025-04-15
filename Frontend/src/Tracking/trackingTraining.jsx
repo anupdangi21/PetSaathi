@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import TrainingRating from '../Rating/trainingRating'; 
 import axios from "axios"
+import moment from "moment-timezone"
 
 const TrackingTraining = ({ userEmail }) => {
   const [training, setTraining] = useState([]);
@@ -152,8 +153,10 @@ const TrackingTraining = ({ userEmail }) => {
                 className="w-full h-64 object-cover rounded-lg mt-2"
               />
               <p className="mt-2 font-medium">Booked by you</p>
+              <p className="mt-2">Booked on: {moment(grooming.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p>
               <p className="mt-2">Vendor Contact: {training.vendorcontact}</p>
               <p className="mt-1">Vendor Email: {training.vendoremail}</p>
+              <p className="mt-1">Payment Status: {training.paymentStatus}</p>
               <p className="mt-1">
                 Status:
                 <span className={`ml-2 px-2 py-1 rounded ${training.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-green-50 text-green-500'}`}>
