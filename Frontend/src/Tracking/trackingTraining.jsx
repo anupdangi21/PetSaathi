@@ -153,7 +153,7 @@ const TrackingTraining = ({ userEmail }) => {
                 className="w-full h-64 object-cover rounded-lg mt-2"
               />
               <p className="mt-2 font-medium">Booked by you</p>
-              <p className="mt-2">Booked on: {moment(grooming.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p>
+              <p className="mt-2">Booked on: {moment(training.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</p>
               <p className="mt-2">Vendor Contact: {training.vendorcontact}</p>
               <p className="mt-1">Vendor Email: {training.vendoremail}</p>
               <p className="mt-1">Payment Status: {training.paymentStatus}</p>

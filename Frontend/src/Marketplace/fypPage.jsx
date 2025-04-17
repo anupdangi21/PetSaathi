@@ -97,6 +97,11 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
       }
     });
   };
+  const handleInfoClick = (item) => {
+    navigate(`/marketplace/items/${item._id}`, {
+      state: { item } // Pass the entire item object as state
+    });
+  };
 
   const handleAddToCart = (item) => {
     Swal.fire({
@@ -106,10 +111,6 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
       showConfirmButton: false,
       timer: 1500,
     });
-  };
-
-  const handleInfoClick = (itemId) => {
-    navigate(`/marketplace/items/${itemId}`);
   };
 
   if (loading) {
@@ -208,12 +209,12 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
               <div className="flex justify-end gap-2 mt-4">
                 {isOwner ? (
                   <button
-                    onClick={() => handleInfoClick(item._id)}
-                    className="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 flex items-center gap-1"
-                  >
-                    <Info size={16} />
-                    View Details
-                  </button>
+                  onClick={() => handleInfoClick(item)}
+                  className="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 flex items-center gap-1"
+                >
+                  <Info size={16} />
+                  View Details
+                </button>
                 ) : (
                   <>
                     <button

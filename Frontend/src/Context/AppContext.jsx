@@ -7,6 +7,7 @@ export const AppContextProvider = (props) => {
     const [isAuthenticated, setisAuthenticated] = useState(false);
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [notificationCount, setNotificationCount] = useState(0);
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("user_data"));
@@ -40,6 +41,7 @@ export const AppContextProvider = (props) => {
         setToken(null);
         setUserData(null);
         setisAuthenticated(false);
+        setNotificationCount(0);
     };
 
     const value = {
@@ -47,6 +49,8 @@ export const AppContextProvider = (props) => {
         isAuthenticated,
         userData,
         loading,
+        notificationCount, 
+        setNotificationCount,
         login,
         logout,
     };

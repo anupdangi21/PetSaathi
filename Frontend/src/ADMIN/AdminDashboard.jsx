@@ -25,6 +25,13 @@ const AdminDashboard = () => {
     training: 0
   });
 
+    const [Bookcounts, setCountsBook] = useState({
+      grooming: 0,
+      listings: 0,
+      hostel: 0,
+      training: 0
+    });
+
   useEffect(() => {
     const fetchData = async () => {
       const userData = JSON.parse(localStorage.getItem('user_data'));
@@ -68,12 +75,61 @@ const AdminDashboard = () => {
 
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const userData = JSON.parse(localStorage.getItem('user_data'));
+      const userEmail = userData?.user?.email;
+
+      if (!userEmail) return;
+
+      try {
+        const endpoints = [
+          { url: 'http://localhost:3000/bookgroom', key: 'grooming'},
+          { url: 'http://localhost:3000/adoption', key: 'listings',},
+          { url: 'http://localhost:3000/bookhostel', key: 'hostel',},
+          { url: 'http://localhost:3000/booktrain', key: 'training'}
+        ];
+
+        const results = await Promise.all(
+          endpoints.map(async ({ url, key }) => {
+            try {
+              const response = await fetch(url);
+              if (!response.ok) throw new Error(`Failed to fetch ${key}`);
+              const { data } = await response.json();
+              const count = Array.isArray(data) ? data.length : 0;
+              return { key, count };
+            } catch (error) {
+              console.error(`Error fetching ${key}:`, error);
+              return { key, count: 0 };
+            }
+          })
+        );
+
+        const newCounts = results.reduce((acc, { key, count }) => {
+          acc[key] = count;
+          return acc;
+        }, {});
+
+        setCountsBook(prev => ({ ...prev, ...newCounts }));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const chartData = [
     { name: 'Grooming', count: counts.grooming },
     { name: 'Adoption', count: counts.listings },
     { name: 'Hostel', count: counts.hostel },
     { name: 'Training', count: counts.training },
+  ];
+  const chartData2 = [
+    { name: 'Grooming', count: Bookcounts.grooming },
+    { name: 'Adoption', count: Bookcounts.listings },
+    { name: 'Hostel', count: Bookcounts.hostel },
+    { name: 'Training', count: Bookcounts.training },
   ];
 
   return (
@@ -126,8 +182,8 @@ const AdminDashboard = () => {
             <p className="text-sm text-gray-500">Pet Adoption Listings</p>
           </div>
         </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6 h-96">
+        <div className="flex">
+        <div className="bg-white rounded-lg shadow-sm p-6 h-96 w-1/2">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Analytics Overview</h2>
           <ResponsiveContainer width="100%" height="90%">
             <BarChart data={chartData}>
@@ -143,6 +199,24 @@ const AdminDashboard = () => {
               />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 h-96 w-1/2">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Overall Bookings Analytics</h2>
+          <ResponsiveContainer width="100%" height="90%">
+            <BarChart data={chartData2}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar 
+                dataKey="count" 
+                fill="#f97316" 
+                radius={[4, 4, 0, 0]}
+                label={{ position: 'top', fill: '#6b7280' }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
         </div>
       </main>
     </div>

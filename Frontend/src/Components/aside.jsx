@@ -29,7 +29,46 @@ const Aside = () => {
 
   const modalRef = useRef(null);
   const navigate = useNavigate();
-  const { userData, logout } = useContext(AppContext);
+  const { userData, logout,notificationCount  } = useContext(AppContext);
+  const { setNotificationCount } = useContext(AppContext);
+
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (!userData?.email) return;
+  
+      try {
+        const endpoints = [
+          'adoption',
+          'bookgroom',
+          'booktrain',
+          'bookhostel',
+          'groomingreview',
+          'trainingreview',
+          'hostelreview'
+        ];
+  
+        const responses = await Promise.all(
+          endpoints.map(endpoint => 
+            axios.get(`http://localhost:3000/${endpoint}`)
+          )
+        );
+  
+        const total = responses.reduce((acc, response) => {
+          const data = response.data?.data || [];
+          return acc + data.filter(item => item.vendoremail === userData.email).length;
+        }, 0);
+  
+        setNotificationCount(total);
+        
+      } catch (err) {
+        console.error("Error fetching notifications:", err);
+        Swal.fire('Error', 'Failed to load notifications', 'error');
+      }
+    };
+  
+    fetchNotifications();
+  }, [userData?.email, setNotificationCount]);
 
   // Fetch services from the API endpoint
   useEffect(() => {
@@ -169,9 +208,16 @@ const Aside = () => {
               <Banknote size={20} />
               <span>Earnings</span>
             </a>
-            <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
+            <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors relative"
+            onClick={() => setNotificationCount(0)}
+            >
               <Bell size={20} />
               <span>Notifications</span>
+              {notificationCount > 0 && (
+                <span className="absolute bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs -top-1 -right-1">
+                  {notificationCount}
+                </span>
+              )}
             </a>
             {/* Logout Button */}
             <button 

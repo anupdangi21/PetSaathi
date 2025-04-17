@@ -18,7 +18,7 @@ const HostelReservation = () => {
     const hosteldetails = {
       date,
       days,
-      price,
+      price: price * parseInt(days),
       accommodationType: selectedAccommodation?.type,
     };
     

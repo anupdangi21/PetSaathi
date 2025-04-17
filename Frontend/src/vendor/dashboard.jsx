@@ -1,4 +1,5 @@
 import Logo from "../Images/logo.png";
+
 import Aside from "../Components/aside";
 import React, { useState, useEffect } from 'react';
 import { 
@@ -14,6 +15,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const VendorDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [counts, setCounts] = useState({
+    grooming: 0,
+    listings: 0,
+    hostel: 0,
+    training: 0
+  });
+  const [Bookcounts, setCountsBook] = useState({
     grooming: 0,
     listings: 0,
     hostel: 0,
@@ -64,6 +71,50 @@ const VendorDashboard = () => {
 
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const userData = JSON.parse(localStorage.getItem('user_data'));
+      const userEmail = userData?.user?.email;
+
+      if (!userEmail) return;
+
+      try {
+        const endpoints = [
+          { url: 'http://localhost:3000/bookgroom', key: 'grooming', emailField: 'vendoremail' },
+          { url: 'http://localhost:3000/adoption', key: 'listings', emailField: 'vendoremail' },
+          { url: 'http://localhost:3000/bookhostel', key: 'hostel', emailField: 'vendoremail' },
+          { url: 'http://localhost:3000/booktrain', key: 'training', emailField: 'vendoremail' }
+        ];
+
+        const results = await Promise.all(
+          endpoints.map(async ({ url, key, emailField }) => {
+            try {
+              const response = await fetch(url);
+              if (!response.ok) throw new Error(`Failed to fetch ${key}`);
+              const { data } = await response.json();
+              const count = Array.isArray(data) ? 
+                data.filter(item => item[emailField] === userEmail).length : 0;
+              return { key, count };
+            } catch (error) {
+              console.error(`Error fetching ${key}:`, error);
+              return { key, count: 0 };
+            }
+          })
+        );
+
+        const newCounts = results.reduce((acc, { key, count }) => {
+          acc[key] = count;
+          return acc;
+        }, {});
+
+        setCountsBook(prev => ({ ...prev, ...newCounts }));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const chartData = [
     { name: 'Grooming', count: counts.grooming },
@@ -71,6 +122,14 @@ const VendorDashboard = () => {
     { name: 'Hostel', count: counts.hostel },
     { name: 'Training', count: counts.training },
   ];
+
+  const chartData2 =[
+    { name: 'Grooming', count: Bookcounts.grooming },
+    { name: 'Adoption', count: Bookcounts.listings },
+    { name: 'Hostel', count: Bookcounts.hostel },
+    { name: 'Training', count: Bookcounts.training },
+
+  ]
 
   // Calculate the maximum value for Y-axis domain
   const maxCount = Math.max(...chartData.map(item => item.count), 1);
@@ -122,9 +181,9 @@ const VendorDashboard = () => {
             <p className="text-sm text-gray-500">Pet Adoption Listings</p>
           </div>
         </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6 h-96">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Analytics Overview</h2>
+        <div className="flex">
+        <div className="bg-white rounded-lg shadow-sm p-6 h-96 w-1/2">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Listing Overview</h2>
           <ResponsiveContainer width="100%" height="90%">
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -143,6 +202,31 @@ const VendorDashboard = () => {
               />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 h-96 w-1/2">
+        <div className="flex justify-space-between">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Bookings Overview</h2>
+          <button className="mb-4 justify-end bg-orange-200 w-16 hover:bg-orange-400 ml-64">Filter</button>
+          </div>
+          <ResponsiveContainer width="100%" height="90%">
+            <BarChart data={chartData2}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis 
+                domain={[0, maxCount]} 
+                tickCount={maxCount + 1}
+                allowDecimals={false}
+              />
+              <Tooltip />
+              <Bar 
+                dataKey="count" 
+                fill="#f97316" 
+                radius={[4, 4, 0, 0]}
+                label={{ position: 'top', fill: '#6b7280' }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
         </div>
       </main>
     </div>

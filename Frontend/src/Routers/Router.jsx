@@ -51,6 +51,7 @@ import Recentitems from "../Marketplace/recentItems.jsx"
 import Vendorearnings from "../vendor/earnings.jsx"
 import AdminWithdrawal from "../ADMIN/withdrawl.jsx"
 import ResetPassword from "../Components/forgetPassword.jsx"
+import InfoPage from "../Marketplace/infoPage.jsx"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -170,6 +171,10 @@ function AppRouter() {
     {
       path: "/services/hostel/pethostelinfo",
       element: <HostelInfo />,
+    },
+    {
+      path:"/marketplace/items/:itemId",
+      element: <InfoPage />
     },
     {
       path:"/dashboard/vendorprofile",

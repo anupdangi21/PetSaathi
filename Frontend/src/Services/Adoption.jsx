@@ -181,9 +181,9 @@ const handleFilter = () => {
                     alt={pet.petname}
                     className="w-full h-64 object-cover"
                   />
-                  <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
+                  {/* <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
                     <Heart size={20} className="text-red-500" />
-                  </button>
+                  </button> */}
                 </div>
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">

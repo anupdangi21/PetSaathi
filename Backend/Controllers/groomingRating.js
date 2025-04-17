@@ -76,7 +76,8 @@ const updateGroomingRating = async(req,res)=>{
              subject: "Pet Grooming Service Rating Response",
              text: `Hello ${username}, your rating request for grooming service from ${organizationname} has been successfully read by vendor. 
 
-            Thank you for your response.`
+            Thank you for your response.
+            `
          };
 
          await transporter.sendMail(mailOptionsUser);

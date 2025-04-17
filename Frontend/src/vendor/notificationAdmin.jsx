@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Add useContext here
+import { AppContext } from "../Context/AppContext.jsx"; 
 import Aside from "../Components/aside.jsx"
 import { Navigate, useNavigate } from 'react-router-dom';
 import moment from 'moment-timezone';
@@ -7,7 +8,7 @@ const NotificationAdmin = () => {
   const navigate = useNavigate()
 
   //fetching the data from localstorage and the api that matches the vendor logged in email and appi email
-
+  const { setNotificationCount } = useContext(AppContext);
   const [adoptions, setAdoptions] = useState([]);
   const [grooming, setGrooming] = useState([]);
   const [training, setTraining]=useState([])
@@ -19,6 +20,21 @@ const NotificationAdmin = () => {
   const [error, setError] = useState(null);
 
 
+  useEffect(() => {
+    setNotificationCount(0);
+  }, []);
+// notification indicator
+useEffect(() => {
+  const total = 
+    adoptions.length + 
+    grooming.length + 
+    training.length + 
+    hostel.length + 
+    groomingrating.length + 
+    trainingrating.length + 
+    hostelrating.length;
+  setNotificationCount(total);
+}, [adoptions, grooming, training, hostel, groomingrating, trainingrating, hostelrating]);
 
   useEffect(() => {
     // Get user email from localStorage
@@ -372,202 +388,105 @@ const NotificationAdmin = () => {
     navigate("/dashboard/notification/hostelratingnotification")
   }
 
+  const combinedNotifications = [
+    ...adoptions.map(n => ({ ...n, type: 'adoption' })),
+    ...grooming.map(n => ({ ...n, type: 'grooming' })),
+    ...training.map(n => ({ ...n, type: 'training' })),
+    ...hostel.map(n => ({ ...n, type: 'hostel' })),
+    ...groomingrating.map(n => ({ ...n, type: 'groomingrating' })),
+    ...trainingrating.map(n => ({ ...n, type: 'trainingrating' })),
+    ...hostelrating.map(n => ({ ...n, type: 'hostelrating' })),
+  ];
 
+  // Sort notifications by date (newest first)
+  const sortedNotifications = combinedNotifications.sort((a, b) => 
+    new Date(b.bookedAt) - new Date(a.bookedAt)
+  );
+
+  const typeToRoute = {
+    adoption: '/dashboard/notification/adoptionnotification',
+    grooming: '/dashboard/notification/groomingnotification',
+    training: '/dashboard/notification/trainingnotification',
+    hostel: '/dashboard/notification/hostelnotification',
+    groomingrating: '/dashboard/notification/groomingratingnotification',
+    trainingrating: '/dashboard/notification/trainingratingnotification',
+    hostelrating: '/dashboard/notification/hostelratingnotification',
+  };
+
+  const handleViewDetails = (type) => {
+    navigate(typeToRoute[type]);
+  };
+
+  const getNotificationContent = (notification) => {
+    switch(notification.type) {
+      case 'adoption':
+        return `Hello vendor, ${notification.fullname} has just viewed your adoption post for 
+                ${notification.petname} and is interested in adopting your pet. The booked date to 
+                visit your store is ${notification.date}.`;
+      case 'grooming':
+        return `Hello vendor, ${notification.fullname} has booked your grooming service for 
+                package type ${notification.selectedpackage}. Check-in date: ${notification.date}.`;
+      case 'training':
+        return `Hello vendor, ${notification.fullname} has booked your training service for 
+                package type ${notification.selectedpackage}. Check-in date: ${notification.date}.`;
+      case 'hostel':
+        return `Hello vendor, ${notification.fullname} has booked your hostel service for 
+                package type ${notification.selectedpackage}. Check-in date: ${notification.date}.`;
+      case 'groomingrating':
+        return `Hello vendor, ${notification.fullname} reviewed your grooming service with 
+                ${notification.stars} stars. Feedback: ${notification.feedback}`;
+      case 'trainingrating':
+        return `Hello vendor, ${notification.fullname} reviewed your training service with 
+                ${notification.stars} stars. Feedback: ${notification.feedback}`;
+      case 'hostelrating':
+        return `Hello vendor, ${notification.fullname} reviewed your hostel service with 
+                ${notification.stars} stars. Feedback: ${notification.feedback}`;
+      default:
+        return '';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <aside>
-        <Aside />
-      </aside>
-      <main className="ml-64">
-        <div className="w-full md:w-[1250px] mx-auto bg-white rounded-lg shadow-lg min-h-screen">
-          <h2 className="text-2xl font-semibold text-gray-800 pt-10 pl-4">
-            Your All Notifications are displayed below
-          </h2>
+    <aside>
+      <Aside />
+    </aside>
+    <main className="ml-64">
+      <div className="w-full md:w-[1250px] mx-auto bg-white rounded-lg shadow-lg min-h-screen">
+        <h2 className="text-2xl font-semibold text-gray-800 pt-10 pl-4">
+          Your All Notifications
+        </h2>
 
-          {adoptions && adoptions.length > 0 ? (
-            adoptions.map((adoption, index) => (
-              <div key={adoption._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
-              <div className='flex justify-between items-center'>
-                <h2 className="font-bold">Notification for {adoption.petname} adoption</h2>
-                <p className='text-sm'>
-                    {moment(adoption.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
-                  </p>
-              </div>               
-                <p className="mt-2.5">
-                  Hello vendor, {adoption.fullname} has just viewed your adoption post for{" "}
-                  {adoption.petname} and is interested in adopting your pet. The booked date to
-                  visit your store is {adoption.date}.
-                </p>
-                <button className=' bg-white justify-end w-24 h-8 mt-2 '
-                  onClick= {viewAdoption}
-                >
-                  View Details
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="mt-4 ml-4 text-gray-700"></p>
-          )}
+        {sortedNotifications.map((notification, index) => (
+          <div key={`${notification.type}-${index}`} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
+            <div className='flex justify-between items-center'>
+              <h2 className="font-bold">
+                Notification for {notification.type.replace(/rating$/i, '')}
+                {notification.type.includes('rating') ? ' review' : ''}
+              </h2>
+              <p className='text-sm'>
+                {moment(notification.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
+              </p>
+            </div>
+            <p className="mt-2.5">
+              {getNotificationContent(notification)}
+            </p>
+            <button 
+              className='bg-white justify-end w-24 h-8 mt-2'
+              onClick={() => handleViewDetails(notification.type)}
+            >
+              View Details
+            </button>
+          </div>
+        ))}
 
-        {/* grooming ko notification */}
-          {grooming && grooming.length > 0 ? (
-            grooming.map((grooming, index) => (
-              <div key={grooming._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
-              <div className='flex justify-between items-center'>
-                <h2 className="font-bold">Notification for grooming request</h2>
-                <p className='text-sm'>
-                    {moment(grooming.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
-                  </p>
-              </div>
-                <p className="mt-2.5">
-                  Hello vendor, {grooming.fullname} has just viewed your pet grooming service for package type {grooming.selectedpackage}
-                  {grooming.petname} and booked the service. The booked date to
-                  check-in is: {grooming.date}.
-                </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-2 '
-                  onClick= {viewGrooming}
-                >
-                  View Details
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="mt-4 ml-4 text-gray-700"></p>
-          )}
-
-          {/* training ko notification */}
-          {training && training.length > 0 ? (
-            training.map((training, index) => (
-              <div key={training._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
-                <div className='flex justify-between items-center'>
-                  <h2 className="font-bold">Notification for training request</h2>
-                  <p className='text-sm'>
-                    {moment(training.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
-                  </p>
-                </div>
-                
-                <p className="mt-2.5">
-                  Hello vendor, {training.fullname} has just viewed your pet traning service for package type {training.selectedpackage}
-                  {training.petname} and booked the service. The booked date to
-                  check-in is: {training.date}.
-                </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-2 '
-                  onClick= {viewTraining}
-                >
-                  View Details
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="mt-4 ml-4 text-gray-700"></p>
-          )}
-          
-          {/* hostel ko notification */}
-          {hostel && hostel.length > 0 ? (
-            hostel.map((hostel, index) => (
-              <div key={hostel._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
-              <div className='flex justify-between items-center'>
-                <h2 className="font-bold">Notification for hostel request</h2>
-                <p className='text-sm'>
-                    {moment(hostel.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
-                  </p>
-              </div>                
-                <p className="mt-2.5">
-                  Hello vendor, {hostel.fullname} has just viewed your pet hostel service for package type {hostel.selectedpackage}
-                  {hostel.petname} and booked the service. The booked date to
-                  check-in is: {hostel.date}.
-                </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-2 '
-                  onClick= {viewHostel}
-                >
-                  View Details
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="mt-4 ml-4 text-gray-700"></p>
-          )}
-
-          {/* grooming rating ko notification */}
-          {groomingrating && groomingrating.length > 0 ? (
-            groomingrating.map((groomingrating, index) => (
-              <div key={groomingrating._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
-              <div className='flex justify-between items-center'>
-                <h2 className="font-bold">Notification for grooming rating</h2>
-                <p className='text-sm'>
-                    {moment(groomingrating.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
-                  </p>
-              </div>                
-                <p className="mt-2.5">
-                  Hello vendor, {groomingrating.fullname} has just reviewed your pet grooming service for package type {groomingrating.selectedpackage}.
-                  He/Her has given {groomingrating.stars} stars and also has suggestions.
-                </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-2 '
-                  onClick= {viewGroomingRating}
-                >
-                  View Details
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="mt-4 ml-4 text-gray-700"></p>
-          )}
-
-          {/* training rating ko notification */}
-          {trainingrating && trainingrating.length > 0 ? (
-            trainingrating.map((trainingrating, index) => (
-              <div key={trainingrating._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
-              <div className='flex justify-between items-center'>
-                <h2 className="font-bold">Notification for training rating</h2>
-                <p className='text-sm'>
-                    {moment(trainingrating.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
-                  </p>
-              </div>                
-                <p className="mt-2.5">
-                  Hello vendor, {trainingrating.fullname} has just reviewed your pet training service for package type {trainingrating.selectedpackage}.
-                  He/Her has given {trainingrating.stars} stars and also has suggestions to improve.
-                </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-2 '
-                  onClick= {viewTrainingRating}
-                >
-                  View Details
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="mt-4 ml-4 text-gray-700"></p>
-          )}
-
-          {/* grooming rating ko notification */}
-          {hostelrating && hostelrating.length > 0 ? (
-            hostelrating.map((hostelrating, index) => (
-              <div key={hostelrating._id || index} className="rounded-lg bg-zinc-100 mt-2 ml-4 p-4">
-              <div className='flex justify-between items-center'>
-                <h2 className="font-bold">Notification for Hostel rating</h2>
-                <p className='text-sm'>
-                    {moment(hostelrating.bookedAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}
-                  </p>
-              </div>                
-                <p className="mt-2.5">
-                  Hello vendor, {hostelrating.fullname} has just reviewed your pet hostel service for package type {hostelrating.selectedpackage}.
-                  He/Her has given {hostelrating.stars} stars and also has suggestions to improve.
-                </p>
-                <button className=' bg-white justify-end w-24 h-10 mt-2 '
-                  onClick= {viewHostelRating}
-                >
-                  View Details
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="mt-4 ml-4 text-gray-700"></p>
-          )}
-
-        </div>
-      </main>
-    </div>
-  )
-}
+        {sortedNotifications.length === 0 && !loading && (
+          <p className="mt-4 ml-4 text-gray-700">No notifications found</p>
+        )}
+      </div>
+    </main>
+  </div>
+);
+};
 
 export default NotificationAdmin

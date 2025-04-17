@@ -94,9 +94,9 @@ const Hostel = () => {
       <div className="bg-gradient-to-r from-orange-200 to-orange-50 rounded-2xl p-8 mb-12 text-white">
       <h1 className="text-4xl font-bold mb-4 flex items-center justify-between">
           <span>Find Your Perfect Hostel</span>
-          <button onClick={InfoData} className="bg-orange-100 hover:bg-orange-200 px-4 py-2 rounded-m">
+          {/* <button onClick={InfoData} className="bg-orange-100 hover:bg-orange-200 px-4 py-2 rounded-m">
             <Info />
-          </button>
+          </button> */}
         </h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -109,9 +109,9 @@ const Hostel = () => {
                     alt={pet.petname}
                     className="w-full h-64 object-cover"
                   />
-                  <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
+                  {/* <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
                     <Heart size={20} className="text-red-500" />
-                  </button>
+                  </button> */}
                 </div>
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
