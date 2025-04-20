@@ -21,7 +21,7 @@ const Withdrawal = () => {
                     throw new Error('Failed to fetch withdrawal requests');
                 }
                 const data = await response.json();
-                setWithdrawalRequests(data.data);
+                setWithdrawalRequests(data.data.reverse());
             } catch (err) {
                 setError(err.message);
             } finally {

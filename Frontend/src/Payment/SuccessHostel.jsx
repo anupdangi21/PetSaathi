@@ -58,6 +58,7 @@ const SuccessHostel = () => {
         vendorcontact: petDetails.vendorcontact,
         vendoremail: petDetails.vendoremail,
         accommodationType: petDate.accommodationType,
+        accomodationCount:"1",
         price: petDate.price,
         organizationname: petDetails.organizationname,
         paymentStatus: 'Online Paid'

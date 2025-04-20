@@ -5,6 +5,7 @@ import Logo from "../Images/logo.png";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { AppContext } from "../Context/AppContext.jsx";
 import Swal from "sweetalert2";
+import { FiSearch } from "react-icons/fi";
 
 function Nav() {
     const [visible, setVisible] = useState(false);
@@ -20,6 +21,18 @@ function Nav() {
     const navigate = useNavigate()
 
     const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
+
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            navigate('/services/adoption', { 
+                state: { searchedBreed: searchTerm.trim().toLowerCase() } // Add lowercase
+            });
+            setSearchTerm("");
+        }
+    };
 
     // Fetch vendor data when authenticated
     useEffect(() => {
@@ -92,7 +105,7 @@ function Nav() {
             </div>
 
             {/* Navbar */}
-            <nav className="nav flex gap-x-8 ml-[35px]">
+            <nav className="nav flex gap-x-10 ml-[-120px]">
                 <Link to="/" className="text-white font-medium hover:text-orange-100">Home</Link>
                 <div className="relative">
                     <a href="#" onClick={(e) => { e.preventDefault(); toggleDropdown(); }} 
@@ -106,9 +119,22 @@ function Nav() {
             </nav>
 
             {/* Search Bar */}
-            <div className="search-bar ml-24 flex items-center w-[10%] flex-grow">
-                <input type="text" placeholder="Search for pets" 
-                    className="w-1/2 px-4 py-2 border border-white rounded-full" />
+            <div className="search-bar ml-24 flex items-center w-[25%] relative">
+                <form onSubmit={handleSearch} className="w-full">
+                    <input 
+                        type="text" 
+                        placeholder="Search pet breeds..." 
+                        className="w-full px-4 py-2 border border-white rounded-full pr-10"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button 
+                        type="submit"
+                        className="absolute right-2 p-2 text-orange-500 hover:text-orange-600"
+                    >
+                        <FiSearch size={20} />
+                    </button>
+                </form>
             </div>
 
                 {/* Authentication */}

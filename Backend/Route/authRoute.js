@@ -20,6 +20,7 @@ import hostelRating from "../Controllers/hostelRating.js"
 import Itemmarket from "../Controllers/addItems.js"
 import Bankdetails from "../Controllers/vendorBankings.js"
 import Payment from "../Controllers/withdrawl.js"
+import WebsiteReview from "../Controllers/reviewWebsite.js"
 
 const {admin,getadmin, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
@@ -41,7 +42,7 @@ const {hostelRate, gethostelRate,updateHostelRating}=hostelRating
 const {itemAdd,getItem, updateMarketitem, deleteMarketItem,getitemliststatus, changeitemStatus}=Itemmarket
 const {addBankDetails, getBankdetails}= Bankdetails
 const {vendorWithdraw,getWithdrawldata,approveWithdrawal,rejectWithdrawal,getWithdrawldataApprove ,getWithdrawldataReject}=Payment
-
+const {createReview,getReviews}=WebsiteReview
 //routes for posting the data and getting the data
 const authRouter = express.Router();
 authRouter.post("/admin", admin);
@@ -163,6 +164,8 @@ authRouter.get("/withdrawalrequestreject", getWithdrawldataReject)
 authRouter.put("/withdrawalrequestapprove/:id", approveWithdrawal);
 authRouter.put("/withdrawalrequestreject/:id", rejectWithdrawal);
 
-
+//router for posting the website reviews and get website reviews
+authRouter.post("/websitereview",createReview)
+authRouter.get("/websitereview",getReviews)
 
 export default authRouter;

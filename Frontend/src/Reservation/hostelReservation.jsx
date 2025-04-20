@@ -97,7 +97,7 @@ const HostelReservation = () => {
     formData.append("accommodationType", selectedAccommodation.type);
     formData.append("price", price * parseInt(days));
     formData.append("organizationname", selectedPet.organizationname);
-
+    formData.append("accomodationCount", "1")
     const submissionData = {
       image: formData.get("image"),
       date: formData.get('date'),
@@ -113,6 +113,7 @@ const HostelReservation = () => {
       vendorcontact: formData.get("vendorcontact"),
       vendoremail: formData.get("vendoremail"),
       accommodationType: formData.get("accommodationType"),
+      accomodationCount:formData.get("accomodationCount"),
       price: formData.get("price"),
       organizationname: formData.get("organizationname"),
       paymentStatus: "cash"

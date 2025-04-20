@@ -11,6 +11,7 @@ const petHostelSchema = new mongoose.Schema({
     days:String,
     price:String,
     accommodationType:String,
+    accomodationCount:{type:Number, default:1, required:true},
     vendorcontact:String,
     vendoremail:String,
     vendorlocation:String,

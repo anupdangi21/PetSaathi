@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
 import image from "../Images/PetTrain2.jpeg"
@@ -8,6 +10,53 @@ import About3 from "../Images/About-2.jpeg"
 import About4 from "../Images/rg.png"
 
 const Aboutus = () => {
+  const [formData, setFormData] = useState({
+    areaForImprovement: '',
+    suggestion: ''
+  })
+
+  const userData = JSON.parse(localStorage.getItem("user_data")) || {}
+  const user = userData?.user || {}
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    try {
+      const reviewData = {
+        username: user.username || 'Anonymous',
+        email: user.email || '',
+        areaforimprovement: formData.areaForImprovement,
+        suggestion: formData.suggestion
+      }
+
+      const response = await axios.post('http://localhost:3000/websitereview', reviewData)
+
+      if (response.data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Thank You!',
+          text: 'Your feedback has been submitted successfully!',
+          confirmButtonColor: '#f97316'
+        })
+        setFormData({ areaForImprovement: '', suggestion: '' })
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Failed',
+        text: error.response?.data?.message || 'Failed to submit feedback',
+        confirmButtonColor: '#f97316'
+      })
+    }
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
   return (
     <div className='min-h-screen bg-orange-100'>
       <Navbar />
@@ -45,28 +94,28 @@ const Aboutus = () => {
 
         {/* Features Section */}
         <section className='py-6'>
-        <div className="text-center text-2xl font-bold dark:text-black mt-10 bg-orange rounded-lg ml-8 mr-8"> 
-        <h1 className='text-4xl font-bold text-gray-800 text-center mb-8'>
+          <div className="text-center text-2xl font-bold dark:text-black mt-10 bg-orange rounded-lg ml-8 mr-8"> 
+            <h1 className='text-4xl font-bold text-gray-800 text-center mb-8'>
               Why <span className='text-orange-600'>PetSaathi</span>
             </h1>
-                <div className='grid grid-cols-3 gap-4 mt-8 h-94'>
-                  <div className='rounded-full bg-white-200 w-96 ml-8 h-96 '>
-                    <h1 className='text-center ml-8'>multiple vendor</h1>
-                    <img src={About1} className='rounded-full w-80 h-80 ml-8 mt-6'></img>
-                    <h2 className='text-center ml-8 mt-4'>100+ vendors</h2>
-                  </div>
-                  <div className='rounded-full bg-white-200 w-96 ml-8 h-96'>
-                    <h1 className='text-center ml-8'>multiple service in one</h1>
-                    <img src={About2} className='rounded-full w-80 h-80 ml-12 mt-6' />
-                    <h2 className='text-center ml-8 mt-4'>100+ happy vendors</h2>
-                  </div>
-                  <div className='rounded-full bg-white-200 w-96 ml-8'>
-                  <h1 className='text-center ml-8'>Happy customers and pets</h1>
-                    <img src={About4} className='rounded-full w-80 h-80 ml-12 mt-6'/>
-                    <h2 className='text-center ml-8 mt-4'>100+ happy customers</h2>
-                  </div>
-                </div>
-                </div>
+            <div className='grid grid-cols-3 gap-4 mt-8 h-94'>
+              <div className='rounded-full bg-white-200 w-96 ml-8 h-96 '>
+                <h1 className='text-center ml-8'>Multiple Vendors</h1>
+                <img src={About1} className='rounded-full w-80 h-80 ml-8 mt-6' alt="Vendors" />
+                <h2 className='text-center ml-8 mt-4'>100+ vendors</h2>
+              </div>
+              <div className='rounded-full bg-white-200 w-96 ml-8 h-96'>
+                <h1 className='text-center ml-8'>Multiple Services</h1>
+                <img src={About2} className='rounded-full w-80 h-80 ml-12 mt-6' alt="Services" />
+                <h2 className='text-center ml-8 mt-4'>100+ happy vendors</h2>
+              </div>
+              <div className='rounded-full bg-white-200 w-96 ml-8'>
+                <h1 className='text-center ml-8'>Happy Customers</h1>
+                <img src={About4} className='rounded-full w-80 h-80 ml-12 mt-6' alt="Customers" />
+                <h2 className='text-center ml-8 mt-4'>100+ happy customers</h2>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Contact Section */}
@@ -86,15 +135,19 @@ const Aboutus = () => {
                   Help Us Improve
                 </h2>
                 
-                <form className='space-y-6'>
+                <form className='space-y-6' onSubmit={handleSubmit}>
                   <div>
                     <label className='block text-gray-700 font-medium mb-2'>
                       Area for Improvement
                     </label>
                     <input
                       type='text'
+                      name="areaForImprovement"
+                      value={formData.areaForImprovement}
+                      onChange={handleChange}
                       className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition'
                       placeholder='What can we improve?'
+                      required
                     />
                   </div>
                   
@@ -104,8 +157,12 @@ const Aboutus = () => {
                     </label>
                     <textarea
                       rows='4'
+                      name="suggestion"
+                      value={formData.suggestion}
+                      onChange={handleChange}
                       className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition'
                       placeholder='Your valuable suggestions...'
+                      required
                     ></textarea>
                   </div>
                   

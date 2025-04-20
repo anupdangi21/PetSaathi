@@ -15,6 +15,9 @@ import {
   Menu,
   X
 } from 'lucide-react';
+import { PiHandWithdrawLight  } from "react-icons/pi";
+import { MdReviews } from "react-icons/md";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 
 const Adminaside = () => {
     const [isServicesOpen, setIsServicesOpen] = useState(false);
@@ -124,6 +127,17 @@ const Adminaside = () => {
                                         <UserCheck className="w-5 h-5 mr-2" />
                                         <span>Vendors</span>
                                     </button>
+                                    <button 
+                                        className="w-full flex items-center p-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                                        onClick={() => {
+                                            setIsServicesOpen(false);
+                                            setIsMobileMenuOpen(false);
+                                            navigate('/Admin/websitereviewss');
+                                        }}
+                                    >
+                                        <MdReviews className="w-5 h-5 mr-2" />
+                                        <span>Website-Reviews</span>
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -132,12 +146,20 @@ const Adminaside = () => {
 
                 {/* Bottom Links */}
                 <div className="p-4 border-t">
+                <a 
+                        href="/Admin/withdrawalrequest?" 
+                        className="flex items-center p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <FaMoneyBillTransfer className="w-5 h-5 mr-3" />
+                        <span>Marketplace withdrawals</span>
+                    </a>
                     <a 
                         href="/Admin/withdrawalrequest?" 
                         className="flex items-center p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        <Bell className="w-5 h-5 mr-3" />
+                        <PiHandWithdrawLight className="w-5 h-5 mr-3" />
                         <span>Withdrawl</span>
                     </a>
                     <button 

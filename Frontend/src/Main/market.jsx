@@ -68,14 +68,6 @@ function Market() {
             >
               Search
             </button>
-            <button
-              className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 flex items-center gap-1"
-              onClick={withAuth(handleAdditem)}
-            >
-              <BadgePlus />
-              <span className="hidden sm:inline"></span>
-            </button>
-
             {/* User Menu Button */}
             <div className="relative" ref={menuRef}>
               <button
@@ -104,6 +96,13 @@ function Market() {
                 </div>
               )}
             </div>
+            <button
+              className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 flex items-center gap-1"
+              onClick={withAuth(handleAdditem)}
+            >
+              <BadgePlus />
+              <span className="hidden sm:inline"></span>
+            </button>
           </form>
         </div>
 

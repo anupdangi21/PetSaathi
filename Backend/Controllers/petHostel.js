@@ -1,13 +1,43 @@
 import express from "express"
 import petHostelModel from "../Models/petHostel.js"
 import transporter from "../nodeMailer.js";
+import addPetHostel from "../Models/addHostel.js"
 
 const bookHostel = async(req, res)=>{
     try {
-        // console.log("aako hostel data", req.body)
-        const {fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating,bookedAt,paymentStatus}=req.body
+        console.log("aako hostel data", req.body)
+        const {fullname,ownercontact,email,image,date,days,price,accommodationType,accomodationCount,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,rating,bookedAt,paymentStatus}=req.body
         if(!price || !days || !accommodationType){
             return res.status(400).json({message: "Please fill all the fields."})
+        }
+
+        // Validate numeric fields
+        const countToDecrement = parseInt(accomodationCount, 10);
+        if (isNaN(countToDecrement) || countToDecrement <= 0) {
+            return res.status(400).json({ message: "Invalid accommodation count." });
+        }
+
+        // Atomic update with arrayFilters
+        const updatedHostel = await addPetHostel.findOneAndUpdate(
+            {
+                organizationname: organizationname,
+                vendorcontact: vendorcontact,
+                "accomodation.type": accommodationType
+            },
+            { $inc: { "accomodation.$[elem].count": -countToDecrement } },
+            {
+                arrayFilters: [{ 
+                    "elem.type": accommodationType,
+                    "elem.count": { $gte: countToDecrement } // Ensure enough seats
+                }],
+                new: true
+            }
+        );
+
+        if (!updatedHostel) {
+            return res.status(400).json({ 
+                message: "No available seats or invalid accommodation type." 
+            });
         }
         const petHostel = new petHostelModel({
             fullname,
@@ -18,6 +48,7 @@ const bookHostel = async(req, res)=>{
             days,
             price,
             accommodationType,
+            accomodationCount,
             vendorcontact,
             vendoremail, 
             vendorlocation,

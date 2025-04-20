@@ -1,4 +1,5 @@
 import express from "express"
+import transporter from "../nodeMailer.js";
 
 import withdrawl from "../Models/withdrawl.js"
 
@@ -6,6 +7,9 @@ const vendorWithdraw = async (req, res)=>{
     try {
         console.log("uta bata akao", req.body)
         const {fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount, status, withdrawlAt }=req.body
+        if(!bankname || !accountnumber){
+            return res.status(400).json({message: "Bank name and  account number are required"})
+        }
         if(!withdrawalAmount || !overallAmount){
             return res.status(400).json({message: "Please fill all the fields."})
         }
@@ -19,6 +23,28 @@ const vendorWithdraw = async (req, res)=>{
             fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount, status, withdrawlAt
         })
         await newWithdrawl.save()
+        const mailOptionsOwner = {
+            from: process.env.SENDER_EMAIL,
+            to: vendoremail, 
+            subject: "Online earning withdrawal response",
+            text: `Hello ${fullname}, your withdrawal request has been successfully processed. Your withdrawal amount is ${withdrawalAmount} and overall amount is ${overallAmount}
+            
+            Please wait untill admin approves your withdrawal request.
+
+            Thank you for choosing our services.`
+        };
+        
+        await transporter.sendMail(mailOptionsOwner);
+// Email to Finder
+            const mailOptionsFinder = {
+                from: process.env.SENDER_EMAIL,
+                to: "anupdangi92@gmail.com", 
+                subject: "Online earning withdrawal response",
+                text: `Hello Admin, ${fullname} has requested for online earings withdrawal.
+                Please check the withdrawal request and approve it if it is correct.`
+            };
+
+await transporter.sendMail(mailOptionsFinder);
         res.status(200).json({message: "Withdrawl created successfully."})
         
     } catch (error) {

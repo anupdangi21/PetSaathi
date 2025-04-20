@@ -4,8 +4,11 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/foot";
 import useAuthGuard from "../Context/useAuthGuard.jsx";
 import AdoptPetReservation from "../Reservation/AdoptPetReservation.jsx";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Adoption() {
+  const location = useLocation();
+    const navigate = useNavigate();
   const withAuth = useAuthGuard();
   const modalRef = useRef(null);
 
@@ -23,6 +26,19 @@ function Adoption() {
 
   const openModal = () => setShowConfirmation(true);
   const closeModal = () => setShowConfirmation(false);
+  
+
+  useEffect(() => {
+    const searchBreed = location.state?.searchedBreed;
+    if (searchBreed) {
+        setFormData(prev => ({
+            ...prev,
+            breed: searchBreed
+        }));
+        // Clear the navigation state after use
+        navigate(location.pathname, { replace: true, state: {} });
+    }
+}, [location.state, navigate, location.pathname]);
 
   useEffect(() => {
     if (showConfirmation) {
@@ -46,16 +62,20 @@ function Adoption() {
                 const userData = JSON.parse(localStorage.getItem('user_data'));
                 const userEmail = userData?.user?.email;
 
-
-                const filteredPets = result.data.filter(pet => 
+                // Initial filtering
+                let filteredPets = result.data.filter(pet => 
                     pet.status !== "Confirmed" && (!userEmail || pet.email !== userEmail)
-                );
+                ).reverse();
 
-                setPets(filteredPets.reverse());
-                setShowAdopt(filteredPets)
-            } else {
-                console.error("Unexpected API response format:", result);
-                setPets([]);
+                // Apply search filter if coming from navbar
+                if (location.state?.searchedBreed) {
+                    filteredPets = filteredPets.filter(pet =>
+                        pet.Breed.toLowerCase().includes(location.state.searchedBreed)
+                    );
+                }
+
+                setPets(filteredPets);
+                setShowAdopt(filteredPets);
             }
         } catch (error) {
             console.error('Error fetching pets:', error);
@@ -64,7 +84,7 @@ function Adoption() {
     };
 
     fetchPets();
-}, []);
+}, [location.state]);
 
 
 const handleChange = (e) =>{
@@ -84,14 +104,25 @@ const handleFilter = () => {
       : true;
       
     const breedMatch = breed
-      ? pet.Breed.toLowerCase().startsWith(breed.toLowerCase())
+      ? pet.Breed.toLowerCase().includes(breed.toLowerCase())
       : true;
 
     return speciesMatch && breedMatch;
   });
 
-  setShowAdopt(filtered);
+  // Sort results with exact matches first
+  const sortedResults = filtered.sort((a, b) => {
+    const aMatch = a.Breed.toLowerCase() === breed.toLowerCase();
+    const bMatch = b.Breed.toLowerCase() === breed.toLowerCase();
+    return (aMatch === bMatch) ? 0 : aMatch ? -1 : 1;
+  });
+
+  setShowAdopt(sortedResults);
 };
+
+useEffect(() => {
+  handleFilter();
+}, [formData.breed, selectedSpecies]);
 
   const handleAdopt = (pet) => {
     const { Description, ...petDetails } = pet;

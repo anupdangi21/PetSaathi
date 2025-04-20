@@ -4,9 +4,11 @@ import { Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import useAuthGuard from '../Context/useAuthGuard.jsx';
+import ChatBox from './chatBox.jsx';
 
 const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
   const withAuth = useAuthGuard();
+  const [chatWithSeller, setChatWithSeller] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -83,34 +85,15 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
   const userEmail = JSON.parse(localStorage.getItem('user_data'))?.user?.email || '';
 
   const handleBuyNow = (item) => {
-    Swal.fire({
-      title: `Buy ${item.itemtype}?`,
-      text: `You're about to purchase this item for RS ${item.price}`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirm Purchase',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire('Purchase Initiated!', 'The seller will contact you shortly.', 'success');
-      }
-    });
+    setChatWithSeller(item.selleremail);
   };
   const handleInfoClick = (item) => {
     navigate(`/marketplace/items/${item._id}`, {
       state: { item } // Pass the entire item object as state
     });
   };
-
-  const handleAddToCart = (item) => {
-    Swal.fire({
-      position: 'top-end',
-      icon: 'success',
-      title: `${item.itemtype} added to cart`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+  const handleInfoClick1 = (item) => {
+    navigate('/marketplace/recentitems');
   };
 
   if (loading) {
@@ -197,23 +180,25 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
                 </span></p>
               </div>
 
-              <div className="space-y-1 text-sm text-gray-600">
+              <div className="space-y-1 text-md text-gray-800">
                 <p><span className="font-medium">Category:</span> {item.category}</p>
                 <p><span className="font-medium">Condition:</span> {item.condition}</p>
                 <p><span className="font-medium">Used Time:</span> {item.usedtime}</p>
               </div>
 
-              <p className="mt-2 text-sm text-gray-500 line-clamp-2">{item.description}</p>
+              <p><span className="font-medium">Description:</span> {item.description}</p>
+
+              <p><span className="font-medium">Status:</span> {item.status}</p>
 
               {/* Buttons */}
               <div className="flex justify-end gap-2 mt-4">
                 {isOwner ? (
                   <button
-                  onClick={() => handleInfoClick(item)}
+                  onClick={() => handleInfoClick1()}
                   className="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 flex items-center gap-1"
                 >
                   <Info size={16} />
-                  View Details
+                  View All
                 </button>
                 ) : (
                   <>
@@ -224,7 +209,7 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
                       Buy Now
                     </button>
                     <button
-                      onClick={() => handleInfoClick(item._id)}
+                      onClick={() => handleInfoClick(item)}
                       className="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 flex items-center gap-1"
                     >
                       <Info size={16} />
@@ -236,6 +221,13 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
           </div>
         );
       })}
+      {chatWithSeller && (
+      <ChatBox
+        sellerEmail={chatWithSeller}
+        buyerEmail={userEmail}
+        onClose={() => setChatWithSeller(null)}
+      />
+    )}
     </div>
   );
 };

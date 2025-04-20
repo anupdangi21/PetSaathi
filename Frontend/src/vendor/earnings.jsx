@@ -4,11 +4,13 @@ import Aside from "../Components/aside"
 import { Banknote } from 'lucide-react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import moment from "moment-timezone"
 
 const Earnings = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showWithdrawalForm, setShowWithdrawalForm] = useState(false);
-  const [showHistoryData, setShowhistoryData]=useState(false)
+  const [showHistoryData, setShowHistoryData] = useState(false);
+  const [withdrawalHistory, setWithdrawalHistory] = useState([]);
   const [totalEarnings, setTotalEarnings] = useState({
     grooming: 0,
     hostel: 0,
@@ -20,8 +22,7 @@ const Earnings = () => {
     training: 0
   });
   const [bankDetails, setBankDetails] = useState(null);
-const [withdrawalDetails, setWithdrawalDetails] = useState(null);
-  // State variables
+  const [withdrawalDetails, setWithdrawalDetails] = useState(null);
   const [withdrawalAmount, setWithdrawalAmount] = useState(0);
   const [bankname, setBankname] = useState("");
   const [accountnumber, setAccountnumber] = useState("");
@@ -31,12 +32,10 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
     const fetchData = async () => {
       const userData = JSON.parse(localStorage.getItem('user_data'));
       const userEmail = userData?.user?.email;
-      console.log("match", userEmail)
 
       if (!userEmail) return;
 
       try {
-        // Fetch earnings data
         const endpoints = [
           { url: 'http://localhost:3000/bookgroom', key: 'grooming', emailField: 'vendoremail' },
           { url: 'http://localhost:3000/bookhostel', key: 'hostel', emailField: 'vendoremail' },
@@ -80,13 +79,9 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
         setTotalEarnings(prev => ({ ...prev, ...newTotalEarnings }));
         setOnlineEarnings(prev => ({ ...prev, ...newOnlineEarnings }));
 
-        // Fetch bank details
         const bankResponse = await axios.get('http://localhost:3000/bankaccount');
-        console.log("api response", bankResponse.data);
         const bankData = Array.isArray(bankResponse?.data.data) ? bankResponse.data.data : [];
-        const userBankDetails = bankData.find(
-          detail => detail.vendoremail === userEmail
-        );
+        const userBankDetails = bankData.find(detail => detail.vendoremail === userEmail);
         
         if (userBankDetails) {
           setBankDetails(userBankDetails);
@@ -102,6 +97,32 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchWithdrawalHistory = async () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem('user_data'));
+        const userEmail = userData?.user?.email;
+  
+        if (!userEmail) return;
+  
+        const response = await axios.get(`http://localhost:3000/withdrawalrequest?vendoremail=${userEmail}`);
+        
+        if (response.data && Array.isArray(response.data.data)) {
+          // Filter results to ensure only matching email entries are included
+          const matchedData = response.data.data.filter(item => item.vendoremail === userEmail);
+          setWithdrawalHistory(matchedData.reverse());
+        }
+      } catch (error) {
+        console.error('Error fetching withdrawal history:', error);
+      }
+    };
+  
+    if (showHistoryData) {
+      fetchWithdrawalHistory();
+    }
+  }, [showHistoryData]);
+  
 
   const totalWithdrawal = Object.values(onlineEarnings).reduce((sum, val) => sum + val, 0);
 
@@ -121,7 +142,7 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
     const bankData = {
       fullname: userData.user.username,
       vendorcontact: userData.user.number,
-      vendoremail: userData.user.email,
+      vendoremail: userEmail,
       organizationname: userData.user.organizationname,
       location: userData.user.location,
       bankname,
@@ -183,16 +204,17 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
           text: "Your Withdrawal request has been sent to admin",
         });
         setWithdrawalDetails(withdrawRequest);
+        setWithdrawalAmount(0);
+        setShowWithdrawalForm(false);
       }
     } catch (error) {
       console.error(error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to save bank details",
+        text: "Failed to submit withdrawal request",
       });
     }
-
   }
 
   return (
@@ -201,7 +223,7 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
         <Aside />
       </aside>
       <main className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-20'} transition-all duration-300 p-8`}>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Overall Withdrawal Card */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between mb-4">
@@ -213,18 +235,24 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
             
             <h3 className="text-2xl font-bold text-gray-900">NPR: {totalWithdrawal.toFixed(2)}</h3>
             <div className='flex gap-4'>
-            <button 
-              onClick={() => setShowhistoryData(true)}
-              className='w-28 h-8 bg-blue-500 hover:bg-blue-600 mt-2 shadow-2xl text-white rounded-lg'
-            >
-              History
-            </button>
-            <button 
-              onClick={() => setShowWithdrawalForm(true)}
-              className='w-28 h-8 bg-green-500 hover:bg-green-600 mt-2 shadow-2xl text-white rounded-lg'
-            >
-              Withdraw
-            </button>
+              <button 
+                onClick={() => {
+                  setShowHistoryData(true);
+                  setShowWithdrawalForm(false);
+                }}
+                className='w-28 h-8 bg-blue-500 hover:bg-blue-600 mt-2 shadow-2xl text-white rounded-lg'
+              >
+                History
+              </button>
+              <button 
+                onClick={() => {
+                  setShowWithdrawalForm(true);
+                  setShowHistoryData(false);
+                }}
+                className='w-28 h-8 bg-green-500 hover:bg-green-600 mt-2 shadow-2xl text-white rounded-lg'
+              >
+                Withdraw
+              </button>
             </div>
           </div>
 
@@ -297,6 +325,54 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
                     className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700"
                   >
                     Request Withdrawal
+                  </button>
+                </div>
+              </div>
+            )}
+            {showHistoryData && (
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-6">
+                <h1 className="text-lg font-bold mb-6">Withdrawal History</h1>
+                {withdrawalHistory.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">No withdrawal history found</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Date</th>
+                          <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Amount</th>
+                          <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {withdrawalHistory.map((item, index) => (
+                          <tr key={index} className="border-t border-gray-100">
+                            <td className="px-4 py-3">{moment(item.withdrawlAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</td>
+                            <td className="px-4 py-3">Amount: Rs: {(Number(item.withdrawalAmount) || 0).toFixed(2)}</td>
+                            <td className="px-4 py-3">
+                              <span className={`px-2 py-1 rounded-full text-sm ${
+                                item.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-red-100 text-red-800'
+                              }`}>
+                                {item.status || 'pending'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                <div className="mt-4 flex justify-end">
+                  <button
+                    onClick={() => {
+                      setShowHistoryData(false);
+                      setShowWithdrawalForm(true);
+                    }}
+                    className="text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    Back to Withdrawal
                   </button>
                 </div>
               </div>
@@ -387,35 +463,7 @@ const [withdrawalDetails, setWithdrawalDetails] = useState(null);
                 </form>
               )}
             </div>
-          </div>
-        </div>
-        <div className="flex flex-col w-full md:w-7/12 rounded-lg shadow-lg">
-        {showHistoryData && (
-      <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 rounded-lg shadow-sm">
-        <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-          <div className="overflow-hidden">
-            <table className="min-w-full text-left text-sm font-light">
-              <thead className="border-b font-medium dark:border-neutral-500">
-                <tr>
-                  <th scope="col" className="px-6 py-4">S.N</th>
-                  <th scope="col" className="px-6 py-4">Withdrawal Amount</th>
-                  <th scope="col" className="px-6 py-4">Remaining Amount</th>
-                  <th scope="col" className="px-6 py-4">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b dark:border-neutral-500">
-                  <td className="whitespace-nowrap px-6 py-4 font-medium">1</td>
-                  <td className="whitespace-nowrap px-6 py-4">Mark</td>
-                  <td className="whitespace-nowrap px-6 py-4">Otto</td>
-                  <td className="whitespace-nowrap px-6 py-4">@mdo</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-        )}
+            </div>
     </div>
       </main>
     </div>

@@ -52,6 +52,8 @@ import Vendorearnings from "../vendor/earnings.jsx"
 import AdminWithdrawal from "../ADMIN/withdrawl.jsx"
 import ResetPassword from "../Components/forgetPassword.jsx"
 import InfoPage from "../Marketplace/infoPage.jsx"
+import ShowAdminReview from "../ADMIN/websiteReview.jsx"
+
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -75,6 +77,11 @@ function AppRouter() {
       path:"/Admin/withdrawalrequest?",
       element:<AdminWithdrawal />
     },
+    {
+      path:"/Admin/websitereviewss",
+      element:<ShowAdminReview />
+    },
+    
     {
       path: "/register",
       element: <Register />,
