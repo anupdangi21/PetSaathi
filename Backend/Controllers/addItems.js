@@ -5,14 +5,14 @@ import additem from "../Models/addItems.js"
 const itemAdd = async (req, res)=>{
     try {
         console.log(req.body)
-        const {sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description, Image, status, bookedAt}=req.body;
+        const {sellername, sellercontact, selleremail, selleraddress, itemtype, category, condition, usedtime, price, description, Image, status, bookedAt}=req.body;
         if(!itemtype || !category || !condition || !usedtime || !price || !description){
             return res.status(400).json({message: "Please fill all the fields."})
         }
         const imagePaths = req.files.map(file => file.filename);
 
         const itemonsell = new additem({
-            sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description, Image: imagePaths, status, bookedAt
+            sellername, sellercontact, selleremail, selleraddress, itemtype, category, condition, usedtime, price, description, Image: imagePaths, status, bookedAt
         })
         console.log("marketplace ko saman aayo",itemonsell)
         await itemonsell.save()

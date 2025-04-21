@@ -23,6 +23,7 @@ const AddItems = () => {
   const [itemtype, setItemtype] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
+  const [address, setAddress] = useState('')
   const [usedtime, setUsedtime] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
@@ -66,7 +67,7 @@ const AddItems = () => {
     formData.append('sellername', userData.user.username);
     formData.append('sellercontact', userData.user.number);
     formData.append('selleremail', userData.user.email);
-    formData.append('selleraddress', userData.user.location);
+    formData.append('selleraddress', address);
 
     // Append existing images if in edit mode
     if (isEdit) {
@@ -225,8 +226,10 @@ const AddItems = () => {
                   required
                 >
                   <option value="">Select</option>
-                  <option value="bowl">Bowl</option>
-                  <option value="belt">Belt</option>
+                  <option value="Bowl">Bowl</option>
+                  <option value="Belt">Belt</option>
+                  <option value="Toys">Toys</option>
+                  <option value="Grooming stuffs">Grooming stuffs</option>
                   <option value="other">Other</option>
                 </select>
               </div>
@@ -256,8 +259,8 @@ const AddItems = () => {
                 />
               </div>
             </div>
-
-            <div>
+            <div className='flex items-center gap-4'>
+            <div className='w-full sm:w-1/2'>
               <label className="block mb-1 text-sm font-medium text-gray-700">Price (NPR)</label>
               <input 
                 type="number" 
@@ -268,7 +271,18 @@ const AddItems = () => {
                 required
               />
             </div>
-
+            <div className='w-full sm:w-1/2'>
+              <label className="block mb-1 text-sm font-medium text-gray-700">Location</label>
+              <input 
+                type="text" 
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" 
+                placeholder="e.g., Kaushaltar, bhaktapur" 
+                required
+              />
+            </div>
+            </div>
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">Description</label>
               <textarea 

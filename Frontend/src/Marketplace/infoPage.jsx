@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaArrowLeft, FaArrowRight, FaHeart, FaCommentDots, FaUser, FaTag, FaClock, FaStar } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaUser, FaTag, FaClock, FaStar } from 'react-icons/fa';
+import { GrStatusGood } from "react-icons/gr";
+import OnlineBooking from "./onlineBooking.jsx";
 import Swal from 'sweetalert2';
 import useAuthGuard from '../Context/useAuthGuard.jsx';
-import Navbar from "../Components/Navbar.jsx"
-import Footer from "../Components/foot.jsx"
+import Navbar from "../Components/Navbar.jsx";
+import Footer from "../Components/foot.jsx";
 
 const InfoPage = () => {
   const { state } = useLocation();
@@ -12,7 +14,19 @@ const InfoPage = () => {
   const navigate = useNavigate();
   const withAuth = useAuthGuard();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isHeartFilled, setIsHeartFilled] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const modalRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowBookingModal(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (!item) {
     return (
@@ -39,31 +53,9 @@ const InfoPage = () => {
     );
   };
 
-  const handleBuyNow = () => {
-    Swal.fire({
-      title: `Buy ${item.itemtype}?`,
-      text: `You're about to purchase this item for RS ${item.price}`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#f97316',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirm Purchase',
-      background: '#fff7ed',
-      customClass: {
-        title: 'text-orange-600',
-        confirmButton: 'bg-orange-500 hover:bg-orange-600',
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Purchase Initiated!',
-          text: 'The seller will contact you shortly.',
-          icon: 'success',
-          background: '#fff7ed',
-          confirmButtonColor: '#f97316'
-        });
-      }
-    });
+  const handleBuyNow = (item) => {
+    setSelectedItem(item);
+    setShowBookingModal(true);
   };
 
   const userEmail = JSON.parse(localStorage.getItem('user_data'))?.user?.email || '';
@@ -122,11 +114,12 @@ const InfoPage = () => {
               {/* Info Section */}
               <div className="p-8 flex flex-col">
                 <div className="mb-6">
-                  <p className="text-3xl font-bold text-gray-900 mb-2">{item.itemtype}</p>
-                  <div className="flex items-center mb-4">
-                    <span className="text-2xl font-bold text-orange-600">NPR {item.price}</span>
+                  <div className='flex items-center gap-80'>
+                    <p className="text-3xl font-bold text-gray-900 mb-2">{item.itemtype}</p>
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl font-bold text-orange-600">NPR {item.price}</span>
+                    </div>
                   </div>
-                  
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">Description</h3>
                     <p className="text-gray-600">{item.description}</p>
@@ -152,12 +145,15 @@ const InfoPage = () => {
                       <div>
                         <p className="text-lg text-gray-500">Condition</p>
                         <p className="font-medium">{item.condition}</p>
-                      </div>  
+                      </div> 
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <GrStatusGood className="text-orange-500" />
                       <div>
                         <p className="text-lg text-gray-500">Status</p>
                         <p className="font-medium">{item.status}</p>
                       </div>
-                    </div>
+                    </div> 
                   </div>
                 </div>
 
@@ -181,10 +177,16 @@ const InfoPage = () => {
                   {!isOwner ? (
                     <div className="flex flex-col sm:flex-row gap-4">
                       <button
-                        onClick={withAuth(handleBuyNow)}
+                        onClick={() => withAuth(() => handleBuyNow(item))()}
                         className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-xl transition duration-200 transform hover:scale-105 shadow-md"
                       >
                         Buy Now
+                      </button>
+                      <button
+                        onClick={() => navigate('/marketplace')}
+                        className="flex-1 bg-orange-300 border-2 border-orange-500 text-white py-3 rounded-xl text-lg transition duration-200 transform hover:scale-105"
+                      >
+                        Chat with seller
                       </button>
                       <button
                         onClick={() => navigate('/marketplace')}
@@ -204,7 +206,19 @@ const InfoPage = () => {
           </div>
         </div>
       </main>
-      
+
+      {/* Booking Modal */}
+      {showBookingModal && selectedItem && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div ref={modalRef} className="bg-orange-50 shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]">
+            <OnlineBooking 
+              item={selectedItem} 
+              onClose={() => setShowBookingModal(false)}
+            />
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

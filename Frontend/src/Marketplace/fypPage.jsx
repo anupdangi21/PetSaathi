@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef  } from 'react';
 import { FaArrowLeft, FaArrowRight, FaCartPlus } from 'react-icons/fa';
 import { Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import useAuthGuard from '../Context/useAuthGuard.jsx';
-import ChatBox from './chatBox.jsx';
+import OnlineBooking from "../Marketplace/onlineBooking.jsx"
 
 const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
   const withAuth = useAuthGuard();
@@ -13,7 +13,26 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentImageIndices, setCurrentImageIndices] = useState({});
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [showBookingModal, setShowBookingModal] = useState(false);
+
+    const modalRef = useRef();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowBookingModal(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleBuyNow = (item) => {
+    setSelectedItem(item);
+    setShowBookingModal(true);
+  };
 
   // Fetch data
   useEffect(() => {
@@ -84,9 +103,6 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
 
   const userEmail = JSON.parse(localStorage.getItem('user_data'))?.user?.email || '';
 
-  const handleBuyNow = (item) => {
-    setChatWithSeller(item.selleremail);
-  };
   const handleInfoClick = (item) => {
     navigate(`/marketplace/items/${item._id}`, {
       state: { item } // Pass the entire item object as state
@@ -119,6 +135,7 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
       </div>
     );
   }
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
@@ -221,13 +238,16 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
           </div>
         );
       })}
-      {chatWithSeller && (
-      <ChatBox
-        sellerEmail={chatWithSeller}
-        buyerEmail={userEmail}
-        onClose={() => setChatWithSeller(null)}
-      />
-    )}
+      {showBookingModal && selectedItem && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div ref={modalRef} className="bg-orange-50 shadow-md rounded-lg p-6 min-h-[40vh] w-full max-w-[800px]">
+            <OnlineBooking 
+              item={selectedItem} 
+              onClose={() => setShowBookingModal(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

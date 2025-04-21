@@ -90,8 +90,18 @@ function Market() {
                     >
                       Recent Listing
                     </li> 
-                    <li className="px-4 py-2 hover:bg-orange-50 cursor-pointer">Payments</li>
-                    <li className="px-4 py-2 hover:bg-orange-50 cursor-pointer">Order History</li>
+                    <li 
+                    className="px-4 py-2 hover:bg-orange-50 cursor-pointer"
+                    onClick={()=>{
+                      navigate('/marketplace/eafdsafj44w4jhjn-2452jbjkbnnlkjl25-252enrkewlkjgsgksdfs/earning')
+                    }}
+                    >Payments</li>
+                    <li 
+                    className="px-4 py-2 hover:bg-orange-50 cursor-pointer"
+                    onClick={()=>{
+                      navigate('/marketplace/orderhistory');
+                    }}
+                    >Order History</li>
                   </ul>
                 </div>
               )}

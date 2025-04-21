@@ -53,7 +53,9 @@ import AdminWithdrawal from "../ADMIN/withdrawl.jsx"
 import ResetPassword from "../Components/forgetPassword.jsx"
 import InfoPage from "../Marketplace/infoPage.jsx"
 import ShowAdminReview from "../ADMIN/websiteReview.jsx"
-
+import SuccessMarketplace from "../Payment/SuccessMarketplace.jsx"
+import OrderHistory from "../Marketplace/orderHistory.jsx"
+import MarketplaceEarning from "../Marketplace/earningsMarketplace.jsx"
 
 function AppRouter() {
   const router = createBrowserRouter([
@@ -107,8 +109,21 @@ function AppRouter() {
       element:<AdditemsMarket />,
     },
     {
+      path:"/marketplace/orderhistory",
+      element:<OrderHistory />
+    },
+    {
       path:"/marketplace/recentitems",
       element:<Recentitems />,
+    },
+    
+    {
+      path:"/payment/success/marketplace",
+      element:<SuccessMarketplace />,
+    },
+    {
+      path:"/marketplace/eafdsafj44w4jhjn-2452jbjkbnnlkjl25-252enrkewlkjgsgksdfs/earning",
+      element:<MarketplaceEarning />
     },
     {
       path: "/vendordashboard",

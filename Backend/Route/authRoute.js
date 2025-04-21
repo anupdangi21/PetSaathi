@@ -21,6 +21,9 @@ import Itemmarket from "../Controllers/addItems.js"
 import Bankdetails from "../Controllers/vendorBankings.js"
 import Payment from "../Controllers/withdrawl.js"
 import WebsiteReview from "../Controllers/reviewWebsite.js"
+import BuyMarket from "../Controllers/buyItem.js"
+
+
 
 const {admin,getadmin, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
@@ -43,6 +46,7 @@ const {itemAdd,getItem, updateMarketitem, deleteMarketItem,getitemliststatus, ch
 const {addBankDetails, getBankdetails}= Bankdetails
 const {vendorWithdraw,getWithdrawldata,approveWithdrawal,rejectWithdrawal,getWithdrawldataApprove ,getWithdrawldataReject}=Payment
 const {createReview,getReviews}=WebsiteReview
+const {buyItemMarket, getBuyItem}=BuyMarket
 //routes for posting the data and getting the data
 const authRouter = express.Router();
 authRouter.post("/admin", admin);
@@ -153,6 +157,11 @@ authRouter.put("/marketplacelisting/:id", upload.array("Image", 5), updateMarket
 authRouter.delete("/marketplacelisting/:_id", deleteMarketItem)
 //router for verifying payment
 
+//router for buying the marketplace items
+authRouter.post("/buymarketplacelisting", upload.array("Image", 5), buyItemMarket);
+authRouter.get("/buymarketplacelisting", getBuyItem)
+
+//router for adding the bank account details
 authRouter.post("/bankaccount",addBankDetails)
 authRouter.get("/bankaccount",getBankdetails)
 
