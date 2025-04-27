@@ -34,7 +34,6 @@ function Market() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Search logic will be handled in FypPage component via props
   };
 
   return (

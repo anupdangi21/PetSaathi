@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import moment from 'moment-timezone'
 
 const buyItemSchema= new mongoose.Schema({
+    itemId:String,
     fullname: String,
     ownercontact:String,
     email: String,

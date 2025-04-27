@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import useAuthGuard from '../Context/useAuthGuard.jsx';
 import Navbar from "../Components/Navbar.jsx";
 import Footer from "../Components/foot.jsx";
-
+import ChatBox from "./chatBox.jsx"
 const InfoPage = () => {
   const { state } = useLocation();
   const item = state?.item;
@@ -15,6 +15,7 @@ const InfoPage = () => {
   const withAuth = useAuthGuard();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showChatBox, setShowChatBox] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const modalRef = useRef();
 
@@ -84,7 +85,7 @@ const InfoPage = () => {
                     <img
                       src={`http://localhost:3000/uploads/${item.Image[currentImageIndex]}`}
                       alt={item.itemtype}
-                      className="object-contain max-h-[70vh] w-full rounded-lg"
+                      className="object-contain max-h-[90vh] w-full rounded-lg"
                     />
                     {totalImages > 1 && (
                       <>
@@ -114,7 +115,7 @@ const InfoPage = () => {
               {/* Info Section */}
               <div className="p-8 flex flex-col">
                 <div className="mb-6">
-                  <div className='flex items-center gap-80'>
+                  <div className='flex items-center gap-64'>
                     <p className="text-3xl font-bold text-gray-900 mb-2">{item.itemtype}</p>
                     <div className="flex items-center mb-4">
                       <span className="text-2xl font-bold text-orange-600">NPR {item.price}</span>
@@ -183,11 +184,11 @@ const InfoPage = () => {
                         Buy Now
                       </button>
                       <button
-                        onClick={() => navigate('/marketplace')}
-                        className="flex-1 bg-orange-300 border-2 border-orange-500 text-white py-3 rounded-xl text-lg transition duration-200 transform hover:scale-105"
-                      >
-                        Chat with seller
-                      </button>
+                    onClick={() => withAuth(() => setShowChatBox(true))()}
+                    className="flex-1 bg-orange-300 border-2 border-orange-500 text-white py-3 rounded-xl text-lg transition duration-200 transform hover:scale-105"
+                  >
+                    Chat with seller
+                  </button>
                       <button
                         onClick={() => navigate('/marketplace')}
                         className="flex-1 border-2 border-orange-500 text-orange-600 py-3 rounded-xl text-lg hover:bg-orange-50 hover:text-orange-700 transition duration-200 transform hover:scale-105"
@@ -218,6 +219,15 @@ const InfoPage = () => {
           </div>
         </div>
       )}
+
+      {/* chatbox */}
+      {showChatBox && (
+    <ChatBox
+      sellerEmail={item.selleremail}
+      buyerEmail={userEmail}
+      onClose={() => setShowChatBox(false)}
+    />
+  )}
 
       <Footer />
     </div>

@@ -1,22 +1,28 @@
 import express from "express"
 import BuyItem from "../Models/buyItem.js"
+import AddItem from "../Models/addItems.js"
 import transporter from "../nodeMailer.js"
 
 
 const buyItemMarket = async (req, res)=>{
     try {
         console.log(req.body)
-        const {fullname,ownercontact,email, sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description, Image,date, status, bookedAt}=req.body
+        const {itemId, fullname,ownercontact,email, sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description, Image,date, status,paymentStatus, bookedAt}=req.body
         
         const imagePaths = req.files ? req.files.map(file => file.filename) : [];
         
         const newBuyItem = new BuyItem({
-            fullname, ownercontact, email, sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description,date, Image: imagePaths, status, bookedAt
+             fullname, ownercontact, email, sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description,date, Image: imagePaths,paymentStatus, status, bookedAt
         })
         console.log("buyer ko save hunxa ta", newBuyItem)
         await newBuyItem.save()
         
-
+        const updatedAddItem = await AddItem.findByIdAndUpdate(
+            itemId, // Use itemId instead of addItemId
+            { status: "Booked" },
+            { new: true }
+          );
+//logic to update status in AddItem (status:booked)
         const mailOptionsUser = {
                     from: process.env.SENDER_EMAIL,
                     to: email, // Owner's email

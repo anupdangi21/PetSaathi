@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/foot";
 import Swal from 'sweetalert2';
-import AdoptionTracking from "../Tracking/trackingAdoption.jsx"
-import TrainingTracking from "../Tracking/trackingTraining.jsx"
-import GroomingTracking from "../Tracking/trackingGrooming.jsx"
-import HostelTracking   from "../Tracking/trackingHostel.jsx"
+import AdoptionTracking from "../Tracking/trackingAdoption.jsx";
+import TrainingTracking from "../Tracking/trackingTraining.jsx";
+import GroomingTracking from "../Tracking/trackingGrooming.jsx";
+import HostelTracking from "../Tracking/trackingHostel.jsx";
 
 const Tracking = () => {
   const [pets, setPets] = useState([]);
@@ -13,10 +13,16 @@ const Tracking = () => {
   const [error, setError] = useState(null);
   const [userEmail, setUserEmail] = useState('');
   const [ownerpet, setOwnerpet] = useState([]);
+  
   // State for dropdown visibility
-  const [showAdoptions, setShowAdoptions] = useState(false);
+  const [showServices, setShowServices] = useState(false);
+  const [showAdoption, setShowAdoption] = useState(false);
+  const [showTraining, setShowTraining] = useState(false);
+  const [showGrooming, setShowGrooming] = useState(false);
+  const [showHostel, setShowHostel] = useState(false);
   const [showFoundPets, setShowFoundPets] = useState(false);
   const [showLostPets, setShowLostPets] = useState(false);
+
   // Fetch found pets
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user_data'));
@@ -157,26 +163,77 @@ const Tracking = () => {
         {/* Service Tracking Dropdown */}
         <div className="mb-6">
           <button 
-            onClick={() => setShowAdoptions(!showAdoptions)}
+            onClick={() => setShowServices(!showServices)}
             className="w-64 p-4 bg-orange-200 rounded-lg hover:bg-orange-300 transition-colors flex justify-between items-center"
           >
             <h1 className="font-medium text-l">Service Tracking</h1>
-            <span className="text-xl">{showAdoptions ? '▲' : '▼'}</span>
+            <span className="text-xl">{showServices ? '▲' : '▼'}</span>
           </button>
           
-          {showAdoptions && (
-            <div className="mt-4 flex flex-wrap gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-              <AdoptionTracking userEmail={userEmail} />
+          {showServices && (
+            <div className="mt-4 ml-4 space-y-4">
+              {/* Adoption Tracking Dropdown */}
+              <div>
+                <button 
+                  onClick={() => setShowAdoption(!showAdoption)}
+                  className="w-56 p-3 bg-orange-300 rounded-lg hover:bg-orange-400 transition-colors flex justify-between items-center"
+                >
+                  <span>Adoption</span>
+                  <span className="text-xl">{showAdoption ? '▲' : '▼'}</span>
+                </button>
+                {showAdoption && (
+                  <div className="mt-2 ml-4">
+                    <AdoptionTracking userEmail={userEmail} />
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-              <TrainingTracking userEmail={userEmail} />
+
+              {/* Training Tracking Dropdown */}
+              <div>
+                <button 
+                  onClick={() => setShowTraining(!showTraining)}
+                  className="w-56 p-3 bg-orange-300 rounded-lg hover:bg-orange-400 transition-colors flex justify-between items-center"
+                >
+                  <span>Training</span>
+                  <span className="text-xl">{showTraining ? '▲' : '▼'}</span>
+                </button>
+                {showTraining && (
+                  <div className="mt-2 ml-4">
+                    <TrainingTracking userEmail={userEmail} />
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-              <GroomingTracking userEmail={userEmail} />
+
+              {/* Grooming Tracking Dropdown */}
+              <div>
+                <button 
+                  onClick={() => setShowGrooming(!showGrooming)}
+                  className="w-56 p-3 bg-orange-300 rounded-lg hover:bg-orange-400 transition-colors flex justify-between items-center"
+                >
+                  <span>Grooming</span>
+                  <span className="text-xl">{showGrooming ? '▲' : '▼'}</span>
+                </button>
+                {showGrooming && (
+                  <div className="mt-2 ml-4">
+                    <GroomingTracking userEmail={userEmail} />
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-              <HostelTracking   userEmail={userEmail} />
+
+              {/* Hostel Tracking Dropdown */}
+              <div>
+                <button 
+                  onClick={() => setShowHostel(!showHostel)}
+                  className="w-56 p-3 bg-orange-300 rounded-lg hover:bg-orange-400 transition-colors flex justify-between items-center"
+                >
+                  <span>Hostel</span>
+                  <span className="text-xl">{showHostel ? '▲' : '▼'}</span>
+                </button>
+                {showHostel && (
+                  <div className="mt-2 ml-4">
+                    <HostelTracking userEmail={userEmail} />
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -226,7 +283,7 @@ const Tracking = () => {
                       </div>
                     </div>
                   ))}
-                  {filteredPets.length === 0 && !loading && <p className=' mt-6 mb-6 ml-6'>No pets found matching your account.</p>}
+                  {filteredPets.length === 0 && !loading && <p className='mt-6 mb-6 ml-6'>No pets found matching your account.</p>}
                 </div>
               )}
             </div>

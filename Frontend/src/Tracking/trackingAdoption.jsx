@@ -115,7 +115,7 @@ const TrackingAdoption = ({ userEmail }) => {
               <p className="mt-1">Vendor Email: {adoption.vendoremail}</p>
               <p className="mt-1">
                 Status:
-                <span className={`ml-2 px-2 py-1 rounded ${adoption.status === 'Booked' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                <span className={`ml-2 px-2 py-1 rounded ${adoption.status === 'Booked' ? 'bg-green-100 text-green-800' : 'bg-green-200 text-green-800'}`}>
                   {adoption.status}
                 </span>
               </p>

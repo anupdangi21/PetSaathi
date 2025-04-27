@@ -193,7 +193,7 @@ const PetTraining = () => {
                 <div className='flex flex'>
                   <div className="flex flex items-center">
                     <Award size={20} className="mr-2" />
-                    <span className='font-bold text-lg flex'> Vendor Experience:</span>
+                    <span className='font-bold text-lg flex'> Trainer Experience:</span>
                     <p className="flex flex-1 ml-1 mt-0.5 text-lg"> {selectedPet.experience}</p>
                   </div>
                   <div className="flex items-center ml-20">

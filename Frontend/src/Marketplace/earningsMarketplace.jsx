@@ -1,12 +1,15 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Banknote } from 'lucide-react';
+import { Banknote , ChevronLeft } from 'lucide-react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import moment from "moment-timezone"
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/foot"
+import { useNavigate } from 'react-router-dom';
 const Earnings = () => {
+  const navigate = useNavigate()
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showWithdrawalForm, setShowWithdrawalForm] = useState(false);
   const [showHistoryData, setShowHistoryData] = useState(false);
@@ -28,7 +31,7 @@ const Earnings = () => {
       if (!userEmail) return;
 
       try {
-        const response = await fetch('http://localhost:3000/marketplacebookings');
+        const response = await fetch('http://localhost:3000/buymarketplacelisting');
         if (!response.ok) throw new Error('Failed to fetch marketplace earnings');
         const { data } = await response.json();
 
@@ -38,7 +41,7 @@ const Earnings = () => {
 
         const total = userItems.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
         const online = userItems
-          .filter(item => item.paymentStatus === 'Completed')
+          .filter(item => item.paymentStatus === 'Online Paid')
           .reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
 
         setTotalEarnings(total);
@@ -68,7 +71,7 @@ const Earnings = () => {
       try {
         const userData = JSON.parse(localStorage.getItem('user_data'));
         const userEmail = userData?.user?.email;
-  
+        console.log("vinaju", userEmail)
         if (!userEmail) return;
   
         const response = await axios.get(`http://localhost:3000/withdrawalrequest?vendoremail=${userEmail}`);
@@ -103,7 +106,7 @@ const Earnings = () => {
     const bankData = {
       fullname: userData.user.username,
       vendorcontact: userData.user.number,
-      vendoremail: userEmail,
+      vendoremail: userData.user.email,
       organizationname: userData.user.organizationname,
       location: userData.user.location,
       bankname,
@@ -147,8 +150,8 @@ const Earnings = () => {
       fullname: userData.user.username,
       vendorcontact: userData.user.number,
       vendoremail: userData.user.email,
-      organizationname: userData.user.organizationname,
-      location: userData.user.location,
+      organizationname: userData.user.organizationname || "Marketplace User",
+      location: userData.user.location || "",
       bankname,
       accountnumber: accountnumber,
       bankaccountname: bankaccountholder,
@@ -178,12 +181,21 @@ const Earnings = () => {
     }
   }
 
+  const handleBackbtn = () =>{
+    navigate("/marketplace")
+  }
+
   return (
     <div className="min-h-screen bg-orange-100 flex flex-col">
   <Navbar />
 
   <main className="flex-1 p-8 m-8">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  <button
+          className='bg-orange-300 hover:bg-orange-400 flex w-20 h-10'
+          onClick={handleBackbtn}>
+          <h1 className='flex mt-2'><ChevronLeft />  </h1>  <h1 className='mt-2.5'>Back</h1>
+          </button>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-4">
       {/* Overall Withdrawal Card */}
       <div className="bg-orange-50 rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-4">

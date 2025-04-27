@@ -8,7 +8,6 @@ import OnlineBooking from "../Marketplace/onlineBooking.jsx"
 
 const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
   const withAuth = useAuthGuard();
-  const [chatWithSeller, setChatWithSeller] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -65,7 +64,9 @@ const FypPage = ({ searchTerm = '', categoryFilter = '' }) => {
           const matchesCategory = categoryFilter
             ? item.category === categoryFilter
             : true;
-          return matchesSearch && matchesCategory;
+          // Add status filter here
+          const matchesStatus = item.status === "On sell";
+          return matchesSearch && matchesCategory && matchesStatus;
         });
 
         setItems(filteredItems.reverse());

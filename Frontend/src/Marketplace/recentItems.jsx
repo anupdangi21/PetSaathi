@@ -4,7 +4,7 @@ import Footer from "../Components/foot"
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
-
+import {ArrowLeftFromLine , ChevronLeft} from "lucide-react"
 
 const RecentOrders = () => {
   const [items, setItems] = useState([]);
@@ -127,12 +127,20 @@ const RecentOrders = () => {
     fetchItems();
   }, []);
 
+  const handleBackbtn = () =>{
+    navigate("/marketplace")
+  }
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <main className="flex-1 p-6 md:p-8 lg:p-12">
-        <h2 className="text-2xl font-bold mb-8 text-gray-800">Your Listed Items</h2>
+        <button
+                  className='bg-orange-300 hover:bg-orange-400 flex w-20 h-10'
+                  onClick={handleBackbtn}>
+                  <h1 className='flex mt-2'><ChevronLeft />  </h1>  <h1 className='mt-2.5'>Back</h1>
+                  </button>
+        <h2 className="text-2xl font-bold mb-8 text-gray-800 mt-4">Your Listed Items</h2>
         
         {loading ? (
           <div className="text-center py-12">
@@ -204,15 +212,18 @@ const RecentOrders = () => {
                       <p><span className="font-medium">Category:</span> {item.category}</p>
                       <p><span className="font-medium">Condition:</span> {item.condition}</p>
                       <p><span className="font-medium">Used Time:</span> {item.usedtime}</p>
+                      <p><span className="font-medium">Status:</span> {item.status}</p>
                     </div>
 
                     <div className="flex justify-end gap-2 mt-4">
-                      <button
-                        onClick={(e) => handleEditItem(item, e)}
-                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
-                      >
-                        Edit
-                      </button>
+                      {item.status === "On sell" && (
+                        <button
+                          onClick={(e) => handleEditItem(item, e)}
+                          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+                        >
+                          Edit
+                        </button>
+                      )}
                       <button
                         onClick={() => handleDeleteItem(item._id)}
                         className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500"

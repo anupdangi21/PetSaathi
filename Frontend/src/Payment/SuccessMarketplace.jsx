@@ -32,6 +32,7 @@ const SuccessMarketplace = () => {
       }
 
       const bookingData = {
+        itemId:selectedItem.item.id,
         fullname: userData.user.username,
         ownercontact: userData.user.number,
         email: userData.user.email,

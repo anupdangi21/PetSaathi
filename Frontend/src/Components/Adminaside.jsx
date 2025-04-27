@@ -146,14 +146,6 @@ const Adminaside = () => {
 
                 {/* Bottom Links */}
                 <div className="p-4 border-t">
-                <a 
-                        href="/Admin/withdrawalrequest?" 
-                        className="flex items-center p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                        <FaMoneyBillTransfer className="w-5 h-5 mr-3" />
-                        <span>Marketplace withdrawals</span>
-                    </a>
                     <a 
                         href="/Admin/withdrawalrequest?" 
                         className="flex items-center p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"

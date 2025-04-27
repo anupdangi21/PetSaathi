@@ -17,7 +17,7 @@ const vendorWithdraw = async (req, res)=>{
             return res.status(400).json({message: "Withdrawl amount higher than overall amount."})
         }
         if(withdrawalAmount < 100){
-            return res.status(400).json({message: "Withdrawl amount should be greater than 10 thousands" })
+            return res.status(400).json({message: "Withdrawl amount should be greater than 100" })
         }
         const newWithdrawl = new withdrawl({
             fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount, status, withdrawlAt
