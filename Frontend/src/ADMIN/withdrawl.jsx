@@ -139,6 +139,15 @@ const Withdrawal = () => {
             </aside>
 
             <main className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-20'} transition-all duration-300 p-8`}>
+            <div className="mb-6 text-lg font-semibold">
+                    Commission Earned: Rs. {Number(
+                        withdrawalRequests.reduce((total, req) => {
+                            return req.status === "Approved" && req.commissionEarned
+                                ? total + Number(req.commissionEarned)
+                                : total;
+                        }, 0)
+                    ).toFixed(2)}
+                </div>
                 {/* Pending Withdrawal Table */}
                 <div className="rounded-lg shadow-lg bg-white p-6 mb-10">
                     <h2 className="text-xl font-semibold mb-4">Pending Withdrawal Requests</h2>

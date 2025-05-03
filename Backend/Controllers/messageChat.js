@@ -11,29 +11,46 @@ export const getChatHistory = async (buyerEmail, sellerEmail) => {
   return messages;
 };
 
+// Updated getConversations function
 export const getConversations = async (userEmail) => {
-  const messages = await Message.find({
-    $or: [{ from: userEmail }, { to: userEmail }]
-  }).sort({ timestamp: -1 });
+  try {
+    // Get all unique conversations for this user
+    const rooms = await Message.distinct('room', {
+      $or: [{ from: userEmail }, { to: userEmail }]
+    });
 
-  const roomMap = new Map();
-  messages.forEach((msg) => {
-    const room = msg.room;
-    if (!roomMap.has(room)) {
+    const conversations = await Promise.all(rooms.map(async (room) => {
+      // Get the most recent message
+      const lastMessage = await Message.findOne({ room })
+        .sort({ timestamp: -1 })
+        .lean();
+
+      // Count unread messages sent TO this user that haven't been read
+      const unreadCount = await Message.countDocuments({
+        room,
+        to: userEmail,
+        read: false
+      });
+
       const participants = room.split('--');
       const otherUser = participants.find(email => email !== userEmail);
-      roomMap.set(room, {
+
+      return {
         id: room,
         buyerEmail: participants[0],
         sellerEmail: participants[1],
         otherUser,
-        lastMessage: msg.content,
-        timestamp: msg.timestamp
-      });
-    }
-  });
+        lastMessage: lastMessage.content,
+        timestamp: lastMessage.timestamp,
+        unreadCount
+      };
+    }));
 
-  return Array.from(roomMap.values()).sort((a, b) => b.timestamp - a.timestamp);
+    return conversations.sort((a, b) => b.timestamp - a.timestamp);
+  } catch (err) {
+    console.error('Error in getConversations:', err);
+    return [];
+  }
 };
 
 export const saveMessage = async (messageData) => {
@@ -41,8 +58,21 @@ export const saveMessage = async (messageData) => {
   const message = new Message({
     ...messageData,
     room,
+    read: false,
     timestamp: new Date(messageData.timestamp),
   });
   await message.save();
   return message;
+};
+
+export const markMessagesAsRead = async (room, userEmail) => {
+  console.log(`Marking messages as read for ${userEmail} in ${room}`);
+  await Message.updateMany(
+    {
+      room,
+      to: userEmail,
+      read: false
+    },
+    { $set: { read: true, readAt: new Date() } }
+  );
 };

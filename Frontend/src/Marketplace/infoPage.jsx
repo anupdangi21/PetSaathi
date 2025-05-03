@@ -225,6 +225,7 @@ const InfoPage = () => {
     <ChatBox
       sellerEmail={item.selleremail}
       buyerEmail={userEmail}
+      itemId={item._id}
       onClose={() => setShowChatBox(false)}
     />
   )}

@@ -7,6 +7,8 @@ import useAuthGuard from "../Context/useAuthGuard.jsx";
 import FypPage from "../Marketplace/fypPage.jsx"; // Import the FypPage component
 import { FaArrowLeft, FaArrowRight, FaCartPlus } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import MessageIcon from "../Marketplace/messageIcon.jsx"
+import { io } from 'socket.io-client';
 
 function Market() {
   const withAuth = useAuthGuard();
@@ -92,6 +94,12 @@ function Market() {
                     <li 
                     className="px-4 py-2 hover:bg-orange-50 cursor-pointer"
                     onClick={()=>{
+                      navigate('/marketplace/orderhistory');
+                    }}
+                    >Messages</li>
+                    <li 
+                    className="px-4 py-2 hover:bg-orange-50 cursor-pointer"
+                    onClick={()=>{
                       navigate('/marketplace/eafdsafj44w4jhjn-2452jbjkbnnlkjl25-252enrkewlkjgsgksdfs/earning')
                     }}
                     >Payments</li>
@@ -118,7 +126,7 @@ function Market() {
         {/* Render the FypPage component with search and filter props */}
         <FypPage searchTerm={searchTerm} categoryFilter={categoryFilter} />
       </main>
-
+      <MessageIcon sellerEmail={JSON.parse(localStorage.getItem('user_data'))?.email} />
       <Footer />
     </div>
   );

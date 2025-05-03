@@ -15,6 +15,7 @@ const petAdoptSchema = new mongoose.Schema({
     date: String,
     firstPet:String,
     enoughSpace:String,
+    seen: { type: Boolean, default: false, required:true },
     status:{type:String, default:"Booked", required:true},
     bookedAt: {
             type: Date,

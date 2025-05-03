@@ -4,10 +4,10 @@ import { Send, ArrowLeft, MessageSquare } from "lucide-react";
 
 const socket = io('http://localhost:3000');
 
-const ChatBox = ({ onClose, initialSellerEmail }) => {
+const ChatBox = ({ onClose, sellerEmail }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [showConversationList, setShowConversationList] = useState(!initialSellerEmail);
+  const [showConversationList, setShowConversationList] = useState(false); // Start with conversation view
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -17,13 +17,40 @@ const ChatBox = ({ onClose, initialSellerEmail }) => {
     const userEmail = userData?.email || userData?.user?.email;
     setCurrentUser(userEmail);
 
-    // Initialize socket listeners
-    socket.on('conversations', (conversations) => {
-      setConversations(conversations);
-    });
+    const initializeChat = (userEmail) => {
+      socket.emit('requestConversations', userEmail);
 
-    socket.on('previousMessages', (messages) => {
-      setMessages(messages);
+      socket.once('conversations', (existingConversations) => {
+        setConversations(existingConversations);
+
+        if (sellerEmail) {
+          const roomId = [userEmail, sellerEmail].sort().join('--');
+
+          const existingConv = existingConversations.find(conv =>
+            conv.id === roomId ||
+            ((conv.buyerEmail === userEmail && conv.sellerEmail === sellerEmail) ||
+             (conv.sellerEmail === userEmail && conv.buyerEmail === sellerEmail))
+          );
+
+          const conversationToUse = existingConv || {
+            id: roomId,
+            buyerEmail: userEmail,
+            sellerEmail: sellerEmail,
+            otherUser: sellerEmail,
+            
+          };
+
+          setSelectedConversation(conversationToUse);
+          socket.emit('joinRoom', {
+            buyerEmail: conversationToUse.buyerEmail,
+            sellerEmail: conversationToUse.sellerEmail
+          });
+        }
+      });
+    };
+
+    socket.on('previousMessages', (msgs) => {
+      setMessages(msgs);
     });
 
     socket.on('receiveMessage', (message) => {
@@ -31,58 +58,23 @@ const ChatBox = ({ onClose, initialSellerEmail }) => {
       socket.emit('requestConversations', userEmail);
     });
 
-    // Initialize based on props
-    if (initialSellerEmail) {
-      const room = [userEmail, initialSellerEmail].sort().join('--');
-      setSelectedConversation({
-        id: room,
-        buyerEmail: userEmail,
-        sellerEmail: initialSellerEmail,
-        otherUser: initialSellerEmail
-      });
-      socket.emit('joinRoom', {
-        buyerEmail: userEmail,
-        sellerEmail: initialSellerEmail
-      });
-      setShowConversationList(false);
-    } else {
-      socket.emit('requestConversations', userEmail);
-    }
+    initializeChat(userEmail);
 
     return () => {
       socket.off('receiveMessage');
       socket.off('previousMessages');
       socket.off('conversations');
     };
-  }, [initialSellerEmail]);
-
-  const handleMessageSeller = (sellerEmail) => {
-    const room = [currentUser, sellerEmail].sort().join('--');
-    const newConversation = {
-      id: room,
-      buyerEmail: currentUser,
-      sellerEmail: sellerEmail,
-      otherUser: sellerEmail
-    };
-    
-    setSelectedConversation(newConversation);
-    setShowConversationList(false);
-    socket.emit('joinRoom', {
-      buyerEmail: currentUser,
-      sellerEmail: sellerEmail
-    });
-  };
+  }, [sellerEmail]);
 
   const sendMessage = () => {
     if (!input.trim() || !selectedConversation) return;
-    
     const message = {
       from: currentUser,
       to: selectedConversation.otherUser,
       content: input,
       timestamp: new Date(),
     };
-    
     socket.emit('sendMessage', message);
     setInput('');
   };
@@ -98,7 +90,7 @@ const ChatBox = ({ onClose, initialSellerEmail }) => {
 
   const getParticipant = (conv) => {
     if (!conv) return 'Loading...';
-    return conv.otherUser || 
+    return conv.otherUser ||
       (currentUser === conv.buyerEmail ? conv.sellerEmail : conv.buyerEmail);
   };
 

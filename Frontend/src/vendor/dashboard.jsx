@@ -306,7 +306,7 @@ const VendorDashboard = () => {
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Bookings Overview</h2>
           <button 
     onClick={() => setShowFilter(true)}
-    className="bg-orange-200 px-3 py-1 rounded hover:bg-orange-400"
+    className="bg-orange-200 px-3 py-1 rounded hover:bg-orange-400 ml-64"
   >
     Filter
   </button>

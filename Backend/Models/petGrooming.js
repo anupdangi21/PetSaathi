@@ -16,6 +16,7 @@ const petGroomingSchema = new mongoose.Schema({
     vendoremail:String,
     vendorcontact:String,
     paymentStatus:String,
+    seen: { type: Boolean, default: false,required:true },
     status:{type:String, default:"Booked", required:true},
     rating:{type:String, default:"Not rated", required:true},
     bookedAt: {

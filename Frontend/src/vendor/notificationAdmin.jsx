@@ -22,9 +22,9 @@ const NotificationAdmin = () => {
 
   useEffect(() => {
     setNotificationCount(0);
-  }, []);
-// notification indicator
-useEffect(() => {
+  }, [setNotificationCount]);
+
+  useEffect(() => {
   const total = 
     adoptions.length + 
     grooming.length + 

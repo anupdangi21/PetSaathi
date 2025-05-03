@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Icon from "../Images/logo.png";
 import { AppContext } from "../Context/AppContext.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link  } from "react-router-dom";
 import Swal from 'sweetalert2';
 import Addservice from "../vendor/addService.jsx";
 import { 
@@ -208,8 +208,9 @@ const Aside = () => {
               <Banknote size={20} />
               <span>Earnings</span>
             </a>
-            <a href="/dashboard/notification" className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors relative"
-            onClick={() => setNotificationCount(0)}
+            <Link 
+              to="/dashboard/notification" 
+              className="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors relative"
             >
               <Bell size={20} />
               <span>Notifications</span>
@@ -218,7 +219,7 @@ const Aside = () => {
                   {notificationCount}
                 </span>
               )}
-            </a>
+            </Link>
             {/* Logout Button */}
             <button 
               onClick={() => {

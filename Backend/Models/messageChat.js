@@ -5,7 +5,9 @@ const messageSchema = new mongoose.Schema({
   to: { type: String, required: true },
   content: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
-  room: { type: String, required: true }
+  room: { type: String, required: true },
+  read: { type: Boolean, default: false }, // Add this field
+  readAt: Date
 });
 
 const messageChat = mongoose.model('message-market', messageSchema);

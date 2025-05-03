@@ -1,6 +1,6 @@
 // chatSocket.js
 import { getChatHistory, saveMessage, getRoomId, getConversations  } from '../Controllers/messageChat.js';
-
+import Message from "../Models/messageChat.js"
 export const configureSocket = (io) => {
   io.on('connection', (socket) => {
     socket.on('joinRoom', async ({ buyerEmail, sellerEmail }) => {
@@ -32,5 +32,31 @@ export const configureSocket = (io) => {
         console.error('Error fetching conversations:', error);
       }
     });
+    
+    socket.on('markAsRead', async ({ room, userEmail }) => {
+      try {
+        console.log(`Marking messages as read in room ${room} for ${userEmail}`);
+        await Message.updateMany(
+          {
+            room,
+            to: userEmail,
+            read: false
+          },
+          { $set: { read: true, readAt: new Date() } }
+        );
+
+        // Notify all clients in the room about the read status
+        io.to(room).emit('messagesRead', { room, userEmail });
+        
+        // Refresh conversations for the current user only
+        socket.emit('requestConversations', userEmail);
+      } catch (error) {
+        console.error('Error marking messages as read:', error);
+      }
+    });
+    socket.on('messagesRead', ({ room, userEmail }) => {
+      io.to(room).emit('requestConversations', userEmail);
+    });
+
   });
 };

@@ -12,8 +12,9 @@ const OnlineWithdrawSchema = new mongoose.Schema({
     bankaccountname:String,
     withdrawalAmount:String,
     overallAmount:String,
+    commissionEarned:String,
     reason:String,
-    // remainingAmount:String,
+    netAmount:String,
     status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
     withdrawlAt: {
             type: Date,

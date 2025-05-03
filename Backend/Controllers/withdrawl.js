@@ -18,7 +18,7 @@ const vendorWithdraw = async (req, res)=>{
         }
         if(withdrawalAmount < 100){
             return res.status(400).json({message: "Withdrawl amount should be greater than 100" })
-        }
+        }        
         const newWithdrawl = new withdrawl({
             fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount, status, withdrawlAt
         })
@@ -80,9 +80,16 @@ const getWithdrawldataReject = async(req, res)=>{
 const approveWithdrawal = async (req, res) => {
     try {
         const { id } = req.params;
+        const withdrawal = await withdrawl.findById(id);
+        const commission = withdrawal.withdrawalAmount * 0.02;
         const updatedWithdrawal = await withdrawl.findByIdAndUpdate(
             id,
-            { status: "Approved", processedAt: new Date() },
+            {
+                status: "Approved",
+                processedAt: new Date(),
+                commissionEarned: commission,
+                netAmount: withdrawal.withdrawalAmount - commission,
+            },
             { new: true }
         );
 
