@@ -44,7 +44,7 @@ const {hostelRate, gethostelRate,updateHostelRating}=hostelRating
 // const {verifyPayment}=GroomingVerifyPayment
 const {itemAdd,getItem, updateMarketitem, deleteMarketItem,getitemliststatus, changeitemStatus}=Itemmarket
 const {addBankDetails, getBankdetails}= Bankdetails
-const {vendorWithdraw,getWithdrawldata,approveWithdrawal,rejectWithdrawal,getWithdrawldataApprove ,getWithdrawldataReject}=Payment
+const {vendorWithdraw,marketWithdraw,getWithdrawldataMarket, getWithdrawldata,approveWithdrawal,rejectWithdrawal,getWithdrawldataApprove ,getWithdrawldataReject}=Payment
 const {createReview,getReviews}=WebsiteReview
 const {buyItemMarket, getBuyItem}=BuyMarket
 //routes for posting the data and getting the data
@@ -167,7 +167,9 @@ authRouter.get("/bankaccount",getBankdetails)
 
 //router for posting the withdrawl request
 authRouter.post("/withdrawalrequest",vendorWithdraw)
+authRouter.post("/withdrawalrequest/marketplace",marketWithdraw)   
 authRouter.get("/withdrawalrequest", getWithdrawldata)
+authRouter.get("/withdrawalrequest/marketplace", getWithdrawldataMarket)
 authRouter.get("/withdrawalrequestapprove", getWithdrawldataApprove)
 authRouter.get("/withdrawalrequestreject", getWithdrawldataReject)
 authRouter.put("/withdrawalrequestapprove/:id", approveWithdrawal);

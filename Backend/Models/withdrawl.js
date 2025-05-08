@@ -15,6 +15,7 @@ const OnlineWithdrawSchema = new mongoose.Schema({
     commissionEarned:String,
     reason:String,
     netAmount:String,
+    from:String,
     status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
     withdrawlAt: {
             type: Date,

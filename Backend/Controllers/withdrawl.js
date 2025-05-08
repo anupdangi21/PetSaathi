@@ -6,7 +6,7 @@ import withdrawl from "../Models/withdrawl.js"
 const vendorWithdraw = async (req, res)=>{
     try {
         console.log("uta bata akao", req.body)
-        const {fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount, status, withdrawlAt }=req.body
+        const {fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount,from, status, withdrawlAt }=req.body
         if(!bankname || !accountnumber){
             return res.status(400).json({message: "Bank name and  account number are required"})
         }
@@ -20,7 +20,7 @@ const vendorWithdraw = async (req, res)=>{
             return res.status(400).json({message: "Withdrawl amount should be greater than 100" })
         }        
         const newWithdrawl = new withdrawl({
-            fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount, status, withdrawlAt
+            fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount,from, status, withdrawlAt
         })
         await newWithdrawl.save()
         const mailOptionsOwner = {
@@ -40,7 +40,58 @@ const vendorWithdraw = async (req, res)=>{
                 from: process.env.SENDER_EMAIL,
                 to: "anupdangi92@gmail.com", 
                 subject: "Online earning withdrawal response",
-                text: `Hello Admin, ${fullname} has requested for online earings withdrawal.
+                text: `Hello Admin, ${fullname} has requested for online earings withdrawal from ${from}.
+                Please check the withdrawal request and approve it if it is correct.`
+            };
+
+await transporter.sendMail(mailOptionsFinder);
+        res.status(200).json({message: "Withdrawl created successfully."})
+        
+    } catch (error) {
+        return res.status(400).json({success:false, message:error.message})
+    }
+}
+
+
+//for marketplace
+const marketWithdraw = async (req, res)=>{
+    try {
+        console.log("uta bata akao", req.body)
+        const {fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount,from, status, withdrawlAt }=req.body
+        if(!bankname || !accountnumber){
+            return res.status(400).json({message: "Bank name and  account number are required"})
+        }
+        if(!withdrawalAmount || !overallAmount){
+            return res.status(400).json({message: "Please fill all the fields."})
+        }
+        if(withdrawalAmount > overallAmount){
+            return res.status(400).json({message: "Withdrawl amount higher than overall amount."})
+        }
+        if(withdrawalAmount < 100){
+            return res.status(400).json({message: "Withdrawl amount should be greater than 100" })
+        }        
+        const newWithdrawl = new withdrawl({
+            fullname, organizationname, vendoremail, vendorcontact, location, bankname, accountnumber,bankaccountname, withdrawalAmount, overallAmount,from, status, withdrawlAt
+        })
+        await newWithdrawl.save()
+        const mailOptionsOwner = {
+            from: process.env.SENDER_EMAIL,
+            to: vendoremail, 
+            subject: "Online earning withdrawal response",
+            text: `Hello ${fullname}, your withdrawal request has been successfully processed. Your withdrawal amount is ${withdrawalAmount} and overall amount is ${overallAmount}
+            
+            Please wait untill admin approves your withdrawal request.
+
+            Thank you for choosing our services.`
+        };
+        
+        await transporter.sendMail(mailOptionsOwner);
+// Email to Finder
+            const mailOptionsFinder = {
+                from: process.env.SENDER_EMAIL,
+                to: "anupdangi92@gmail.com", 
+                subject: "Online earning withdrawal response",
+                text: `Hello Admin, ${fullname} has requested for online earings withdrawal from ${from}.
                 Please check the withdrawal request and approve it if it is correct.`
             };
 
@@ -60,7 +111,14 @@ const getWithdrawldata = async(req, res)=>{
         return res.status(400).json({success:false, message:error.message})
     }
 }
-
+const getWithdrawldataMarket = async(req, res)=>{
+    try {
+        const getWithdraw = await withdrawl.find()
+        return res.status(200).json({success:true, data:getWithdraw})
+    } catch (error) {
+        return res.status(400).json({success:false, message:error.message})
+    }
+}
 const getWithdrawldataApprove = async(req, res)=>{
     try {
         const getWithdraw = await withdrawl.find()
@@ -135,4 +193,4 @@ const rejectWithdrawal = async (req, res) => {
         res.status(400).json({ success: false, message: error.message });
     }
 };
-export default {vendorWithdraw,getWithdrawldata,approveWithdrawal,rejectWithdrawal,getWithdrawldataApprove ,getWithdrawldataReject}
+export default {vendorWithdraw,marketWithdraw,getWithdrawldataMarket, getWithdrawldata,approveWithdrawal,rejectWithdrawal,getWithdrawldataApprove ,getWithdrawldataReject}

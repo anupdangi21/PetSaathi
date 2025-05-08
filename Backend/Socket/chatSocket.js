@@ -35,7 +35,7 @@ export const configureSocket = (io) => {
     
     socket.on('markAsRead', async ({ room, userEmail }) => {
       try {
-        console.log(`Marking messages as read in room ${room} for ${userEmail}`);
+        // console.log(`Marking messages as read in room ${room} for ${userEmail}`);
         await Message.updateMany(
           {
             room,

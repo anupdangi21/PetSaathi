@@ -109,9 +109,11 @@ const Earnings = () => {
         const response = await axios.get(`http://localhost:3000/withdrawalrequest?vendoremail=${userEmail}`);
         
         if (response.data && Array.isArray(response.data.data)) {
-          const matchedData = response.data.data.filter(item => item.vendoremail === userEmail);
+          const matchedData = response.data.data.filter(item => item.vendoremail === userEmail && item.from === "Vendor-PetSaathi");
           setWithdrawalHistory(matchedData.reverse());
+          
         }
+        
       } catch (error) {
         console.error('Error fetching withdrawal history:', error);
       }
@@ -121,10 +123,10 @@ const Earnings = () => {
       fetchWithdrawalHistory();
     }
   }, [showHistoryData]);
-  
+
   // Calculate total online earnings
   const totalWithdrawal = Object.values(onlineEarnings).reduce((sum, val) => sum + val, 0);
-  
+  // console.log("1anup", totalWithdrawal)
   // Calculate total approved withdrawals
   const totalApprovedWithdrawals = withdrawalHistory
     .filter(item => item.status === 'Approved')
@@ -220,7 +222,7 @@ const Earnings = () => {
       bankaccountname: bankaccountholder,
       overallAmount: totalWithdrawal,
       withdrawalAmount: withdrawalAmount,
-      status: "Pending",
+      from:"Vendor-PetSaathi",
       withdrawlAt: new Date().toISOString()
     }
 
@@ -381,7 +383,7 @@ const Earnings = () => {
                         {withdrawalHistory.map((item, index) => (
                           <tr key={index} className="border-t border-gray-100">
                             <td className="px-4 py-3">{moment(item.withdrawlAt).tz("Asia/Kathmandu").format("MMM Do YYYY, h:mm:ss a")}</td>
-                            <td className="px-4 py-3">NPR: {(Number(item.netAmount) || 0).toFixed(2)}</td>
+                            <td className="px-4 py-3">NPR: {(Number(item.netAmount || item.withdrawalAmount) || 0).toFixed(2)}</td>
                             <td className="px-4 py-3">
                               <span className={`px-2 py-1 rounded-full text-sm ${
                                 item.status === 'Approved' ? 'bg-green-100 text-green-800' :
