@@ -202,7 +202,7 @@ const Withdrawal = () => {
                     <table className="w-full rounded-lg overflow-hidden">
                         <thead className="bg-gray-50">
                             <tr>
-                                {['S.N.', 'Full Name', 'Organization', 'Number', 'Withdrawal Amount', 'Status'].map((header) => (
+                                {['S.N.', 'Full Name', 'Organization', 'Number','From', 'Withdrawal Amount', 'Status'].map((header) => (
                                     <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                         {header}
                                     </th>
@@ -216,6 +216,7 @@ const Withdrawal = () => {
                                     <td className="px-6 py-4 whitespace-nowrap">{data.fullname}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">{data.organizationname}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">{data.vendorcontact}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{data.from}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">{data.withdrawalAmount}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

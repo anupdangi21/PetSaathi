@@ -123,6 +123,54 @@ const Tracking = () => {
     }
   };
 
+const handleDeleteFound = async (petId) => {
+    // Confirmation dialog
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Are you sure this was not your pet?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!"
+    });
+
+    // If user cancels, exit the function
+    if (!result.isConfirmed) return;
+
+    try {
+      // Send DELETE request
+      const response = await fetch(`http://localhost:3000/petreunite/${petId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Deletion failed');
+      }
+
+      setPets(prevPets => prevPets.filter(pet => pet._id !== petId));
+
+      await Swal.fire(
+        'Deleted!',
+        'The pet has been removed.',
+        'success'
+      );
+      
+    } catch (err) {
+      console.error('Deletion error:', err);
+      await Swal.fire(
+        'Error!',
+        err.message || 'Failed to delete pet',
+        'error'
+      );
+    }
+  };
+
   // Fetch owner pets
   useEffect(() => {
     const fetchOwnerPets = async () => {
@@ -318,6 +366,14 @@ const Tracking = () => {
                       <p className="text-gray-600 mt-2">Found Location: {pet.petLocationFound}</p>
                       <p className="text-gray-600 mt-2">Reunite date: {pet.date}</p>
                       <p className="text-gray-600 mt-2">Owner {pet.fullname}</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleDeleteFound(pet._id)}
+                          className="bg-red-500 text-white px-4 py-2 mt-4 rounded hover:bg-red-600 transition"
+                        >
+                          Not mine
+                        </button>
+                      </div>
                     </div>
                   ))
                 ) : (

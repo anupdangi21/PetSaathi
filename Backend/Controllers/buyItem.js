@@ -7,15 +7,35 @@ import transporter from "../nodeMailer.js"
 const buyItemMarket = async (req, res)=>{
     try {
         console.log(req.body)
-        const {itemId, fullname,ownercontact,email, sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description, Image,date, status,paymentStatus, bookedAt}=req.body
-        
-        const imagePaths = req.files ? req.files.map(file => file.filename) : [];
-        
-        const newBuyItem = new BuyItem({
-             fullname, ownercontact, email, sellername, sellercontact, selleremail, selleraddres, itemtype, category, condition, usedtime, price, description,date, Image: imagePaths,paymentStatus, status, bookedAt
-        })
-        console.log("buyer ko save hunxa ta", newBuyItem)
-        await newBuyItem.save()
+        const {itemId, fullname, ownercontact, email,Image, sellername, sellercontact, 
+            selleremail, selleraddres, itemtype, category, condition, 
+            usedtime, price, description, date, status, paymentStatus,bookedAt} = req.body;
+             
+    //  const imagePaths = req.files ? req.files.map(file => file.filename) : [];
+             
+     const newBuyItem = new BuyItem({
+         fullname, 
+         ownercontact, 
+         email, 
+         Image,
+         sellername, 
+         sellercontact, 
+         selleremail, 
+         selleraddres, 
+         itemtype, 
+         category, 
+         condition, 
+         usedtime, 
+         price, 
+         description,
+         date, 
+        //  Image: imagePaths, // Only use the uploaded files
+         paymentStatus, 
+         status, 
+         bookedAt // Generate fresh timestamp
+     });
+     
+     await newBuyItem.save();
         
         const updatedAddItem = await AddItem.findByIdAndUpdate(
             itemId, // Use itemId instead of addItemId

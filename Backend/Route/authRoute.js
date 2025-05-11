@@ -25,11 +25,11 @@ import BuyMarket from "../Controllers/buyItem.js"
 
 
 
-const {admin,getadmin, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
+const {admin,getadmin,deleteRegister, register,registerGetData,updateRegisterData,VendorregisterGetData,updateVendorData, vendorRegister, signin,logout, isAuthenticated,sendResetOtp, resetPassword } = authController;
 const {petList, getPetlist, updatePet, deletePet,changeStatus,getPetliststatus}= petController;
 const {petFoundData,getPetFound,updateStatus,deleteFoundPet }= found;
 const {petLostData, getLostPetData}= lost;
-const {petOwner, getpetOwner}=petOwn;
+const {petOwner, getpetOwner,deleteLostPet}=petOwn;
 const {addService}=addServic;
 const {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}=petAdoption;
 const  {petHostel,getHostel, updateHostel,deleteHostel }= Hostel;
@@ -53,6 +53,7 @@ authRouter.post("/admin", admin);
 authRouter.get("/admin", getadmin);
 authRouter.post("/register", register);
 authRouter.get("/register", registerGetData);
+authRouter.delete("/register/:id", deleteRegister)
 authRouter.put("/register/:id", updateRegisterData);
 authRouter.post("/registration", vendorRegister);
 authRouter.get("/registration", VendorregisterGetData)
@@ -149,6 +150,7 @@ authRouter.post("/addservice", addService)
 //router for posting the details of lost petowner and getting its data
 authRouter.post("/petreunite", petOwner)
 authRouter.get("/petreunite", getpetOwner)
+authRouter.delete("/petreunite/:id",deleteLostPet )
 
 //router for posting the marketplace items 
 authRouter.post("/marketplacelisting", upload.array("Image", 5), itemAdd);

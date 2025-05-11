@@ -13,6 +13,7 @@ const CProfile = () => {
     password: ''
   });
   const [loading, setLoading] = useState(true);
+  const [showManageOptions, setShowManageOptions] = useState(false);
   const { logout } = useContext(AppContext);
 
   useEffect(() => {
@@ -27,14 +28,14 @@ const CProfile = () => {
       try {
         const response = await fetch("http://localhost:3000/register");
         if (!response.ok) throw new Error('Failed to fetch user data');
-        
+
         const { data } = await response.json();
-        const currentUser = data.find(user => 
+        const currentUser = data.find(user =>
           user.email === userData.user.email
         );
 
         if (!currentUser) throw new Error('User data not found');
-        
+
         setFormData({
           number: currentUser.number || '',
           username: currentUser.username || '',
@@ -69,11 +70,10 @@ const CProfile = () => {
       );
 
       const result = await response.json();
-      
+
       if (!response.ok) throw new Error(result.message);
 
-      // Update local storage
-      const updatedUser = { 
+      const updatedUser = {
         ...userData.user,
         ...result.user
       };
@@ -108,12 +108,50 @@ const CProfile = () => {
     });
   };
 
+  const handleDeleteAccount = async () => {
+    const userData = JSON.parse(localStorage.getItem('user_data'));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will permanently delete your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#aaa",
+      confirmButtonText: "Yes, delete it"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/register/${userData.user.id}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Authorization": `Bearer ${localStorage.getItem('userToken')}`
+              }
+            }
+          );
+
+          if (!response.ok) throw new Error("Failed to delete account");
+
+          localStorage.removeItem('user_data');
+          Swal.fire("Deleted", "Your account has been deleted.", "success").then(() => {
+            logout();
+            navigate('/');
+          });
+        } catch (error) {
+          Swal.fire("Error", error.message, "error");
+          console.error("Delete error:", error);
+        }
+      }
+    });
+  };
+
   if (loading) return <div className="text-center p-8">Loading...</div>;
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      
+
       <main className="flex-1 bg-orange-50">
         <div className="flex items-center justify-center min-h-[calc(100vh-160px)] py-8">
           <div className="bg-gradient-to-r from-orange-200 to-orange-100 rounded-xl shadow-lg p-8 w-full max-w-md mx-4">
@@ -165,9 +203,29 @@ const CProfile = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setShowManageOptions(!showManageOptions)}
+                    className="w-full text-left text-orange-700 font-medium underline hover:text-orange-900 mt-2"
+                  >
+                    {showManageOptions ? "Hide Manage ID" : "Manage ID"}
+                  </button>
+
+                  {showManageOptions && (
+                    <button
+                      type="button"
+                      onClick={handleDeleteAccount}
+                      className="mt-3 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Delete My ID
+                    </button>
+                  )}
+                </div>
               </div>
 
-              <div className="flex justify-between gap-4">
+              <div className="flex justify-between gap-4 pt-4">
                 <button
                   type="button"
                   onClick={() => navigate('/')}

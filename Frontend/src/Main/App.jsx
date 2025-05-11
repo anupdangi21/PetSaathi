@@ -7,6 +7,7 @@ import Foot from "../Components/foot"; // Importing foot component
 import pet from "../Images/display-main1.png";
 import { PawPrint, Heart, MapPin, } from 'lucide-react';
 import useAuthGuard from "../Context/useAuthGuard.jsx"
+import MessageIcon from "../Marketplace/messageIcon.jsx"
 
 
 function App() {
@@ -147,6 +148,7 @@ function App() {
         </div>
       </div>
     </main>
+    <MessageIcon sellerEmail={JSON.parse(localStorage.getItem('user_data'))?.email} />
     <footer>
           <Foot />
         </footer> 

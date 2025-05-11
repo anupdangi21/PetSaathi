@@ -145,6 +145,34 @@ const registerGetData = async (req, res) => {
     }
 }
 
+//deleting the registered user
+
+const deleteRegister = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const deletedUser = await registerModel.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+      user: deletedUser
+    });
+  } catch (error) {
+    console.error("Delete error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while deleting user"
+    });
+  }
+};
 //updating the registered user data
 
 const updateRegisterData = async (req, res) => {
@@ -614,4 +642,4 @@ const resetPassword = async (req, res) => {
       res.status(500).json({ success: false, message: error.message });
   }
 };
-export default {admin,getadmin, register,registerGetData,updateRegisterData, vendorRegister, VendorregisterGetData,updateVendorData, signin, logout, isAuthenticated, sendResetOtp, resetPassword };
+export default {admin,getadmin,deleteRegister, register,registerGetData,updateRegisterData, vendorRegister, VendorregisterGetData,updateVendorData, signin, logout, isAuthenticated, sendResetOtp, resetPassword };
