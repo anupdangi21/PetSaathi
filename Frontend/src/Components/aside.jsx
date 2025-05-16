@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Icon from "../Images/logo.png";
 import { AppContext } from "../Context/AppContext.jsx";
-import { useNavigate, Link  } from "react-router-dom";
+import { useNavigate, Link ,useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import Addservice from "../vendor/addService.jsx";
 import { 
@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 
 const Aside = () => {
+  const location = useLocation();
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [fetchedServices, setFetchedServices] = useState([]);
@@ -35,8 +36,8 @@ const Aside = () => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      if (!userData?.email) return;
-  
+      if (location.pathname === '/dashboard/notification') return;
+      if (!userData?.email) return;     
       try {
         const endpoints = [
           'adoption',
@@ -68,7 +69,7 @@ const Aside = () => {
     };
   
     fetchNotifications();
-  }, [userData?.email, setNotificationCount]);
+  }, [userData?.email, setNotificationCount,location.pathname]);
 
   // Fetch services from the API endpoint
   useEffect(() => {

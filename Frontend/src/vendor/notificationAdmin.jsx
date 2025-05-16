@@ -20,21 +20,22 @@ const NotificationAdmin = () => {
   const [error, setError] = useState(null);
 
 
-  useEffect(() => {
-    setNotificationCount(0);
-  }, [setNotificationCount]);
+useEffect(() => {
+  return () => {
+  };
+}, [setNotificationCount]);
 
-  useEffect(() => {
-  const total = 
-    adoptions.length + 
-    grooming.length + 
-    training.length + 
-    hostel.length + 
-    groomingrating.length + 
-    trainingrating.length + 
-    hostelrating.length;
-  setNotificationCount(total);
-}, [adoptions, grooming, training, hostel, groomingrating, trainingrating, hostelrating]);
+//   useEffect(() => {
+//   const total = 
+//     adoptions.length + 
+//     grooming.length + 
+//     training.length + 
+//     hostel.length + 
+//     groomingrating.length + 
+//     trainingrating.length + 
+//     hostelrating.length;
+//   setNotificationCount(total);
+// }, [adoptions, grooming, training, hostel, groomingrating, trainingrating, hostelrating]);
 
   useEffect(() => {
     // Get user email from localStorage
