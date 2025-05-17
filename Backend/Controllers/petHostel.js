@@ -10,35 +10,6 @@ const bookHostel = async(req, res)=>{
         if(!price || !days || !accommodationType){
             return res.status(400).json({message: "Please fill all the fields."})
         }
-
-        // Validate numeric fields
-        const countToDecrement = parseInt(accomodationCount, 10);
-        if (isNaN(countToDecrement) || countToDecrement <= 0) {
-            return res.status(400).json({ message: "Invalid accommodation count." });
-        }
-
-        // Atomic update with arrayFilters
-        const updatedHostel = await addPetHostel.findOneAndUpdate(
-            {
-                organizationname: organizationname,
-                vendorcontact: vendorcontact,
-                "accomodation.type": accommodationType
-            },
-            { $inc: { "accomodation.$[elem].count": -countToDecrement } },
-            {
-                arrayFilters: [{ 
-                    "elem.type": accommodationType,
-                    "elem.count": { $gte: countToDecrement } // Ensure enough seats
-                }],
-                new: true
-            }
-        );
-
-        if (!updatedHostel) {
-            return res.status(400).json({ 
-                message: "No available seats or invalid accommodation type." 
-            });
-        }
         const petHostel = new petHostelModel({
             fullname,
             ownercontact,
