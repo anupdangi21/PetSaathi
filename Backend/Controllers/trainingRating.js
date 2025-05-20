@@ -5,13 +5,13 @@ import TrainingRating from "../Models/TrainingRate.js"
 const trainingRate = async(req,res)=>{
     try {
         // console.log(req.body)
-        const {image, rating, stars, areaImprovement, userComment,organizationname, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt}=req.body
+        const {image, rating, stars, areaImprovement, userComment,organizationname, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,vendoremail,seen,status,bookedAt}=req.body
          if(!stars || !areaImprovement || !userComment){
             return res.status(400).json({message:"Please fill all fields"})
 
          }
          const rateTrain= new TrainingRating({
-           image, rating, stars, areaImprovement, userComment,organizationname, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,vendoremail,status,bookedAt
+           image, rating, stars, areaImprovement, userComment,organizationname, selectedpackage , includedservice,price,Restrictions,Duration,SelectedTiming, location,fullname,email,ownercontact,vendorcontact,seen,vendoremail,status,bookedAt
          })
         //  console.log("rating hunxa ki nai heram hai ta",rateTrain)
          await rateTrain.save()

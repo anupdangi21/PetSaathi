@@ -4,7 +4,7 @@ import { Send, ArrowLeft, MessageSquare } from "lucide-react";
 
 const socket = io('http://localhost:3000');
 
-const ChatBox = ({ onClose, sellerEmail }) => {
+const ChatBox = ({ onClose, sellerEmail,itemDetails  }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [showConversationList, setShowConversationList] = useState(false); // Start with conversation view
@@ -51,6 +51,11 @@ const ChatBox = ({ onClose, sellerEmail }) => {
 
     socket.on('previousMessages', (msgs) => {
       setMessages(msgs);
+      // Pre-fill message only if no existing messages and item details exist
+      if (msgs.length === 0 && itemDetails) {
+        const prefilledMessage = `Hi, I'm interested in purchasing your ${itemDetails.itemtype} (Price: NPR ${itemDetails.price}, Condition: ${itemDetails.condition}). Is it still available?`;
+        setInput(prefilledMessage);
+      }
     });
 
     socket.on('receiveMessage', (message) => {
@@ -65,7 +70,15 @@ const ChatBox = ({ onClose, sellerEmail }) => {
       socket.off('previousMessages');
       socket.off('conversations');
     };
-  }, [sellerEmail]);
+  }, [sellerEmail,itemDetails]);
+
+   useEffect(() => {
+    // Always prefill when component mounts with itemDetails
+    if (itemDetails) {
+      const prefilledMessage = `Hi, I'm interested in your ${itemDetails.itemtype} (Price: NPR ${itemDetails.price}, Condition: ${itemDetails.condition})`;
+      setInput(prefilledMessage);
+    }
+  }, [itemDetails]);
 
   const sendMessage = () => {
     if (!input.trim() || !selectedConversation) return;

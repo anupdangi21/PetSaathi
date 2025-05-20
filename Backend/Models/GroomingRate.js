@@ -17,6 +17,7 @@ const groomingRateSchema= new mongoose.Schema({
     username:String,
     email:String,
     ownercontact:String,
+    seen: { type: Boolean, default: false, required:true },
      ratedAt: {
         type: Date,
         default: () => moment().tz("Asia/Kathmandu").toDate(), 

@@ -22,6 +22,7 @@ const hostelRateSchema= new mongoose.Schema({
     medicalsupport:String,
     petpickup:String,
     petdropoff:String,
+    seen: { type: Boolean, default: false, required:true },
      ratedAt: {
             type: Date,
             default: () => moment().tz("Asia/Kathmandu").toDate(), 

@@ -5,13 +5,13 @@ import GroomingRating from "../Models/GroomingRate.js"
 const groomRate = async(req,res)=>{
     try {
         // console.log(req.body)
-        const {rating, stars, areaImprovement, userComment,ratedAt, image,organizationname,bookedAt,vendoremail,vendorcontact,price,selectedpackage,location,username,email,ownercontact,status}=req.body
+        const {rating, stars, areaImprovement, userComment,ratedAt, image,organizationname,bookedAt,vendoremail,vendorcontact,price,selectedpackage,location,username,email,seen,ownercontact,status}=req.body
          if(!stars || !areaImprovement || !userComment){
             return res.status(400).json({message:"Please fill all fields"})
 
          }
          const rategroom= new GroomingRating({
-            rating, stars, areaImprovement, userComment,ratedAt, image,organizationname,bookedAt,vendoremail,vendorcontact,price,selectedpackage,location,username,email,ownercontact,status
+            rating, stars, areaImprovement, userComment,ratedAt, image,organizationname,bookedAt,vendoremail,vendorcontact,price,selectedpackage,location,username,seen,email,ownercontact,status
          })
         //  console.log("rating hunxa ki nai heram hai ta",rategroom)
          await rategroom.save()

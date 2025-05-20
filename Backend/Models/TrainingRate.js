@@ -21,6 +21,7 @@ const trainingRateSchema= new mongoose.Schema({
     ownercontact: String,
     vendoremail:String,
     vendorcontact:String,
+    seen: { type: Boolean, default: false, required:true },
     ratedAt: {
         type: Date,
         default: () => moment().tz("Asia/Kathmandu").toDate(), 

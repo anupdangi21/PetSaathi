@@ -5,13 +5,13 @@ import HostelRating from "../Models/HostelRate.js"
 const hostelRate = async(req,res)=>{
     try {
         // console.log(req.body)
-        const {stars, areaImprovement, userComment,fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,bookedAt}=req.body
+        const {stars, areaImprovement, userComment,fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,seen,status,bookedAt}=req.body
          if(!stars || !areaImprovement || !userComment){
             return res.status(400).json({message:"Please fill all fields"})
 
          }
          const ratehostel= new HostelRating({
-            stars, areaImprovement, userComment,fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,status,bookedAt
+            stars, areaImprovement, userComment,fullname,ownercontact,email,image,date,days,price,accommodationType,vendorcontact,vendoremail, vendorlocation,organizationname,food,medicalsupport,petpickup,petdropoff,seen,status,bookedAt
          })
         //  console.log("rating hunxa ki nai heram hai ta",ratehostel)
          await ratehostel.save()

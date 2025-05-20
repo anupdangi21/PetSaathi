@@ -4,8 +4,13 @@ import Swal from 'sweetalert2';
 import moment from 'moment-timezone';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/foot';
+import {ArrowLeftFromLine , ChevronLeft} from "lucide-react"
+import { useNavigate } from 'react-router-dom'
+
 
 const OrderHistory = () => {
+      const navigate = useNavigate();
+    
     const [marketItem, setMarketItem] = useState([]);
     const [marketItemLoading, setMarketItemLoading] = useState(true);
     const [marketItemError, setMarketItemError] = useState(null);
@@ -51,13 +56,21 @@ const OrderHistory = () => {
         fetchMarketItems();
     }, [userEmail, userToken]);
 
+      const handleBackbtn = () =>{
+    navigate("/marketplace")
+  }
 
     return (
         <div className="bg-orange-50 min-h-screen flex flex-col">
             <Navbar />
 
             <main className="flex-grow">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="max-w-7xl mx-auto sm: py-8">
+                    <button
+                  className='bg-orange-300 hover:bg-orange-400 flex w-20 h-10'
+                  onClick={handleBackbtn}>
+                  <h1 className='flex mt-2'><ChevronLeft />  </h1>  <h1 className='mt-2.5'>Back</h1>
+                  </button>
                     <h1 className="text-2xl font-bold text-gray-800 mb-6">Your Marketplace Orders</h1>
 
                     {marketItemLoading ? (
