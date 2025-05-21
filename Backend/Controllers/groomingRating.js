@@ -99,4 +99,34 @@ const updateGroomingRating = async(req,res)=>{
     }
 }
 
-export default {groomRate, getgroomRating,updateGroomingRating}
+const GroomratemarkAsSeen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await GroomingRating.findByIdAndUpdate(
+      id,
+      { seen: true },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const GroomratemarkBatchAsSeen = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const result = await GroomingRating.updateMany(
+      { _id: { $in: ids } },
+      { $set: { seen: true } }
+    );
+    res.status(200).json({ 
+      success: true,
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default {groomRate, getgroomRating,updateGroomingRating, GroomratemarkAsSeen, GroomratemarkBatchAsSeen}

@@ -283,7 +283,7 @@ useEffect(() => {
         return response.json();
       })
       .then((data) => {
-        // console.log("Fetched Data k abrian ho?:", data);
+        // console.log("Fetched Data k  ho?:", data);
   
         // Check if data.data exists and is an array
         if (!data || !Array.isArray(data.data)) {
@@ -328,7 +328,7 @@ useEffect(() => {
         return response.json();
       })
       .then((data) => {
-        // console.log("Fetched Data k abrian ho?:", data);
+        // console.log("Fetched Data k  ho?:", data);
   
         // Check if data.data exists and is an array
         if (!data || !Array.isArray(data.data)) {

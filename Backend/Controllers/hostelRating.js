@@ -98,4 +98,34 @@ const gethostelRate = async(req,res)=>{
         }
     }
 
-export default {hostelRate, gethostelRate,updateHostelRating}
+const hostelratemarkAsSeen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await HostelRating.findByIdAndUpdate(
+      id,
+      { seen: true },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const hostelratemarkBatchAsSeen = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const result = await HostelRating.updateMany(
+      { _id: { $in: ids } },
+      { $set: { seen: true } }
+    );
+    res.status(200).json({ 
+      success: true,
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default {hostelRate, gethostelRate,updateHostelRating, hostelratemarkAsSeen, hostelratemarkBatchAsSeen}

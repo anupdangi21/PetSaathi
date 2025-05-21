@@ -160,4 +160,34 @@ const cancelTraining = async (req, res) => {
     }
 };
 
-export default {AddpetTrain, AddgetpetTrain,AddgetpetTrainUser,updateTrainStatus,updateTrainingRateStatus,cancelTraining}
+const TrainingmarkAsSeen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await PetTrainingModel.findByIdAndUpdate(
+      id,
+      { seen: true },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const TrainingmarkBatchAsSeen = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const result = await PetTrainingModel.updateMany(
+      { _id: { $in: ids } },
+      { $set: { seen: true } }
+    );
+    res.status(200).json({ 
+      success: true,
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default {AddpetTrain, AddgetpetTrain,AddgetpetTrainUser,updateTrainStatus,updateTrainingRateStatus,cancelTraining, TrainingmarkAsSeen, TrainingmarkBatchAsSeen}

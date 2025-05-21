@@ -26,17 +26,4 @@ const getLostPetData = async (req, res)=>{
         res.status(400).json({success: false, message: error.message})
     }
 }
-
-const deleteLostPet=async(req,res)=>{
-    try {
-        const {id}=req.params
-        const deletepet = await lostPet.findByIdAndDelete(id)
-        if(!deletepet){
-            return res.status(404).json({message:"Pet not found"})
-        }
-        res.status(200).json({message:"pet deleted successfully"})
-    } catch (error) {
-       return res.status(400).json({message:error.message}) 
-    }
-}
-export default{petLostData,getLostPetData,deleteLostPet }
+export default{petLostData,getLostPetData }

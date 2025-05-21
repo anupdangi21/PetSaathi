@@ -449,7 +449,6 @@ const signin = async (req, res) => {
         const vendor = await vendorregisterModel.findOne({ username }).exec();
         const admin = await AdminModel.findOne({ username }).exec();
 
-        // Fix 1: Check all three possibilities (user, vendor, admin)
         if (!user && !vendor && !admin) {
             return res.status(400).json({ message: "Account not found" });
         }
@@ -459,7 +458,6 @@ const signin = async (req, res) => {
         let isAdminMatch = false;
         let vendorData = null;
 
-        // Fix 2: Check admin first since it's a separate role
         if (admin) {
             isAdminMatch = await bcrypt.compare(password, admin.password);
         } else if (user) {

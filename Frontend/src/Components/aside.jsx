@@ -30,46 +30,55 @@ const Aside = () => {
 
   const modalRef = useRef(null);
   const navigate = useNavigate();
-  const { userData, logout,notificationCount  } = useContext(AppContext);
-  const { setNotificationCount } = useContext(AppContext);
+  const { userData, logout, notificationCount, setUnseenNotifications } = useContext(AppContext);
 
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      if (location.pathname === '/dashboard/notification') return;
-      if (!userData?.email) return;     
-      try {
-        const endpoints = [
-          'adoption',
-          'bookgroom',
-          'booktrain',
-          'bookhostel',
-          'groomingreview',
-          'trainingreview',
-          'hostelreview'
+  const fetchNotifications = async () => {
+    if (location.pathname === '/dashboard/notification') return;
+    if (!userData?.email) return;
+    
+    try {
+      const endpoints = [
+        'adoption',
+        'bookgroom',
+        'booktrain',
+        'bookhostel',
+        'groomingreview',
+        'trainingreview',
+        'hostelreview'
+      ];
+
+      const responses = await Promise.all(
+        endpoints.map(endpoint => 
+          axios.get(`http://localhost:3000/${endpoint}`)
+        )
+      );
+
+      // Filter unseen notifications for the current vendor
+      const unseenIds = responses.reduce((acc, response) => {
+        const data = response.data?.data || [];
+        return [
+          ...acc,
+          ...data
+            .filter(item => 
+              item.vendoremail === userData.email && 
+              item.seen === false
+            )
+            .map(item => item._id)
         ];
-  
-        const responses = await Promise.all(
-          endpoints.map(endpoint => 
-            axios.get(`http://localhost:3000/${endpoint}`)
-          )
-        );
-  
-        const total = responses.reduce((acc, response) => {
-          const data = response.data?.data || [];
-          return acc + data.filter(item => item.vendoremail === userData.email).length;
-        }, 0);
-  
-        setNotificationCount(total);
-        
-      } catch (err) {
-        console.error("Error fetching notifications:", err);
-        Swal.fire('Error', 'Failed to load notifications', 'error');
-      }
-    };
-  
-    fetchNotifications();
-  }, [userData?.email, setNotificationCount,location.pathname]);
+      }, []);
+
+      setUnseenNotifications(unseenIds);
+      
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
+      Swal.fire('Error', 'Failed to load notifications', 'error');
+    }
+  };
+
+  fetchNotifications();
+}, [userData?.email, location.pathname]);
 
   // Fetch services from the API endpoint
   useEffect(() => {

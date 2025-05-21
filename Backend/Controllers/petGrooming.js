@@ -157,5 +157,35 @@
          res.status(500).json({ message: "Server error", error: error.message });
      }
  };
+
+ const GroommarkAsSeen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await PetGroomingModel.findByIdAndUpdate(
+      id,
+      { seen: true },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const GroommarkBatchAsSeen = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const result = await PetGroomingModel.updateMany(
+      { _id: { $in: ids } },
+      { $set: { seen: true } }
+    );
+    res.status(200).json({ 
+      success: true,
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
  
- export default {AddpetGroom, AddgetpetGroom,AddgetpetGroomUser,updateGroomStatus,updateGroomingRateStatus,cancelGrooming}
+ export default {AddpetGroom, AddgetpetGroom,AddgetpetGroomUser,updateGroomStatus,updateGroomingRateStatus,cancelGrooming, GroommarkAsSeen, GroommarkBatchAsSeen}

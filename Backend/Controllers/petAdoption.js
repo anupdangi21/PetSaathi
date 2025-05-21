@@ -128,4 +128,35 @@ const cancelAdoption = async (req, res) => {
     }
 };
 
-export default {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption}
+const markAsSeen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await petAdoptModel.findByIdAndUpdate(
+      id,
+      { seen: true },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Mark multiple adoption notifications as seen
+const markBatchAsSeen = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const result = await petAdoptModel.updateMany(
+      { _id: { $in: ids } },
+      { $set: { seen: true } }
+    );
+    res.status(200).json({ 
+      success: true,
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default {petAdopt, getpetAdopt,updateAdoptionStatus,cancelAdoption, markAsSeen, markBatchAsSeen}

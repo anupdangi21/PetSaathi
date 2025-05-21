@@ -178,4 +178,34 @@ const cancelHostelBook = async (req,res)=>{
     }
 }
 
-export default {bookHostel, getHostelBook,getHostelBookUser,updateHostelStatus,updateRateStatus,cancelHostelBook}
+const HostelmarkAsSeen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await Hostel.findByIdAndUpdate(
+      id,
+      { seen: true },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const HostelmarkBatchAsSeen = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const result = await Hostel.updateMany(
+      { _id: { $in: ids } },
+      { $set: { seen: true } }
+    );
+    res.status(200).json({ 
+      success: true,
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default {bookHostel, getHostelBook,getHostelBookUser,updateHostelStatus,updateRateStatus,cancelHostelBook, HostelmarkAsSeen, HostelmarkBatchAsSeen}

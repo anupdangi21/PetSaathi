@@ -7,7 +7,7 @@ export const AppContextProvider = (props) => {
     const [isAuthenticated, setisAuthenticated] = useState(false);
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [notificationCount, setNotificationCount] = useState(0);
+const [unseenNotifications, setUnseenNotifications] = useState([]);
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("user_data"));
@@ -25,6 +25,17 @@ export const AppContextProvider = (props) => {
         }
         setLoading(false); 
     }, []);
+
+    const markNotificationAsSeen = (notificationId) => {
+        setUnseenNotifications(prev => 
+            prev.filter(id => id !== notificationId)
+        );
+    };
+    const markAllNotificationsAsSeen = (notificationIds) => {
+  setUnseenNotifications(prev => 
+    prev.filter(id => !notificationIds.includes(id))
+  );
+};
 
     const login = (newToken, newData) => {
         localStorage.setItem(
@@ -49,10 +60,13 @@ export const AppContextProvider = (props) => {
         isAuthenticated,
         userData,
         loading,
-        notificationCount, 
-        setNotificationCount,
+        notificationCount: unseenNotifications.length,
+        setUnseenNotifications, 
+        markNotificationAsSeen,
+        markAllNotificationsAsSeen,
         login,
         logout,
+
     };
 
     return (
