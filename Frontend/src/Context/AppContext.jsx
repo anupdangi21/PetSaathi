@@ -52,7 +52,6 @@ const [unseenNotifications, setUnseenNotifications] = useState([]);
         setToken(null);
         setUserData(null);
         setisAuthenticated(false);
-        setNotificationCount(0);
     };
 
     const value = {
