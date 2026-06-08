@@ -5,6 +5,7 @@ The platform simplifies the process of pet adoption while also offering addition
 Built using the MERN Stack (MongoDB, Express.js, React.js, and Node.js), PetSaathi provides a modern, responsive, and user-friendly experience for managing pet-related activities online.
 
 Features
+
 1.Pet Adoption
 Browse available pets for adoption
 View detailed pet profiles
@@ -50,6 +51,7 @@ Oversee marketplace activities
 Moderate reviews and reported content
 
 Tech Stack
+
 1.Frontend
 React.js
 React Router
